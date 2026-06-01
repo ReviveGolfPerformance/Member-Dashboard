@@ -958,8 +958,10 @@ document.getElementById("effClass").className = "hero-class " + oc.cls;
 
 // screen overview cards
 const grid=document.getElementById("screenGrid");
+grid.innerHTML = "";          // ← add this
 screens.forEach((s,i)=>{
   const c=document.createElement("button");
+const c=document.createElement("button");
   c.className="screen-card"+(i===0?" active":"");
   c.setAttribute("data-key",s.key);
   c.innerHTML=`
