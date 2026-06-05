@@ -426,29 +426,34 @@ section { margin-top: clamp(28px, 5vw, 46px); }
 .load-list .txt { font-size: 14px; color: var(--silver); }
 .load-list .txt b { color: var(--white); font-weight: 600; }
 
-.swing-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.swing-grid { 
+  display: grid; 
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); 
+  gap: 16px; 
+}
 .swing-foot { font-family: var(--mono); font-size: 10.5px; color: var(--muted); letter-spacing: .4px; margin-top: 14px; line-height: 1.5; }
-.club-card { background: linear-gradient(160deg, var(--charcoal), #0d0d0d); border: 1px solid var(--slate); border-radius: 12px; overflow: hidden; border-top: 2px solid var(--red); }
+.club-card { background: linear-gradient(160deg, var(--charcoal), #0d0d0d); border: 1px solid var(--slate); border-radius: 12px; overflow: hidden; border-top: 2px solid var(--red); display: flex; flex-direction: column; }
 .club-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 14px 18px; border-bottom: 1px solid var(--slate); background: var(--panel); }
-.club-head .cname { font-family: var(--display); font-size: 24px; letter-spacing: 1.5px; }
+.club-head .cname { font-family: var(--display); font-size: 22px; letter-spacing: 1px; text-transform: uppercase; }
 .club-head .cgain { font-family: var(--mono); font-size: 10px; letter-spacing: .5px; text-transform: uppercase; color: var(--optimal); background: rgba(16,185,129,.12); padding: 5px 10px; border-radius: 3px; white-space: nowrap; }
 .club-head .cgain.down { color: var(--monitor); background: rgba(245,158,11,.12); }
-.metric-line { padding: 13px 18px; border-bottom: 1px solid var(--slate); }
-.metric-line:last-child { border-bottom: none; }
+.club-head .cgain.alert-bad { color: var(--restricted); background: rgba(239,68,68,.12); }
+.metric-line { padding: 14px 18px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
 .ml-top { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
-.ml-name { font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); }
-.ml-delta { font-family: var(--mono); font-size: 12.5px; font-weight: 500; color: var(--muted); }
+.ml-name { font-family: var(--mono); font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); }
+.ml-delta { font-family: var(--mono); font-size: 12px; font-weight: 500; color: var(--muted); }
 .ml-delta.up { color: var(--optimal); }
 .ml-delta.down { color: var(--monitor); }
+.ml-delta.bad { color: var(--restricted); }
 .ml-vals { display: flex; align-items: baseline; gap: 9px; margin-top: 7px; }
 .ml-pre { font-family: var(--display); font-size: 20px; letter-spacing: .5px; color: var(--muted); line-height: 1; }
 .ml-arrow { color: var(--red); font-size: 15px; }
-.ml-post { font-family: var(--display); font-size: 30px; letter-spacing: .5px; color: var(--white); line-height: 1; }
+.ml-post { font-family: var(--display); font-size: 32px; letter-spacing: .5px; color: var(--white); line-height: 1; }
 .ml-unit { font-family: var(--mono); font-size: 11px; color: var(--silver); }
 .cmp-bar { position: relative; height: 5px; border-radius: 3px; background: var(--slate); margin-top: 9px; overflow: hidden; }
 .cmp-post { position: absolute; inset: 0; background: linear-gradient(90deg, var(--red), var(--optimal)); border-radius: 3px; }
 .cmp-pre { position: absolute; left: 0; top: 0; height: 100%; background: #4a4a4a; border-radius: 3px; }
-.ml-trials { font-family: var(--mono); font-size: 9px; color: #5f5f5f; margin-top: 8px; letter-spacing: .5px; }
+.ml-trials { font-family: var(--mono); font-size: 8.5px; color: #5f5f5f; margin-top: 8px; letter-spacing: .5px; white-space: normal; line-height: 1.3; }
 
 .cta {
   margin-top: clamp(30px, 6vw, 52px);
@@ -506,6 +511,7 @@ footer .cred { font-family: var(--mono); font-size: 10px; letter-spacing: 1px; c
   .hero-class { margin: 0 auto; }
   .client-badge { display: none; }
   .eff-scale, .hero-readout .eyebrow { text-align: left; }
+  .swing-grid { grid-template-columns: 1fr; }
 }
 @media(max-width:420px) {
   .screen-grid { grid-template-columns: repeat(1, 1fr); }
@@ -598,11 +604,11 @@ footer .cred { font-family: var(--mono); font-size: 10px; letter-spacing: 1px; c
   <!-- PERFORMANCE MEASUREMENTS (PRE vs POST) -->
   <section class="reveal" style="animation-delay:.2s">
     <div class="sec-label">Sport Performance Indicators</div>
-    <h2 class="sec-title">Shot Velocity & Agility Profiles (Pre → Post)</h2>
+    <h2 class="sec-title">On-Field Agility & Ballistics (Pre → Post Mobility)</h2>
     <div class="swing-grid" id="swingGrid">
       <!-- Pre/Post comparison metrics derived from configuration -->
     </div>
-    <p class="swing-foot">Values represent actual multi-trial session gains, indicating real-time functional adaptation from physical setup preparation.</p>
+    <p class="swing-foot">Each metric displays the average derived from five comprehensive test trials before and after customized target joint conditioning.</p>
   </section>
 
   <!-- BOOKING CONVERT CTA -->
@@ -684,17 +690,35 @@ const CONFIG = {
     }
   },
 
-  /* ── PERFORMANCE INDICATOR METRICS ──────────────────────────── */
+  /* ── PERFORMANCE INDICATOR METRICS (PRE vs POST) ──────────────── */
   sportMetrics: {
-    metric1: {
-      name: "Shot Velocity (Standing)",
-      speed: { pre: [82,84,83], post: [86,88,87] }, // mph
-      outcome: { name: "Shot Velocity (Crow Hop)", pre: [70,75,72], post: [82,85,84], unit: "mph" } 
+    standingShot: {
+      name: "Standing Shot Velocity",
+      unit: "mph",
+      lowerIsBetter: false,
+      pre: [81, 83, 82, 84, 80],   // 5 trials required
+      post: [85, 87, 86, 88, 89]   // 5 trials required
     },
-    metric2: {
-      name: "5-10-5",
-      speed: { pre: [14,15,14], post: [16,16,17] }, // sec indicator calculated
-      outcome: { name: "L Drill", pre: [4.6,4.5,4.6], post: [4.3,4.2,4.3], unit: "sec" }
+    crowHopShot: {
+      name: "Crow Hop Shot Velocity",
+      unit: "mph",
+      lowerIsBetter: false,
+      pre: [85, 87, 86, 88, 84],   // 5 trials required
+      post: [91, 93, 92, 94, 95]   // 5 trials required
+    },
+    agility5105: {
+      name: "5-10-5 Agility Drill",
+      unit: "sec",
+      lowerIsBetter: true,
+      pre: [4.65, 4.61, 4.69, 4.58, 4.62], // 5 trials required
+      post: [4.31, 4.28, 4.35, 4.25, 4.26] // 5 trials required
+    },
+    agilityLDrill: {
+      name: "L-Speed Agility Drill",
+      unit: "sec",
+      lowerIsBetter: true,
+      pre: [7.85, 7.91, 7.82, 7.88, 7.89], // 5 trials required
+      post: [7.41, 7.35, 7.39, 7.32, 7.33] // 5 trials required
     }
   },
 
@@ -710,7 +734,7 @@ const CONFIG = {
     ]
   }
 };
-/* ███  END CONFIG — Do not edit below  ███ */
+/* ███  END CONFIG  ███ */
 
 document.addEventListener('DOMContentLoaded', () => {
   const c = CONFIG.client;
@@ -795,13 +819,13 @@ document.addEventListener('DOMContentLoaded', () => {
   let statusLabel = "Restricted";
 
   if (heroScore >= 85) {
-    statusClass = "bg-status-pass";
+    statusClass = "bg-optimal";
     statusLabel = "Optimal";
   } else if (heroScore >= 70) {
-    statusClass = "bg-status-monitor";
+    statusClass = "bg-monitor";
     statusLabel = "Functional";
   } else if (heroScore >= 55) {
-    statusClass = "bg-status-monitor";
+    statusClass = "bg-monitor";
     statusLabel = "Developing";
   }
   heroClassObj.className = `hero-class ${statusClass}`;
@@ -1090,59 +1114,123 @@ document.addEventListener('DOMContentLoaded', () => {
     <li><span class="tag">${sig.tag}</span><span class="txt">${sig.text}</span></li>
   `).join("");
 
+
+  /* ── ATHLETIC PERFORMANCE CARD GENERATION ── */
   const swingGridObj = document.getElementById("swingGrid");
+
   const makePerfCard = (m) => {
-    const avgVal = arr => Math.round(arr.reduce((a, b) => a + b, 0) / arr.length);
-    const preSpd = avgVal(m.speed.pre);
-    const postSpd = avgVal(m.speed.post);
-    const preOut = avgVal(m.outcome.pre);
-    const postOut = avgVal(m.outcome.post);
-    const spdDiff = postSpd - preSpd;
-    const outDiff = postOut - preOut;
-    const pctChange = preSpd ? ((spdDiff / preSpd) * 100).toFixed(1) : "0";
+    const sum = arr => arr.reduce((a, b) => a + b, 0);
+    const roundDec = (val, dec) => parseFloat(val.toFixed(dec));
+
+    // Averages (1 decimal place for Speed/Mph, 2 decimal places for Agility/Seconds)
+    const isAgility = m.lowerIsBetter;
+    const preAvg = roundDec(sum(m.pre) / m.pre.length, isAgility ? 2 : 1);
+    const postAvg = roundDec(sum(m.post) / m.post.length, isAgility ? 2 : 1);
+
+    // Delta Adaptation Calculations (Positive/Negative meaning changes relative to "Lower Is Better")
+    const rawDiff = postAvg - preAvg;
+    const diffText = isAgility ? rawDiff.toFixed(2) : rawDiff.toFixed(1);
+    
+    let isImprovement = false;
+    let badgeClass = "";
+    let deltaClass = "";
+    let arrow = "▲";
+
+    if (isAgility) {
+      // Lower seconds = better performance
+      if (rawDiff < 0) {
+        isImprovement = true;
+        badgeClass = "optimal";
+        deltaClass = "up";
+        arrow = "▼";
+      } else if (rawDiff === 0) {
+        badgeClass = "monitor";
+        deltaClass = "down";
+        arrow = "▬";
+      } else {
+        isImprovement = false;
+        badgeClass = "alert-bad";
+        deltaClass = "bad";
+        arrow = "▲";
+      }
+    } else {
+      // Higher mph = better performance
+      if (rawDiff > 0) {
+        isImprovement = true;
+        badgeClass = "optimal";
+        deltaClass = "up";
+        arrow = "▲";
+      } else if (rawDiff === 0) {
+        badgeClass = "monitor";
+        deltaClass = "down";
+        arrow = "▬";
+      } else {
+        isImprovement = false;
+        badgeClass = "alert-bad";
+        deltaClass = "bad";
+        arrow = "▼";
+      }
+    }
+
+    const pctChange = preAvg ? ((Math.abs(rawDiff) / preAvg) * 100).toFixed(1) : "0";
+
+    // Set up graphic visualization bars
+    let prePct, postPct;
+    if (isAgility) {
+      // For agility (seconds), lower post is the optimized progress target
+      prePct = 100;
+      postPct = Math.min(100, Math.max(10, (postAvg / preAvg) * 100));
+    } else {
+      // For shot speeds, higher post is the optimized progress target
+      prePct = Math.min(100, Math.max(10, (preAvg / postAvg) * 100));
+      postPct = 100;
+    }
 
     return `
       <div class="club-card">
         <div class="club-head">
           <span class="cname">${m.name}</span>
-          <span class="cgain ${spdDiff >= 0 ? '' : 'down'}">${spdDiff >= 0 ? '+' : ''}${spdDiff} mph change today</span>
+          <span class="cgain ${badgeClass}">
+            ${isImprovement && !isAgility ? '+' : ''}${diffText} ${m.unit} change
+          </span>
         </div>
         <div class="metric-line">
           <div class="ml-top">
-            <span class="ml-name">Speed metric <span style="opacity:.6">· avg</span></span>
-            <span class="ml-delta ${spdDiff >= 0 ? 'up' : 'down'}">${spdDiff >= 0 ? '▲' : '▼'} ${spdDiff >= 0 ? '+' : ''}${spdDiff} mph (${pctChange}%)</span>
+            <span class="ml-name">Functional Adaptation Profile</span>
+            <span class="ml-delta ${deltaClass}">
+              ${arrow} ${isImprovement ? 'Progressive Gain' : 'Deficit'} (${pctChange}%)
+            </span>
           </div>
           <div class="ml-vals">
-            <span class="ml-pre">${preSpd}</span>
+            <span class="ml-pre">${preAvg}</span>
             <span class="ml-arrow">→</span>
-            <span class="ml-post">${postSpd}</span>
-            <span class="ml-unit">mph</span>
+            <span class="ml-post">${postAvg}</span>
+            <span class="ml-unit">${m.unit}</span>
           </div>
           <div class="cmp-bar">
-            <div class="cmp-post"></div>
-            <div class="cmp-pre" style="width: ${Math.min(100, (preSpd / Math.max(preSpd, postSpd)) * 100)}%"></div>
+            <div class="cmp-post" style="width: ${postPct}%"></div>
+            <div class="cmp-pre" style="width: ${prePct}%"></div>
           </div>
-          <div class="ml-trials">PRE: [${m.speed.pre.join(', ')}]  |  POST: [${m.speed.post.join(', ')}]</div>
-        </div>
-        <div class="metric-line">
-          <div class="ml-top">
-            <span class="ml-name">${m.outcome.name} <span style="opacity:.6">· avg</span></span>
-            <span class="ml-delta ${outDiff >= 0 ? 'up' : 'down'}">${outDiff >= 0 ? '▲' : '▼'} ${outDiff >= 0 ? '+' : ''}${outDiff}</span>
+          <div class="ml-trials">
+            <b>PRE TRIALS:</b> [${m.pre.join(', ')}] <br>
+            <b>POST TRIALS:</b> [${m.post.join(', ')}]
           </div>
-          <div class="ml-vals">
-            <span class="ml-pre">${preOut}</span>
-            <span class="ml-arrow">→</span>
-            <span class="ml-post">${postOut}</span>
-            <span class="ml-unit">${m.outcome.unit || ''}</span>
-          </div>
-          <div class="ml-trials">PRE: [${m.outcome.pre.join(', ')}]  |  POST: [${m.outcome.post.join(', ')}]</div>
         </div>
       </div>
     `;
   };
 
-  swingGridObj.innerHTML = makePerfCard(CONFIG.sportMetrics.metric1) + makePerfCard(CONFIG.sportMetrics.metric2);
+  // Compile and load all cards dynamically inside our container grid
+  let performanceCardsHtml = "";
+  for (const metricKey in CONFIG.sportMetrics) {
+    if (CONFIG.sportMetrics.hasOwnProperty(metricKey)) {
+      performanceCardsHtml += makePerfCard(CONFIG.sportMetrics[metricKey]);
+    }
+  }
+  swingGridObj.innerHTML = performanceCardsHtml;
 
+
+  /* ── DRILLS & ROUTINES ENGINE ── */
   const programHost = document.getElementById("programHost");
   const programSub = document.getElementById("programSub");
 
