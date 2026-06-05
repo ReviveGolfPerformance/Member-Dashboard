@@ -633,9 +633,9 @@ footer .cred { font-family: var(--mono); font-size: 10px; letter-spacing: 1px; c
    ==================================================================== */
 const CONFIG = {
   client: {
-    name: "Alex Miller",         // Full Athlete Name
-    date: "June 5, 2026",        // Screen Date
-    age:  24,                    // Athlete Age
+    name: "Matt DiMaria",         // Full Athlete Name
+    date: "June 7, 2026",        // Screen Date
+    age:  17,                    // Athlete Age
     sex:  "male",                // "male" or "female"
     hand: "right",               // "right" or "left" (dominant hand)
     bodyweightLbs: 185,          // Used for weight ratio computations
@@ -649,7 +649,7 @@ const CONFIG = {
     strength: {
       trapBarDeadlift: { weight: 265, reps: 5, tested: true },
       backSquat:       { weight: 205, reps: 5, tested: true },
-      pullups:         { addedWeight: 10, reps: 5, tested: true },
+      pullups:         { addedWeight: 0, reps: 5, tested: true },
       cablePull:       { leftWeight: 70, leftReps: 8, rightWeight: 75, rightReps: 8, tested: true },
       cablePush:       { leftWeight: 55, leftReps: 8, rightWeight: 60, rightReps: 8, tested: true },
       splitSquat:      { leftWeight: 60, leftReps: 8, rightWeight: 60, rightReps: 8, tested: true }
@@ -668,25 +668,25 @@ const CONFIG = {
 
     /* TOP 3 PRIMARY ROM FOR LACROSSE (DEGREES) */
     rom: [
-      { name: "Shoulder ER", lead: 38, trail: 42, target: 90, limitRange: 5 },
-      { name: "Hip IR", lead: 30, trail: 34, target: 45, limitRange: 10 },
-      { name: "T-Spine Rotation", lead: 40, trail: 43, target: 60, limitRange: 15 }
+      { name: "Shoulder ER", lead: 88, trail: 84, target: 90, limitRange: 5 },
+      { name: "Hip IR", lead: 37, trail: 34, target: 45, limitRange: 10 },
+      { name: "T-Spine Rotation", lead: 43, trail: 50, target: 60, limitRange: 15 }
     ],
 
     /* MOBILITY / CLEARANCE CRITICAL STANDARDS */
     mobilityClearance: [
-      { name: "Overhead Deep Squat", status: "Pass" },    
+      { name: "Overhead Deep Squat", status: "Monitor" },    
       { name: "In-Line Lunge Screen", status: "Monitor" },
-      { name: "Single Leg Balance", status: "Pass" },
-      { name: "Rotary Stability Test", status: "Pass" }
+      { name: "Single Leg Balance", status: "Monitor" },
+      { name: "Rotary Stability Test", status: "Monitor" }
     ],
 
     /* PERFORMANCE INDEX COMPOSITE */
     performanceIndex: {
       name: "Dynamic Lacrosse Handicap",
       display: "15",
-      fillPct: 62.5,
-      class: "Functional"
+      fillPct: 58.33,
+      class: "Developing"
     }
   },
 
@@ -723,7 +723,7 @@ const CONFIG = {
   },
 
   program: {
-    fullProgramUrl: "", 
+    fullProgramUrl: "https://pro.theprehabguys.com/patient-portal/programs/SZGZLOOJ", 
     exercises: [
       { name: "Thoracic Spine Foam Roll", url: "" },
       { name: "90/90 Dynamic Hip Flow", url: "" },
