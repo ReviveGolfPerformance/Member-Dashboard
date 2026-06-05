@@ -724,7 +724,7 @@ const CONFIG = {
 
     /* PERFORMANCE INDEX COMPOSITE */
     performanceIndex: {
-      name: "OnBaseU Batter Grade",
+      name: "Lacrosse Performance Index",
       display: "20",       // Handicap style readout or percentage representation
       fillPct: 42.85714,   // 0-100 visual mapping scale
       class: "Developing" // Class assignment: "Optimal" | "Functional" | "Developing" | "Restricted"
@@ -735,14 +735,14 @@ const CONFIG = {
   /* Dynamically changes based on selected sport metric arrays */
   sportMetrics: {
     metric1: {
-      name: "Fastball Velocity",
+      name: "Standing Shot Velocity",
       speed: { pre: [88,89,88], post: [91,92,92] }, // mph
-      outcome: { name: "Spin Rate", pre: [2100,2150,2120], post: [2200,2250,2210], unit: "rpm" } 
+      outcome: { name: "", pre: [], post: [], unit: "" } 
     },
     metric2: {
-      name: "Bat Speed (Exit Velo)",
+      name: "Crow hop Shot velo",
       speed: { pre: [95,96,94], post: [98,99,99] }, // mph
-      outcome: { name: "Distance", pre: [310,315,312], post: [330,340,335], unit: "ft" }
+      outcome: { name: "", pre: [], post: [], unit: "" }
     }
   },
 
