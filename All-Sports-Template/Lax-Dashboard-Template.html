@@ -886,9 +886,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const buildDetailView = (key) => {
     let html = "";
-    if (key === "strength") {
+if (key === "strength") {
       let rows = strengthParts.map(p => {
-        let input = p.on ? `${p.w} × ${p.r}` : "Deferred";
+        // Fix: Safely handle both unilateral (L/R) and standard compound lifts
+        let input = "Deferred";
+        if (p.on) {
+          const rawData = st[p.key];
+          if (rawData.leftWeight !== undefined) {
+            input = `L: ${rawData.leftWeight}×${rawData.leftReps} | R: ${rawData.rightWeight}×${rawData.rightReps}`;
+          } else {
+            input = `${p.w} × ${p.r}`;
+          }
+        }
+        
         let status = p.on ? (p.ratio >= p.target ? "Optimal" : (p.ratio >= p.target * 0.85 ? "Monitor" : "Restricted")) : "Deferred";
         let col = status === "Optimal" ? "var(--optimal)" : (status === "Monitor" ? "var(--monitor)" : "var(--restricted)");
         return `
