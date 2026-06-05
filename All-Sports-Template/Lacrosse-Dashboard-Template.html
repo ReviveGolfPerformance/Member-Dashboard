@@ -3,15 +3,15 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Golf Physical Capacity Dashboard — Revive Performance</title>
+<title>Lacrosse Physical Capacity Dashboard — Revive Performance</title>
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
 
 :root {
-  --red: #CC1010;          /* Revive Red */
-  --red-impact: #E01515;   /* hover / active */
-  --red-dim: #7a0e0e;
+  --red: #D946EF;          /* Lacrosse Neon Fuchsia/Magenta */
+  --red-impact: #F43F5E;   /* Bright Coral Highlight */
+  --red-dim: #701A75;
   --black: #0A0A0A;        /* Performance Black */
   --charcoal: #1A1A1A;     /* Deep Charcoal — cards */
   --panel: #141414;
@@ -20,9 +20,9 @@
   --white: #FFFFFF;
   --silver: #C8C8C8;
   --muted: #8a8a8a;
-  --optimal: #2FBF71;      /* green */
-  --monitor: #E0A92E;      /* amber */
-  --restricted: #CC1010;   /* red */
+  --optimal: #10B981;      /* emerald green */
+  --monitor: #F59E0B;      /* amber yellow */
+  --restricted: #EF4444;   /* scarlet red */
   --display: 'Bebas Neue', Impact, Helvetica, sans-serif;
   --sans: 'DM Sans', Helvetica, Arial, sans-serif;
   --mono: 'DM Mono', 'Courier New', monospace;
@@ -34,8 +34,8 @@ html { scroll-behavior: smooth; }
 body {
   background: var(--black);
   background-image:
-    radial-gradient(circle at 80% -10%, rgba(204,16,16,.10), transparent 45%),
-    radial-gradient(circle at 0% 100%, rgba(204,16,16,.05), transparent 40%);
+    radial-gradient(circle at 80% -10%, rgba(217,70,239,.12), transparent 45%),
+    radial-gradient(circle at 0% 100%, rgba(244,63,94,.05), transparent 40%);
   color: var(--white);
   font-family: var(--sans);
   font-size: 15px;
@@ -44,7 +44,6 @@ body {
   padding-bottom: 40px;
 }
 
-/* ── HEADER ── */
 header {
   background: linear-gradient(180deg, #000, #0d0d0d);
   border-bottom: 2px solid var(--red);
@@ -91,7 +90,6 @@ header {
   margin-top: 4px;
 }
 
-/* ── LAYOUT ── */
 .wrap { max-width: 1080px; margin: 0 auto; padding: 0 clamp(14px, 4vw, 40px); }
 section { margin-top: clamp(28px, 5vw, 46px); }
 .sec-label {
@@ -114,7 +112,6 @@ section { margin-top: clamp(28px, 5vw, 46px); }
   margin-bottom: 18px;
 }
 
-/* ── OVERALL EFFICIENCY HERO ── */
 .hero {
   display: grid;
   grid-template-columns: minmax(0, 300px) 1fr;
@@ -170,7 +167,7 @@ section { margin-top: clamp(28px, 5vw, 46px); }
   height: 14px;
   border-radius: 8px;
   overflow: hidden;
-  background: linear-gradient(90deg, #7a0e0e 0%, #CC1010 22%, #E0A92E 55%, #2FBF71 100%);
+  background: linear-gradient(90deg, #701a75 0%, #D946EF 22%, #F59E0B 55%, #10B981 100%);
   box-shadow: inset 0 0 0 1px rgba(255,255,255,.06);
 }
 .eff-mask {
@@ -196,7 +193,6 @@ section { margin-top: clamp(28px, 5vw, 46px); }
 .eff-scale .restricted { color: var(--restricted); }
 .eff-scale .optimal { color: var(--optimal); }
 
-/* ── SCREEN OVERVIEW GRID ── */
 .screen-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
@@ -221,7 +217,7 @@ section { margin-top: clamp(28px, 5vw, 46px); }
 .screen-card.active {
   border-color: var(--red);
   background: var(--panel-2);
-  box-shadow: 0 0 0 1px var(--red), 0 8px 24px rgba(204,16,16,.18);
+  box-shadow: 0 0 0 1px var(--red), 0 8px 24px rgba(217,70,239,.18);
 }
 .screen-card .stat-dot {
   position: absolute;
@@ -266,24 +262,22 @@ section { margin-top: clamp(28px, 5vw, 46px); }
   font-weight: 500;
 }
 
-/* Status designations */
 .s-optimal { color: var(--optimal); }
-.bg-optimal { background: rgba(47,191,113,.15); color: var(--optimal); }
+.bg-optimal { background: rgba(16,185,129,.15); color: var(--optimal); }
 .dot-optimal { background: var(--optimal); box-shadow: 0 0 8px var(--optimal); }
 
 .s-monitor { color: var(--monitor); }
-.bg-monitor { background: rgba(224,169,46,.15); color: var(--monitor); }
+.bg-monitor { background: rgba(245,158,11,.15); color: var(--monitor); }
 .dot-monitor { background: var(--monitor); box-shadow: 0 0 8px var(--monitor); }
 
 .s-restricted { color: var(--restricted); }
-.bg-restricted { background: rgba(204,16,16,.18); color: #ff5a5a; }
+.bg-restricted { background: rgba(239,68,68,.18); color: #ff6e6e; }
 .dot-restricted { background: var(--restricted); box-shadow: 0 0 8px var(--restricted); }
 
 .s-deferred { color: var(--muted); }
 .bg-deferred { background: rgba(138,138,138,.14); color: var(--silver); }
 .dot-deferred { background: var(--muted); box-shadow: none; }
 
-/* ── DETAIL PANEL ── */
 .detail {
   margin-top: 14px;
   background: linear-gradient(160deg, var(--charcoal), #0d0d0d);
@@ -314,8 +308,8 @@ section { margin-top: clamp(28px, 5vw, 46px); }
 .calc-table .num { font-family: var(--mono); text-align: right; color: var(--white); white-space: nowrap; }
 .calc-table th.num { color: var(--muted); }
 .calc-table tr:last-child td { border-bottom: none; }
-.calc-table tr.total td { border-top: 2px solid var(--red); background: rgba(204,16,16,.06); color: var(--white); font-weight: 600; }
-.calc-table tr.total .num { color: #ff5a5a; font-size: 16px; font-family: var(--display); letter-spacing: .5px; }
+.calc-table tr.total td { border-top: 2px solid var(--red); background: rgba(217,70,239,.06); color: var(--white); font-weight: 600; }
+.calc-table tr.total .num { color: #f472b6; font-size: 16px; font-family: var(--display); letter-spacing: .5px; }
 .calc-note { font-family: var(--mono); font-size: 10px; color: var(--muted); margin-top: 8px; letter-spacing: .4px; line-height: 1.5; }
 .tstat { display: inline-block; font-family: var(--mono); font-size: 8.5px; letter-spacing: .5px; text-transform: uppercase; padding: 2px 7px; border: 1px solid; border-radius: 3px; background: rgba(255,255,255,.02); white-space: nowrap; }
 .tinput { display: block; font-family: var(--mono); font-size: 9px; color: #6f6f6f; letter-spacing: .3px; margin-top: 2px; }
@@ -329,29 +323,15 @@ section { margin-top: clamp(28px, 5vw, 46px); }
   margin: 20px 0 8px;
 }
 .bottleneck {
-  background: rgba(204,16,16,.06);
+  background: rgba(217,70,239,.06);
   border-left: 3px solid var(--red);
   padding: 14px 16px;
   border-radius: 0 8px 8px 0;
   color: var(--silver);
   font-size: 14.5px;
 }
-.bottleneck.clear { background: rgba(47,191,113,.06); border-left-color: var(--optimal); }
-.asym-flag {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  margin-top: 12px;
-  font-family: var(--mono);
-  font-size: 11px;
-  letter-spacing: .5px;
-  color: var(--monitor);
-  background: rgba(224,169,46,.1);
-  padding: 6px 12px;
-  border-radius: 4px;
-}
+.bottleneck.clear { background: rgba(16,185,129,.06); border-left-color: var(--optimal); }
 
-/* ── DRILL CARDS ── */
 .drills { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; margin-top: 8px; }
 .drill {
   background: var(--black);
@@ -382,7 +362,7 @@ section { margin-top: clamp(28px, 5vw, 46px); }
   align-items: center;
   justify-content: center;
   transition: transform .2s ease, background .2s ease;
-  box-shadow: 0 6px 18px rgba(204,16,16,.4);
+  box-shadow: 0 6px 18px rgba(217,70,239,.4);
 }
 .drill-thumb:hover .play { transform: scale(1.1); background: var(--red-impact); }
 .drill-thumb .play svg { width: 18px; height: 18px; margin-left: 3px; fill: #fff; }
@@ -395,16 +375,15 @@ section { margin-top: clamp(28px, 5vw, 46px); }
 .program-sub { font-family: var(--mono); font-size: 11px; letter-spacing: .4px; color: var(--muted); margin: -6px 0 16px; }
 .program-full { display: flex; align-items: center; gap: 18px; text-decoration: none; background: linear-gradient(160deg, var(--charcoal), #0d0d0d); border: 1px solid var(--slate); border-top: 2px solid var(--red); border-radius: 12px; padding: 22px 24px; transition: border-color .18s ease, transform .18s ease; }
 .program-full:hover { border-color: var(--red); transform: translateY(-2px); }
-.program-full .pf-icon { width: 54px; height: 54px; flex-shrink: 0; border-radius: 50%; background: var(--red); display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 24px rgba(204,16,16,.4); }
+.program-full .pf-icon { width: 54px; height: 54px; flex-shrink: 0; border-radius: 50%; background: var(--red); display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 24px rgba(217,70,239,.4); }
 .program-full .pf-icon svg { width: 22px; height: 22px; margin-left: 3px; fill: #fff; }
 .program-full .pf-text { display: flex; flex-direction: column; gap: 3px; }
 .program-full .pf-text b { font-family: var(--display); font-size: 24px; letter-spacing: 1px; color: var(--white); }
 .program-full .pf-text span { font-family: var(--mono); font-size: 11px; letter-spacing: .5px; color: var(--silver); }
 .drill-dose { font-family: var(--mono); font-size: 10.5px; letter-spacing: .5px; color: var(--white); background: var(--charcoal); border: 1px solid var(--slate); border-radius: 5px; padding: 7px 10px; text-align: center; margin-top: auto; }
 
-/* ── LOAD MANAGEMENT ── */
 .load-panel {
-  background: linear-gradient(160deg, #1a1010, #0d0808);
+  background: linear-gradient(160deg, #2e102e, #0d080d);
   border: 1px solid var(--red-dim);
   border-radius: 12px;
   padding: clamp(18px, 4vw, 28px);
@@ -417,7 +396,7 @@ section { margin-top: clamp(28px, 5vw, 46px); }
   margin: 18px 0 22px;
   height: 8px;
   border-radius: 6px;
-  background: linear-gradient(90deg, var(--optimal), #9ec22e 45%, var(--monitor) 70%, var(--restricted));
+  background: linear-gradient(90deg, var(--optimal), #a3e635 45%, var(--monitor) 70%, var(--restricted));
   position: relative;
 }
 .hole-track .hmark { position: absolute; top: -22px; transform: translateX(-50%); font-family: var(--mono); font-size: 9px; letter-spacing: 1px; color: var(--muted); }
@@ -447,14 +426,13 @@ section { margin-top: clamp(28px, 5vw, 46px); }
 .load-list .txt { font-size: 14px; color: var(--silver); }
 .load-list .txt b { color: var(--white); font-weight: 600; }
 
-/* ── SPORT PERFORMANCE METRICS ── */
 .swing-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 .swing-foot { font-family: var(--mono); font-size: 10.5px; color: var(--muted); letter-spacing: .4px; margin-top: 14px; line-height: 1.5; }
 .club-card { background: linear-gradient(160deg, var(--charcoal), #0d0d0d); border: 1px solid var(--slate); border-radius: 12px; overflow: hidden; border-top: 2px solid var(--red); }
 .club-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 14px 18px; border-bottom: 1px solid var(--slate); background: var(--panel); }
 .club-head .cname { font-family: var(--display); font-size: 24px; letter-spacing: 1.5px; }
-.club-head .cgain { font-family: var(--mono); font-size: 10px; letter-spacing: .5px; text-transform: uppercase; color: var(--optimal); background: rgba(47,191,113,.12); padding: 5px 10px; border-radius: 3px; white-space: nowrap; }
-.club-head .cgain.down { color: var(--monitor); background: rgba(224,169,46,.12); }
+.club-head .cgain { font-family: var(--mono); font-size: 10px; letter-spacing: .5px; text-transform: uppercase; color: var(--optimal); background: rgba(16,185,129,.12); padding: 5px 10px; border-radius: 3px; white-space: nowrap; }
+.club-head .cgain.down { color: var(--monitor); background: rgba(245,158,11,.12); }
 .metric-line { padding: 13px 18px; border-bottom: 1px solid var(--slate); }
 .metric-line:last-child { border-bottom: none; }
 .ml-top { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
@@ -471,16 +449,7 @@ section { margin-top: clamp(28px, 5vw, 46px); }
 .cmp-post { position: absolute; inset: 0; background: linear-gradient(90deg, var(--red), var(--optimal)); border-radius: 3px; }
 .cmp-pre { position: absolute; left: 0; top: 0; height: 100%; background: #4a4a4a; border-radius: 3px; }
 .ml-trials { font-family: var(--mono); font-size: 9px; color: #5f5f5f; margin-top: 8px; letter-spacing: .5px; }
-.ml-best { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 9px; padding-top: 9px; border-top: 1px dashed var(--slate); font-family: var(--mono); font-size: 10px; letter-spacing: .4px; }
-.ml-best .bl-tag { color: var(--muted); text-transform: uppercase; }
-.ml-best .bl-val { color: var(--silver); }
-.ml-best .bl-val b { color: var(--white); font-family: var(--display); font-size: 14px; letter-spacing: .5px; }
-.ml-best .bl-delta { margin-left: auto; font-weight: 500; color: var(--muted); }
-.ml-best .bl-delta.up { color: var(--optimal); }
-.ml-best .bl-delta.down { color: var(--monitor); }
-@media(max-width:680px) { .swing-grid { grid-template-columns: 1fr; } }
 
-/* ── BOOKING CTA ── */
 .cta {
   margin-top: clamp(30px, 6vw, 52px);
   text-align: center;
@@ -510,11 +479,10 @@ section { margin-top: clamp(28px, 5vw, 46px); }
   cursor: pointer;
   border-radius: 4px;
   transition: background .18s ease, transform .18s ease, box-shadow .18s ease;
-  box-shadow: 0 8px 28px rgba(204,16,16,.35);
+  box-shadow: 0 8px 28px rgba(217,70,239,.35);
 }
-.book-btn:hover { background: var(--red-impact); transform: translateY(-2px); box-shadow: 0 12px 34px rgba(204,16,16,.5); }
+.book-btn:hover { background: var(--red-impact); transform: translateY(-2px); box-shadow: 0 12px 34px rgba(217,70,239,.5); }
 
-/* ── FOOTER ── */
 footer {
   max-width: 1080px;
   margin: 40px auto 0;
@@ -529,11 +497,9 @@ footer {
 footer .scope { font-family: var(--mono); font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); }
 footer .cred { font-family: var(--mono); font-size: 10px; letter-spacing: 1px; color: var(--silver); }
 
-/* Fade-in transitions on load */
 .reveal { opacity: 0; transform: translateY(14px); animation: rise .7s cubic-bezier(.2,.8,.2,1) forwards; }
 @keyframes rise { to { opacity: 1; transform: none; } }
 
-/* ── RESPONSIVE OVERRIDES ── */
 @media(max-width:760px) {
   .hero { grid-template-columns: 1fr; text-align: center; }
   .radar-box { order: -1; }
@@ -550,7 +516,7 @@ footer .cred { font-family: var(--mono); font-size: 10px; letter-spacing: 1px; c
 
 <header>
   <div class="brand-text">
-    <div class="brand-logo-txt">REVIVE <span>GOLF</span></div>
+    <div class="brand-logo-txt">REVIVE <span>LACROSSE</span></div>
     <p>Physical Capacity Dashboard</p>
   </div>
   <div class="client-badge">
@@ -566,12 +532,12 @@ footer .cred { font-family: var(--mono); font-size: 10px; letter-spacing: 1px; c
     <div class="sec-label">Overall Movement Efficiency</div>
     <div class="hero">
       <div class="radar-box">
-        <svg id="radar" viewBox="-40 0 380 300" role="img" aria-label="Movement efficiency radar across six axes">
-          <!-- Generated by JS -->
+        <svg id="radar" viewBox="-40 0 380 300" role="img" aria-label="Lacrosse efficiency radar across six axes">
+          <!-- Dynamically generated by JavaScript -->
         </svg>
       </div>
       <div class="hero-readout">
-        <div class="eyebrow">Golf Efficiency Score</div>
+        <div class="eyebrow">Lacrosse Efficiency Score</div>
         <div class="hero-score"><span id="effScore">0</span><span class="unit">/100</span></div>
         <span class="hero-class bg-monitor" id="effClass">Calculating...</span>
         <div class="eff-bar-wrap">
@@ -590,7 +556,7 @@ footer .cred { font-family: var(--mono); font-size: 10px; letter-spacing: 1px; c
   <!-- SCREEN OVERVIEW -->
   <section class="reveal" style="animation-delay:.08s">
     <div class="sec-label">Physical Capacity Screens — Tap any card to analyze</div>
-    <h2 class="sec-title" id="sport-sec-title">Athlete Golf Testing Profile</h2>
+    <h2 class="sec-title" id="sport-sec-title">Athlete Testing Profile</h2>
     <div class="screen-grid" id="screenGrid">
       <!-- Generated Dynamically by JS Engine -->
     </div>
@@ -604,24 +570,24 @@ footer .cred { font-family: var(--mono); font-size: 10px; letter-spacing: 1px; c
   <!-- PRESCRIBED PROGRAM -->
   <section class="reveal" style="animation-delay:.12s">
     <div class="sec-label">Prescribed Training Program</div>
-    <h2 class="sec-title">Golf Preparedness Drills</h2>
+    <h2 class="sec-title">Lacrosse Preparedness Drills</h2>
     <p class="program-sub" id="programSub">Loading target routines...</p>
     <div id="programHost">
-      <!-- Drills or complete workout links generated by configuration -->
+      <!-- Generated by configuration -->
     </div>
   </section>
 
   <!-- LOCALIZED LOAD MANAGEMENT -->
   <section class="reveal" style="animation-delay:.16s">
     <div class="sec-label">Localized Load Management</div>
-    <h2 class="sec-title" id="load-sec-title">Your Body Over 18 Holes</h2>
+    <h2 class="sec-title" id="load-sec-title">Your Body Over 4 Quarters</h2>
     <div class="load-panel">
-      <p class="intro" id="loadIntro">Evaluating physical screens to discover potential swing stress load zones during a round of golf...</p>
+      <p class="intro" id="loadIntro">Evaluating physical screens to discover potential stress load zones during intense field activity...</p>
       <div class="hole-track" id="load-track-labels">
-        <span class="hmark" style="left:5%">Hole 1</span>
-        <span class="hmark" style="left:50%">Hole 9</span>
-        <span class="hmark" style="left:72%">Hole 13</span>
-        <span class="hmark" style="left:95%">Hole 18</span>
+        <span class="hmark" style="left:5%">Q1 Start</span>
+        <span class="hmark" style="left:35%">Halftime</span>
+        <span class="hmark" style="left:65%">Q3 End</span>
+        <span class="hmark" style="left:95%">Q4 Finish</span>
       </div>
       <ul class="load-list" id="loadList">
         <!-- Dynamically generated stress alerts based on screening limitations -->
@@ -632,7 +598,7 @@ footer .cred { font-family: var(--mono); font-size: 10px; letter-spacing: 1px; c
   <!-- PERFORMANCE MEASUREMENTS (PRE vs POST) -->
   <section class="reveal" style="animation-delay:.2s">
     <div class="sec-label">Sport Performance Indicators</div>
-    <h2 class="sec-title">Swing Speed & Output Tracking (Pre → Post)</h2>
+    <h2 class="sec-title">Shot Velocity & Agility Profiles (Pre → Post)</h2>
     <div class="swing-grid" id="swingGrid">
       <!-- Pre/Post comparison metrics derived from configuration -->
     </div>
@@ -641,8 +607,8 @@ footer .cred { font-family: var(--mono); font-size: 10px; letter-spacing: 1px; c
 
   <!-- BOOKING CONVERT CTA -->
   <section class="cta reveal" style="animation-delay:.24s">
-    <h3>BOOK YOUR NEXT <span class="r">GOLF SESSION</span></h3>
-    <p>Consistently close physical capacity gaps, drive explosive club speeds, and build golf resilience week over week.</p>
+    <h3>BOOK YOUR NEXT <span class="r">LACROSSE SESSION</span></h3>
+    <p>Consistently close physical capacity gaps, drive explosive shot velocity, and build field endurance week over week.</p>
     <a class="book-btn" id="bookBtn" href="#" target="_blank" rel="noopener">Book Training Session →</a>
   </section>
 
@@ -650,24 +616,24 @@ footer .cred { font-family: var(--mono); font-size: 10px; letter-spacing: 1px; c
 
 <footer>
   <span class="scope">Performance · Wellness · Prevention Scope Only</span>
-  <span class="cred">Nick Kirsch, ATC | Golf Fitness & Biomechanics Specialist</span>
+  <span class="cred">Nick Kirsch, ATC | Lacrosse Conditioning & Capacity Specialist</span>
 </footer>
 
 <script>
 /* ====================================================================
    ███  CONFIG — EDIT THIS BLOCK ONLY  ███
    --------------------------------------------------------------------
-   Update values below. Code dynamically adjusts to selected sport.
+   Update values below. Code dynamically adjusts to lacrosse context.
    ==================================================================== */
 const CONFIG = {
   client: {
-    name: "John Sample",         // Full Athlete Name
+    name: "Alex Miller",         // Full Athlete Name
     date: "June 5, 2026",        // Screen Date
-    age:  48,                    // Athlete Age
-    sex:  "male",                // "male" or "female" (governs baseline tables)
-    hand: "right",               // "right" or "left" (determines lead/trail side)
-    bodyweightLbs: 195,          // Used for weight ratio computations
-    primarySport: "Golf"
+    age:  24,                    // Athlete Age
+    sex:  "male",                // "male" or "female"
+    hand: "right",               // "right" or "left" (dominant hand)
+    bodyweightLbs: 185,          // Used for weight ratio computations
+    primarySport: "Lacrosse"
   },
 
   bookingUrl: "https://www.revivegolfperformance.com/booking",
@@ -675,72 +641,72 @@ const CONFIG = {
   scores: {
     /* STRENGTH TESTING (RSI COMPILATION) */
     strength: {
-      trapBarDeadlift: { weight: 245, reps: 4, tested: true },
-      backSquat:       { weight: 185, reps: 5, tested: true },
-      pullups:         { addedWeight: 0, reps: 5, tested: true },
-      cablePull:       { leftWeight: 60, leftReps: 8, rightWeight: 65, rightReps: 8, tested: true },
-      cablePush:       { leftWeight: 50, leftReps: 8, rightWeight: 52, rightReps: 8, tested: true },
-      splitSquat:      { leftWeight: 50, leftReps: 8, rightWeight: 50, rightReps: 8, tested: true }
+      trapBarDeadlift: { weight: 265, reps: 5, tested: true },
+      backSquat:       { weight: 205, reps: 5, tested: true },
+      pullups:         { addedWeight: 10, reps: 5, tested: true },
+      cablePull:       { leftWeight: 70, leftReps: 8, rightWeight: 75, rightReps: 8, tested: true },
+      cablePush:       { leftWeight: 55, leftReps: 8, rightWeight: 60, rightReps: 8, tested: true },
+      splitSquat:      { leftWeight: 60, leftReps: 8, rightWeight: 60, rightReps: 8, tested: true }
     },
-    rsiTarget: 5.80,
+    rsiTarget: 6.00,
 
     /* EXPLOSIVE POWER TESTING (POWER INDEX COMPILATION) */
     power: {
-      verticalJump:  { ft: null, in: 20, tested: true },
-      chestPass:     { ft: 17, tested: true },
-      situpThrow:    { ft: 15, tested: true },
-      shotPutRight:  { ft: 15, tested: true },
-      shotPutLeft:   { ft: 13, tested: true }
+      verticalJump:  { ft: null, in: 24, tested: true },
+      chestPass:     { ft: 19, tested: true },
+      situpThrow:    { ft: 16, tested: true },
+      shotPutRight:  { ft: 17, tested: true },
+      shotPutLeft:   { ft: 15, tested: true }
     },
-    powerTarget: 800,
+    powerTarget: 850,
 
-    /* TOP 3 PRIMARY ROM FOR SELECTED SPORT (DEGREES) */
+    /* TOP 3 PRIMARY ROM FOR LACROSSE (DEGREES) */
     rom: [
-      { name: "Shoulder External Rotation", lead: 80, trail: 92, target: 90, limitRange: 10 },
-      { name: "Hip Internal Rotation", lead: 28, trail: 33, target: 40, limitRange: 10 },
-      { name: "Seated Thoracic Rotation", lead: 42, trail: 38, target: 45, limitRange: 8 }
+      { name: "Shoulder Horiz. Abduction", lead: 38, trail: 42, target: 45, limitRange: 8 },
+      { name: "Hip Internal Rotation", lead: 30, trail: 34, target: 40, limitRange: 10 },
+      { name: "Thoracic Rotation", lead: 40, trail: 43, target: 45, limitRange: 8 }
     ],
 
     /* MOBILITY / CLEARANCE CRITICAL STANDARDS */
     mobilityClearance: [
       { name: "Overhead Deep Squat", status: "Pass" },    
-      { name: "Shoulder 90/90 Screen", status: "Monitor" },
-      { name: "Single Leg Stance", status: "Pass" },
-      { name: "Wrist Extension", status: "Pass" }
+      { name: "In-Line Lunge Screen", status: "Monitor" },
+      { name: "Single Leg Balance", status: "Pass" },
+      { name: "Rotary Stability Test", status: "Pass" }
     ],
 
     /* PERFORMANCE INDEX COMPOSITE */
     performanceIndex: {
-      name: "TPI Golf Handicap",
-      display: "18",
-      fillPct: 45.5,
-      class: "Developing"
+      name: "Dynamic Lacrosse Handicap",
+      display: "15",
+      fillPct: 62.5,
+      class: "Functional"
     }
   },
 
-  /* ── SWING SPEED METRICS ────────────────────────────────────── */
+  /* ── PERFORMANCE INDICATOR METRICS ──────────────────────────── */
   sportMetrics: {
     metric1: {
-      name: "5-Iron Speed Indicator",
-      speed: { pre: [78,80,79], post: [81,82,83] }, // mph
-      outcome: { name: "Carry Yards", pre: [150,153,151], post: [158,160,159], unit: "yds" } 
+      name: "Time-Room Shot Velocity",
+      speed: { pre: [82,84,83], post: [86,88,87] }, // mph
+      outcome: { name: "Accuracy Index", pre: [70,75,72], post: [82,85,84], unit: "%" } 
     },
     metric2: {
-      name: "Driver Swing Indicator",
-      speed: { pre: [92,94,93], post: [95,97,96] }, // mph
-      outcome: { name: "Carry Yards", pre: [225,228,226], post: [236,239,237], unit: "yds" }
+      name: "Shuttle Running Pace",
+      speed: { pre: [14,15,14], post: [16,16,17] }, // mph indicator calculated
+      outcome: { name: "Pro Shuttle Time", pre: [4.6,4.5,4.6], post: [4.3,4.2,4.3], unit: "sec" }
     }
   },
 
   program: {
     fullProgramUrl: "", 
     exercises: [
-      { name: "Wall Angels", url: "" },
-      { name: "90/90 Hip Flow", url: "" },
-      { name: "Open Books", url: "" },
-      { name: "Trap-Bar Deadlift", url: "" },
-      { name: "Rotational Med-Ball Throw", url: "" },
-      { name: "Single-Leg Stability", url: "" }
+      { name: "Thoracic Spine Foam Roll", url: "" },
+      { name: "90/90 Dynamic Hip Flow", url: "" },
+      { name: "Shoulder Sleeper Stretch", url: "" },
+      { name: "Lateral Goblet Squats", url: "" },
+      { name: "Rotational Med-Ball Slams", url: "" },
+      { name: "Single-Leg Balance Touches", url: "" }
     ]
   }
 };
@@ -751,15 +717,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const s = CONFIG.scores;
   const BW = c.bodyweightLbs;
   const SEX = c.sex.toLowerCase() === "female" ? "female" : "male";
-  const leadHand = c.hand.toLowerCase() === "left" ? "Left" : "Right";
-  const trailHand = c.hand.toLowerCase() === "left" ? "Right" : "Left";
+  const sport = c.primarySport.trim();
 
-  // Setup header labels
   document.getElementById("hClientName").textContent = c.name;
-  document.getElementById("hClientMeta").textContent = `${c.date} · Age ${c.age} · Golf`;
+  document.getElementById("hClientMeta").textContent = `${c.date} · Age ${c.age} · ${sport}`;
   document.getElementById("bookBtn").href = CONFIG.bookingUrl;
+  document.getElementById("sport-sec-title").textContent = `Your ${sport} Profile Screens`;
 
-  // Calculation: Strength RSI (Relative Strength Index)
   const calc1RM = (w, r) => w * (1 + r / 30);
   const st = s.strength;
   const isTested = obj => obj && obj.tested !== false;
@@ -768,9 +732,9 @@ document.addEventListener('DOMContentLoaded', () => {
     { name: "Trap-Bar Deadlift", key: "trapBarDeadlift", on: isTested(st.trapBarDeadlift), w: st.trapBarDeadlift.weight, r: st.trapBarDeadlift.reps, target: 1.5 },
     { name: "Back Squat", key: "backSquat", on: isTested(st.backSquat), w: st.backSquat.weight, r: st.backSquat.reps, target: 1.25 },
     { name: "Pull-Ups (BW + Load)", key: "pullups", on: isTested(st.pullups), w: BW + st.pullups.addedWeight, r: st.pullups.reps, target: (SEX === "female" ? 0.65 : 0.85) },
-    { name: "Cable Pull (Avg L/R)", key: "cablePull", on: isTested(st.cablePull), ratio: (calc1RM(st.cablePull.leftWeight, st.cablePull.leftReps)/BW + calc1RM(st.cablePull.rightWeight, st.cablePull.rightReps)/BW)/2, target: (SEX === "female" ? 0.25 : 0.30), desc: `L:${st.cablePull.leftWeight} R:${st.cablePull.rightWeight}` },
-    { name: "Cable Push (Avg L/R)", key: "cablePush", on: isTested(st.cablePush), ratio: (calc1RM(st.cablePush.leftWeight, st.cablePush.leftReps)/BW + calc1RM(st.cablePush.rightWeight, st.cablePush.rightReps)/BW)/2, target: (SEX === "female" ? 0.20 : 0.25), desc: `L:${st.cablePush.leftWeight} R:${st.cablePush.rightWeight}` },
-    { name: "Split Squat (Avg L/R)", key: "splitSquat", on: isTested(st.splitSquat), ratio: (calc1RM(st.splitSquat.leftWeight, st.splitSquat.leftReps)/BW + calc1RM(st.splitSquat.rightWeight, st.splitSquat.rightReps)/BW)/2, target: 0.50, desc: `L:${st.splitSquat.leftWeight} R:${st.splitSquat.rightWeight}` }
+    { name: "Cable Pull (Avg L/R)", key: "cablePull", on: isTested(st.cablePull), ratio: (calc1RM(st.cablePull.leftWeight, st.cablePull.leftReps)/BW + calc1RM(st.cablePull.rightWeight, st.cablePull.rightReps)/BW)/2, target: (SEX === "female" ? 0.25 : 0.30) },
+    { name: "Cable Push (Avg L/R)", key: "cablePush", on: isTested(st.cablePush), ratio: (calc1RM(st.cablePush.leftWeight, st.cablePush.leftReps)/BW + calc1RM(st.cablePush.rightWeight, st.cablePush.rightReps)/BW)/2, target: (SEX === "female" ? 0.20 : 0.25) },
+    { name: "Split Squat (Avg L/R)", key: "splitSquat", on: isTested(st.splitSquat), ratio: (calc1RM(st.splitSquat.leftWeight, st.splitSquat.leftReps)/BW + calc1RM(st.splitSquat.rightWeight, st.splitSquat.rightReps)/BW)/2, target: 0.50 }
   ];
 
   strengthParts.forEach(p => {
@@ -784,7 +748,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const totalRSI = strengthScored.reduce((sum, p) => sum + p.ratio, 0);
   const rescaledRsiTarget = s.rsiTarget * (strengthScored.length / strengthParts.length);
 
-  // Calculation: Power Index & Symmetry
   const pt = s.power;
   const vjIn = (pt.verticalJump.in != null) ? pt.verticalJump.in : (pt.verticalJump.ft || 0) * 12;
 
@@ -800,16 +763,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const totalPower = powerScored.reduce((sum, p) => sum + p.inches, 0);
   const rescaledPowerTarget = Math.round(s.powerTarget * (powerScored.length / powerParts.length));
 
-  // Symmetry
   const symTested = isTested(pt.shotPutRight) && isTested(pt.shotPutLeft);
   const symValue = symTested ? (Math.min(pt.shotPutRight.ft, pt.shotPutLeft.ft) / Math.max(pt.shotPutRight.ft, pt.shotPutLeft.ft)) * 100 : 0;
 
-  // Compute Axis Normalized Percentages for Radar Axes
   let scoreStrength = Math.min(100, (totalRSI / rescaledRsiTarget) * 100);
   let scorePower = Math.min(100, (totalPower / rescaledPowerTarget) * 100);
   let scoreSymmetry = symTested ? symValue : 50;
 
-  // Mobility clearance pass-rate
   let mobScoreTotal = 0;
   s.mobilityClearance.forEach(mc => {
     if (mc.status === "Pass") mobScoreTotal += 100;
@@ -817,7 +777,6 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   let scoreMobility = s.mobilityClearance.length ? (mobScoreTotal / s.mobilityClearance.length) : 0;
 
-  // ROM average % of target
   let romScoreTotal = 0;
   s.rom.forEach(r => {
     let avg = (r.lead + r.trail) / 2;
@@ -825,14 +784,11 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   let scoreROM = s.rom.length ? (romScoreTotal / s.rom.length) : 0;
 
-  // Performance Index Score
   let scorePerfIndex = s.performanceIndex.fillPct;
 
-  // Calculate Overall Movement Efficiency Hero Score
   let heroScore = Math.round((scoreStrength + scorePower + scoreSymmetry + scoreMobility + scoreROM + scorePerfIndex) / 6);
   document.getElementById('effScore').textContent = heroScore;
 
-  // Update Hero Class and Color Scale
   const heroClassObj = document.getElementById("effClass");
   const heroMaskObj = document.getElementById("effMask");
   let statusClass = "bg-restricted";
@@ -852,7 +808,6 @@ document.addEventListener('DOMContentLoaded', () => {
   heroClassObj.textContent = statusLabel;
   heroMaskObj.style.width = `${100 - heroScore}%`;
 
-  // Dynamic 6-Axis Radar Generator
   const generateRadar = () => {
     const svg = document.getElementById('radar');
     const cx = 150, cy = 150, radius = 100;
@@ -860,7 +815,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const values = [scoreStrength, scorePower, scoreSymmetry, scoreMobility, scoreROM, scorePerfIndex];
     let gElements = "";
 
-    // Draw concentric scale hexagons
     [0.25, 0.50, 0.75, 1.0].forEach(f => {
       let pts = [];
       let r = radius * f;
@@ -871,7 +825,6 @@ document.addEventListener('DOMContentLoaded', () => {
       gElements += `<polygon points="${pts.join(" ")}" fill="none" stroke="#2C2C2C" stroke-width="1" />`;
     });
 
-    // Draw Spokes & Category Labels
     for (let i = 0; i < 6; i++) {
       let angle = (i / 6) * 2 * Math.PI - Math.PI / 2;
       let x2 = cx + radius * Math.cos(angle);
@@ -884,7 +837,6 @@ document.addEventListener('DOMContentLoaded', () => {
       gElements += `<text x="${lx}" y="${ly}" fill="#8a8a8a" font-family="DM Mono, monospace" font-size="9" letter-spacing="0.5" text-anchor="${anchor}">${categories[i].toUpperCase()}</text>`;
     }
 
-    // Draw Athlete Performance Area
     let dataPts = [];
     let vertCircles = "";
     for (let i = 0; i < 6; i++) {
@@ -894,18 +846,17 @@ document.addEventListener('DOMContentLoaded', () => {
       let dy = cy + valR * Math.sin(angle);
       dataPts.push(`${dx},${dy}`);
 
-      let dotColor = values[i] >= 85 ? "#2FBF71" : (values[i] >= 70 ? "#E0A92E" : "#CC1010");
+      let dotColor = values[i] >= 85 ? "#10B981" : (values[i] >= 70 ? "#F59E0B" : "#EF4444");
       vertCircles += `<circle cx="${dx}" cy="${dy}" r="3.5" fill="${dotColor}" />`;
     }
 
-    gElements += `<polygon points="${dataPts.join(" ")}" fill="rgba(204, 16, 16, 0.2)" stroke="#CC1010" stroke-width="2" stroke-linejoin="round" />`;
+    gElements += `<polygon points="${dataPts.join(" ")}" fill="rgba(217, 70, 239, 0.2)" stroke="#D946EF" stroke-width="2" stroke-linejoin="round" />`;
     gElements += vertCircles;
 
     svg.innerHTML = gElements;
   };
   generateRadar();
 
-  // Dynamic Cards & Details Layout array
   const screenGrid = document.getElementById("screenGrid");
   const detailContainer = document.getElementById("detail");
 
@@ -943,7 +894,6 @@ document.addEventListener('DOMContentLoaded', () => {
             ${rows}
             <tr class="total"><td>RSI Index Performance</td><td class="num">${totalRSI.toFixed(2)}</td><td class="num">${rescaledRsiTarget.toFixed(2)}</td><td></td></tr>
           </table>
-          <p class="calc-note">Calculated using 1-RM projections relative to bodyweight of ${BW} lbs. Strength forms the ultimate structural ceiling for speed & load limits.</p>
         </div>
       `;
     } else if (key === "power") {
@@ -976,7 +926,6 @@ document.addEventListener('DOMContentLoaded', () => {
             <tr><th>Power Assessments</th><th class="num">Distance / Height</th><th class="num">Strong Target</th><th class="num">Status</th></tr>
             ${rows}
           </table>
-          <p class="calc-note">Sum of vertical jump (inches) and med-ball launches (feet converted to inches). Explosive output generates raw rotational and ground force velocity.</p>
         </div>
       `;
     } else if (key === "symmetry") {
@@ -1069,7 +1018,7 @@ document.addEventListener('DOMContentLoaded', () => {
           </div>
           <div class="block-label">Overall Context</div>
           <div class="bottleneck">
-            This rating serves as your overall on-course physical handicap benchmark, pulling from all screening and speed performance components.
+            This rating serves as your overall field mobility & capacity benchmark, pulling from all physical screening and speed performance components.
           </div>
         </div>
       `;
@@ -1090,7 +1039,7 @@ document.addEventListener('DOMContentLoaded', () => {
     { key: "symmetry", name: "Bilateral Symmetry Index", display: symTested ? Math.round(scoreSymmetry) + "%" : "Deferred", target: "Target ≥90%", status: symTested ? (scoreSymmetry >= 90 ? "optimal" : (scoreSymmetry >= 80 ? "monitor" : "restricted")) : "deferred" },
     { key: "mobility", name: "Clearance Battery Score", display: Math.round(scoreMobility) + "%", target: `Top Screens Passed`, status: scoreMobility >= 85 ? "optimal" : (scoreMobility >= 70 ? "monitor" : "restricted") },
     { key: "rom", name: "Target ROM Average", display: Math.round(scoreROM) + "%", target: `Top ${s.rom.length} ROMs`, status: scoreROM >= 85 ? "optimal" : (scoreROM >= 70 ? "monitor" : "restricted") },
-    { key: "perf", name: s.performanceIndex.name, display: s.performanceIndex.display, target: "TPI Grade", status: scorePerfIndex >= 85 ? "optimal" : (scorePerfIndex >= 70 ? "monitor" : "restricted") }
+    { key: "perf", name: s.performanceIndex.name, display: s.performanceIndex.display, target: "Sport Composite", status: scorePerfIndex >= 85 ? "optimal" : (scorePerfIndex >= 70 ? "monitor" : "restricted") }
   ];
 
   screenGrid.innerHTML = "";
@@ -1119,23 +1068,23 @@ document.addEventListener('DOMContentLoaded', () => {
   const riskSignals = [];
 
   if (scoreStrength < 70) {
-    riskSignals.push({ tag: "Back Nine", text: "<b>Reduced Strength Foundation (RSI)</b> means lumbar and thoracic stabilizer groups will fatigue early, costing you terminal posture match, swing speed control, and dynamic joint security." });
+    riskSignals.push({ tag: "Late periods", text: "<b>Reduced Strength Foundation (RSI)</b> means high-impact deceleration capability will break down, leaving knees and lower back vulnerable during cutting sequences in Q4." });
   }
   if (scorePower < 70) {
-    riskSignals.push({ tag: "Late holes", text: "<b>Below Target Power Reserves</b> will limit explosive rate of force development. Rotational clubface speed and initial launch acceleration drop noticeably." });
+    riskSignals.push({ tag: "Fastbreaks", text: "<b>Below Target Power Reserves</b> will limit explosive rate of force development. Your quick-release pass velocity and fast-break speed will degrade under pressure." });
   }
   if (scoreSymmetry < 85) {
-    riskSignals.push({ tag: "Lead Hip Stress", text: "<b>Bilateral force imbalance</b> routes excess shear and compression force to your lead side during downhill lies or high-load impact swings." });
+    riskSignals.push({ tag: "Asymmetry stress", text: "<b>Bilateral force imbalance</b> routes excess shear and compression force to your loading leg or shoulder. Look for localized shoulder soreness on your dominant stick-hand side." });
   }
 
   s.rom.forEach(r => {
     let avg = (r.lead + r.trail) / 2;
     if (avg < r.target - r.limitRange) {
-      riskSignals.push({ tag: "Focal restriction", text: `<b>Limited ${r.name}</b> forces neighboring spine levels (e.g. lumbar segments) to hyperextend or slide horizontally during dynamic rotational sequences.` });
+      riskSignals.push({ tag: "Focal restriction", text: `<b>Limited ${r.name}</b> forces neighboring segments (e.g. cervical and lumbar spine) to rotate excessively to achieve a full back-swing cradle position.` });
     }
   });
 
-  riskSignals.push({ tag: "Action item", text: "Execute your targeted preparation routines prior to warm-up. Promptly address any lingering localized discomfort that fails to resolve within 12 hours." });
+  riskSignals.push({ tag: "Action item", text: "Execute your targeted Lacrosse preparation routines prior to warm-up. Promptly address any localized hip/shoulder stiffness." });
 
   loadListObj.innerHTML = riskSignals.map(sig => `
     <li><span class="tag">${sig.tag}</span><span class="txt">${sig.text}</span></li>
@@ -1160,7 +1109,7 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
         <div class="metric-line">
           <div class="ml-top">
-            <span class="ml-name">Club Speed <span style="opacity:.6">· avg</span></span>
+            <span class="ml-name">Speed metric <span style="opacity:.6">· avg</span></span>
             <span class="ml-delta ${spdDiff >= 0 ? 'up' : 'down'}">${spdDiff >= 0 ? '▲' : '▼'} ${spdDiff >= 0 ? '+' : ''}${spdDiff} mph (${pctChange}%)</span>
           </div>
           <div class="ml-vals">
@@ -1198,7 +1147,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const programSub = document.getElementById("programSub");
 
   if (CONFIG.program.fullProgramUrl) {
-    programSub.textContent = "Your customized prehab and capacity workouts are active inside TrainHeroic.";
+    programSub.textContent = "Your customized conditioning workouts are active inside TrainHeroic.";
     programHost.innerHTML = `
       <a class="program-full" href="${CONFIG.program.fullProgramUrl}" target="_blank" rel="noopener">
         <span class="pf-icon"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
@@ -1206,7 +1155,7 @@ document.addEventListener('DOMContentLoaded', () => {
       </a>
     `;
   } else {
-    programSub.textContent = "Execute this routine to optimize target joint positions between competitive rounds.";
+    programSub.textContent = "Execute this routine to optimize target joint positions between competitive events.";
     programHost.innerHTML = `
       <div class="drills">
         ${CONFIG.program.exercises.map((ex, idx) => `
