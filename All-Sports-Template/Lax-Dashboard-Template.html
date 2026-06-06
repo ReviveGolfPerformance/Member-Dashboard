@@ -634,12 +634,12 @@ footer .cred { font-family: var(--mono); font-size: 10px; letter-spacing: 1px; c
    ==================================================================== */
 const CONFIG = {
   client: {
-    name: "Matt DiMaria",
+    name: "John Sample",
     date: "June 7, 2026",
     age:  17,
     sex:  "male",
     hand: "right",
-    bodyweightLbs: 185,
+    bodyweightLbs: 200,
     primarySport: "Lacrosse"
   },
 
@@ -647,41 +647,41 @@ const CONFIG = {
 
   scores: {
     strength: {
-      trapBarDeadlift: { weight: 265, reps: 5, tested: true },
-      backSquat:       { weight: 205, reps: 5, tested: true },
-      pullups:         { addedWeight: 0, reps: 5, tested: true },
-      cablePull:       { leftWeight: 70, leftReps: 8, rightWeight: 75, rightReps: 8, tested: true },
-      cablePush:       { leftWeight: 55, leftReps: 8, rightWeight: 60, rightReps: 8, tested: true },
-      splitSquat:      { leftWeight: 60, leftReps: 8, rightWeight: 60, rightReps: 8, tested: true }
+      trapBarDeadlift: { weight: 100, reps: 5, tested: true },
+      backSquat:       { weight: 100, reps: 5, tested: true },
+      pullups:         { addedWeight: 0, reps: 0, tested: true },
+      cablePull:       { leftWeight: 10, leftReps: 8, rightWeight: 15, rightReps: 8, tested: true },
+      cablePush:       { leftWeight: 15, leftReps: 8, rightWeight: 10, rightReps: 8, tested: true },
+      splitSquat:      { leftWeight: 10, leftReps: 8, rightWeight: 10, rightReps: 8, tested: true }
     },
     rsiTarget: 6.00,
 
     power: {
-      verticalJump:  { ft: null, in: 24, tested: true },
-      chestPass:     { ft: 15, tested: true },
-      situpThrow:    { ft: 14, tested: true },
-      shotPutRight:  { ft: 25, tested: true },
-      shotPutLeft:   { ft: 23, tested: true }
+      verticalJump:  { ft: null, in: 10, tested: true },
+      chestPass:     { ft: 10, tested: true },
+      situpThrow:    { ft: 10, tested: true },
+      shotPutRight:  { ft: 10, tested: true },
+      shotPutLeft:   { ft: 15, tested: true }
     },
     powerTarget: 850,
 
     rom: [
-      { name: "Shoulder ER",       lead: 88, trail: 84, target: 90, limitRange: 5  },
-      { name: "Hip IR",            lead: 37, trail: 34, target: 45, limitRange: 10 },
-      { name: "T-Spine Rotation",  lead: 55, trail: 60, target: 60, limitRange: 15 }
+      { name: "Shoulder ER",       lead: 50, trail: 50, target: 90, limitRange: 5  },
+      { name: "Hip IR",            lead: 20, trail: 20, target: 45, limitRange: 10 },
+      { name: "T-Spine Rotation",  lead: 20, trail: 20, target: 60, limitRange: 15 }
     ],
 
     mobilityClearance: [
-      { name: "Overhead Deep Squat",   status: "Monitor" },
-      { name: "In-Line Lunge Screen",  status: "Monitor" },
-      { name: "Single Leg Balance",    status: "Monitor" },
-      { name: "Rotary Stability Test", status: "Monitor" }
+      { name: "Overhead Deep Squat",   status: "Fail" },
+      { name: "In-Line Lunge Screen",  status: "Fail" },
+      { name: "Single Leg Balance",    status: "Fail" },
+      { name: "Rotary Stability Test", status: "Fail" }
     ],
 
     performanceIndex: {
       name: "Dynamic Lacrosse Index",
-      display: "15",
-      fillPct: 58.33,
+      display: "36",
+      fillPct: 0,
       class: "Developing"
     }
   },
@@ -691,29 +691,29 @@ const CONFIG = {
       name: "Standing Shot Velocity",
       unit: "mph",
       lowerIsBetter: false,
-      pre:  [81, 83, 82, 84, 80],
-      post: [85, 87, 86, 88, 89]
+      pre:  [50, 50, 50, 50, 50],
+      post: [60, 60, 60, 60, 60]
     },
     crowHopShot: {
       name: "Crow Hop Shot Velocity",
       unit: "mph",
       lowerIsBetter: false,
-      pre:  [85, 87, 86, 88, 84],
-      post: [91, 93, 92, 94, 95]
+      pre:  [60, 60, 60, 60, 60],
+      post: [70, 70, 70, 70, 70]
     },
     agility5105: {
       name: "5-10-5 Agility Drill",
       unit: "sec",
       lowerIsBetter: true,
-      pre:  [4.65, 4.61, 4.69],
-      post: [4.31, 4.28, 4.35]
+      pre:  [5.0, 5.0, 5.0],
+      post: [4.5, 4.5, 4.5]
     },
     agilityLDrill: {
       name: "L-Speed Agility Drill",
       unit: "sec",
       lowerIsBetter: true,
-      pre:  [7.85, 7.91, 7.82],
-      post: [7.41, 7.35, 7.39]
+      pre:  [8.0, 8.0, 8.0],
+      post: [7.5, 7.5, 7.5]
     }
   },
 
