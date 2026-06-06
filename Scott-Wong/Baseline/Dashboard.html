@@ -179,6 +179,7 @@ section{margin-top:clamp(28px,5vw,46px)}
 .s-optimal{color:var(--optimal)} .bg-optimal{background:rgba(47,191,113,.15);color:var(--optimal)} .dot-optimal{background:var(--optimal);box-shadow:0 0 8px var(--optimal)}
 .s-monitor{color:var(--monitor)} .bg-monitor{background:rgba(224,169,46,.15);color:var(--monitor)} .dot-monitor{background:var(--monitor);box-shadow:0 0 8px var(--monitor)}
 .s-restricted{color:var(--restricted)} .bg-restricted{background:rgba(204,16,16,.18);color:#ff5a5a} .dot-restricted{background:var(--restricted);box-shadow:0 0 8px var(--restricted)}
+.s-deferred{color:var(--muted)} .bg-deferred{background:rgba(138,138,138,.14);color:var(--silver)} .dot-deferred{background:var(--muted);box-shadow:none}
 
 /* ── DETAIL PANEL ── */
 .detail{
@@ -211,6 +212,8 @@ section{margin-top:clamp(28px,5vw,46px)}
 .calc-table tr.total td{border-top:2px solid var(--red);background:rgba(204,16,16,.06);color:var(--white);font-weight:600}
 .calc-table tr.total .num{color:#ff5a5a;font-size:16px;font-family:var(--display);letter-spacing:.5px}
 .calc-note{font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:8px;letter-spacing:.4px;line-height:1.5}
+.tstat{display:inline-block;font-family:var(--mono);font-size:8.5px;letter-spacing:.5px;text-transform:uppercase;padding:2px 7px;border:1px solid;border-radius:3px;background:rgba(255,255,255,.02);white-space:nowrap}
+.tinput{display:block;font-family:var(--mono);font-size:9px;color:#5f5f5f;letter-spacing:.3px;margin-top:2px}
 
 .block-label{
   font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;
@@ -311,6 +314,12 @@ section{margin-top:clamp(28px,5vw,46px)}
 .cmp-post{position:absolute;inset:0;background:linear-gradient(90deg,var(--red),var(--optimal));border-radius:3px}
 .cmp-pre{position:absolute;left:0;top:0;height:100%;background:#4a4a4a;border-radius:3px}
 .ml-trials{font-family:var(--mono);font-size:9px;color:#5f5f5f;margin-top:8px;letter-spacing:.5px}
+.ml-best{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:9px;padding-top:9px;border-top:1px dashed var(--slate);font-family:var(--mono);font-size:10px;letter-spacing:.4px}
+.ml-best .bl-tag{color:var(--muted);text-transform:uppercase}
+.ml-best .bl-val{color:var(--silver)}
+.ml-best .bl-val b{color:var(--white);font-family:var(--display);font-size:14px;letter-spacing:.5px}
+.ml-best .bl-delta{margin-left:auto;font-weight:500;color:var(--muted)}
+.ml-best .bl-delta.up{color:var(--optimal)} .ml-best .bl-delta.down{color:var(--monitor)}
 @media(max-width:680px){.swing-grid{grid-template-columns:1fr}}
 
 /* ── BOOKING CTA ── */
@@ -560,31 +569,91 @@ const CONFIG = {
 /* ---------- ENGINE ---------- */
 const S = CONFIG.scores;
 const BW = CONFIG.client.bodyweightLbs;
+const SEX = (CONFIG.client.sex||"male").toLowerCase()==="female" ? "female" : "male";
+
+/* STRONG-TIER per-test targets (from Revive Strength & Power Benchmarks).
+   Strength = relative-strength ratio (load ÷ BW) entering the "Strong" band.
+   Power = Strong-tier distance/height, converted to inches for the index. */
+const TARGETS = {
+  // strength ratios (×BW) — Strong-tier floor
+  trapBarDeadlift: 1.5,
+  backSquat:       1.25,
+  pullups:         (SEX==="female" ? 0.65 : 0.85),  // BW-relative pull strength entering Strong
+  cablePull:       (SEX==="female" ? 0.25 : 0.30),  // per-arm ratio, Strong
+  cablePush:       (SEX==="female" ? 0.20 : 0.25),  // per-arm ratio, Strong
+  splitSquat:      0.50,                            // combined load ratio, Strong
+  // power outputs — Strong-tier floor (inches)
+  verticalJump: (SEX==="female" ? 14 : 18),
+  chestPass:    (SEX==="female" ? 12 : 16)*12,
+  situpThrow:   (SEX==="female" ? 10 : 14)*12,
+  shotPutRight: (SEX==="female" ? 14 : 20)*12,
+  shotPutLeft:  (SEX==="female" ? 14 : 20)*12
+};
+// per-test status vs its Strong target: at/above = optimal, within 12% = monitor, below = restricted
+function testStatus(actual, target){
+  if(target<=0) return "monitor";
+  const r=actual/target;
+  if(r>=1) return "optimal";
+  if(r>=0.88) return "monitor";
+  return "restricted";
+}
+const TSTAT_DOT = {optimal:"#2FBF71", monitor:"#E0A92E", restricted:"#CC1010"};
+const TSTAT_LBL = {optimal:"On Target", monitor:"Close", restricted:"Focus Area"};
 
 /* AUTO-CALC: Relative Strength Index from strength tests */
 const oneRM = (w,r)=> w*(1+r/30);
 const stIn = S.strength;
+const isTested = o => o.tested !== false;   // tested unless explicitly false
 const RSI_PARTS = [
-  { label:"Trap-Bar Deadlift",  w:stIn.trapBarDeadlift.weight, r:stIn.trapBarDeadlift.reps },
-  { label:"Back Squat",         w:stIn.backSquat.weight,       r:stIn.backSquat.reps },
-  { label:"Pull-Ups (BW+load)", w:BW+stIn.pullups.addedWeight, r:stIn.pullups.reps },
-  { label:"Cable Pull (avg L/R)",
+  { label:"Trap-Bar Deadlift",  tkey:"trapBarDeadlift", on:isTested(stIn.trapBarDeadlift), w:stIn.trapBarDeadlift.weight, r:stIn.trapBarDeadlift.reps },
+  { label:"Back Squat",         tkey:"backSquat",       on:isTested(stIn.backSquat),       w:stIn.backSquat.weight,       r:stIn.backSquat.reps },
+  { label:"Pull-Ups (BW+load)", tkey:"pullups",         on:isTested(stIn.pullups),         w:BW+stIn.pullups.addedWeight, r:stIn.pullups.reps },
+  { label:"Cable Pull (avg L/R)", tkey:"cablePull",     on:isTested(stIn.cablePull),
     ratio:( oneRM(stIn.cablePull.leftWeight,stIn.cablePull.leftReps)/BW + oneRM(stIn.cablePull.rightWeight,stIn.cablePull.rightReps)/BW )/2,
     sub:`L ${stIn.cablePull.leftWeight}×${stIn.cablePull.leftReps} · R ${stIn.cablePull.rightWeight}×${stIn.cablePull.rightReps}` },
-  { label:"Cable Push (avg L/R)",
+  { label:"Cable Push (avg L/R)", tkey:"cablePush",     on:isTested(stIn.cablePush),
     ratio:( oneRM(stIn.cablePush.leftWeight,stIn.cablePush.leftReps)/BW + oneRM(stIn.cablePush.rightWeight,stIn.cablePush.rightReps)/BW )/2,
     sub:`L ${stIn.cablePush.leftWeight}×${stIn.cablePush.leftReps} · R ${stIn.cablePush.rightWeight}×${stIn.cablePush.rightReps}` },
-  { label:"Split Squat",        w:stIn.splitSquat.weight,      r:stIn.splitSquat.reps }
+  { label:"Split Squat (avg L/R)", tkey:"splitSquat",  on:isTested(stIn.splitSquat),
+    ratio:( oneRM(stIn.splitSquat.leftWeight,stIn.splitSquat.leftReps)/BW + oneRM(stIn.splitSquat.rightWeight,stIn.splitSquat.rightReps)/BW )/2,
+    sub:`L ${stIn.splitSquat.leftWeight}×${stIn.splitSquat.leftReps} · R ${stIn.splitSquat.rightWeight}×${stIn.splitSquat.rightReps}` }
 ];
-RSI_PARTS.forEach(p=>{ if(p.ratio==null){ p.oneRM=oneRM(p.w,p.r); p.ratio=p.oneRM/BW; } });
-const RSI_VALUE = RSI_PARTS.reduce((a,p)=>a+p.ratio,0);
+RSI_PARTS.forEach(p=>{
+  if(p.ratio==null){ p.oneRM=oneRM(p.w,p.r); p.ratio=p.oneRM/BW; }
+  p.target = TARGETS[p.tkey];
+  p.tstat  = p.on ? testStatus(p.ratio, p.target) : "deferred";
+});
+const RSI_TESTED = RSI_PARTS.filter(p=>p.on);
+const RSI_DEFERRED_COUNT = RSI_PARTS.length - RSI_TESTED.length;
+const RSI_VALUE = RSI_TESTED.reduce((a,p)=>a+p.ratio,0);
+// rescale the 6-lift benchmark proportionally to the lifts actually performed
+const RSI_TARGET = S.rsiTarget * (RSI_TESTED.length / RSI_PARTS.length);
 
 /* AUTO-CALC: Power Index + Symmetry from power tests */
 const pIn = S.power;
-const TOTAL_MB_FT = pIn.chestPassFt + pIn.situpThrowFt + pIn.shotPutRightFt + pIn.shotPutLeftFt;
-const MB_INDEX_IN = TOTAL_MB_FT*12;
-const POWER_VALUE = pIn.verticalJumpIn + MB_INDEX_IN;
-const SYMMETRY_VALUE = (Math.min(pIn.shotPutLeftFt,pIn.shotPutRightFt)/Math.max(pIn.shotPutLeftFt,pIn.shotPutRightFt))*100;
+const vjIn = (pIn.verticalJump.in!=null) ? pIn.verticalJump.in : (pIn.verticalJump.ft||0)*12;
+// component list: vertical jump (already inches) + four throws (feet → inches ×12)
+const POWER_PARTS = [
+  { label:"Vertical Jump",        tkey:"verticalJump", unit:"in", on:isTested(pIn.verticalJump), inches:vjIn,                disp:`${vjIn} in` },
+  { label:"Seated Chest Pass",    tkey:"chestPass",    unit:"ft", on:isTested(pIn.chestPass),    inches:pIn.chestPass.ft*12, disp:`${pIn.chestPass.ft} ft` },
+  { label:"Sit-Up Overhead Throw",tkey:"situpThrow",   unit:"ft", on:isTested(pIn.situpThrow),   inches:pIn.situpThrow.ft*12,disp:`${pIn.situpThrow.ft} ft` },
+  { label:"Shot Put — Right",     tkey:"shotPutRight", unit:"ft", on:isTested(pIn.shotPutRight), inches:pIn.shotPutRight.ft*12,disp:`${pIn.shotPutRight.ft} ft` },
+  { label:"Shot Put — Left",      tkey:"shotPutLeft",  unit:"ft", on:isTested(pIn.shotPutLeft),  inches:pIn.shotPutLeft.ft*12, disp:`${pIn.shotPutLeft.ft} ft` }
+];
+POWER_PARTS.forEach(p=>{
+  p.targetIn = TARGETS[p.tkey];
+  p.targetDisp = p.unit==="in" ? `${p.targetIn} in` : `${Math.round(p.targetIn/12)} ft`;
+  p.tstat = p.on ? testStatus(p.inches, p.targetIn) : "deferred";
+});
+const POWER_TESTED = POWER_PARTS.filter(p=>p.on);
+const POWER_DEFERRED_COUNT = POWER_PARTS.length - POWER_TESTED.length;
+const POWER_VALUE = POWER_TESTED.reduce((a,p)=>a+p.inches,0);
+const POWER_TARGET = Math.round(S.powerTarget * (POWER_TESTED.length / POWER_PARTS.length));
+
+// Symmetry needs BOTH shot puts; defer if either is untested
+const SYM_OK = isTested(pIn.shotPutRight) && isTested(pIn.shotPutLeft);
+const spR = pIn.shotPutRight.ft, spL = pIn.shotPutLeft.ft;
+const SYMMETRY_VALUE = SYM_OK ? (Math.min(spL,spR)/Math.max(spL,spR))*100 : null;
 
 const lead = CONFIG.client.hand === "left" ? "Left" : "Right";
 const trail = CONFIG.client.hand === "left" ? "Right" : "Left";
@@ -604,51 +673,85 @@ function ratioStatus(v, target, monitorFloor=0.85){
   if(r >= monitorFloor) return "monitor";
   return "restricted";
 }
-const STAT_LABEL = {optimal:"Within Target", monitor:"Monitor", restricted:"Below Target"};
+const STAT_LABEL = {optimal:"Within Target", monitor:"Monitor", restricted:"Below Target", deferred:"Deferred"};
 
 // build the 7 screen definitions with computed status, normalized %, golf-impact copy, drills
 function buildScreens(){
   const list = [];
 
-  // 1 — RSI (auto-calculated from strength tests)
+  // 1 — RSI (auto-calculated from strength tests; excludes deferred lifts)
   {
-    const v=RSI_VALUE, t=S.rsiTarget, st=ratioStatus(v,t);
-    list.push({
-      key:"rsi", name:"Relative Strength Index", short:"RSI",
-      display:v.toFixed(1), target:"Target "+t.toFixed(2), status:st,
-      pct:clamp(v/t*100),
-      metrics:[["Your RSI",v.toFixed(2)],["Benchmark",t.toFixed(2)],["Classification",rsiClass(v)]],
-      breakdown:rsiBreakdownHTML(),
-      bottleneck: st==="optimal"
-        ? "Your relative strength is at or above the performance benchmark. You have the force-production base to support repeatable speed and protect the body through a full round. Not a current limiter."
-        : "Relative strength is below the performance benchmark. You don't yet have the force base to support repeatable clubhead speed — and a weaker base means the body fatigues and compensates earlier in the round. This is a foundation-level priority.",
-    });
+    if(RSI_TESTED.length===0){
+      list.push({
+        key:"rsi", name:"Relative Strength Index", short:"RSI",
+        display:"—", target:"Not tested", status:"deferred", pct:null,
+        metrics:[["Status","Deferred"],["Lifts tested","0 of "+RSI_PARTS.length],["Note","See findings"]],
+        breakdown:rsiBreakdownHTML(),
+        bottleneck:"Relative strength was not loaded this session. The strength lifts were deferred — mobility, discomfort, or readiness made loading inappropriate today. This is a documented finding, not a low score: we restore the prerequisites first, then screen strength once it's safe to load."
+      });
+    } else {
+      const v=RSI_VALUE, t=RSI_TARGET, st=ratioStatus(v,t);
+      const noteRow = RSI_DEFERRED_COUNT>0 ? [["Lifts scored",RSI_TESTED.length+" of "+RSI_PARTS.length]] : [];
+      list.push({
+        key:"rsi", name:"Relative Strength Index", short:"RSI",
+        display:v.toFixed(1), target:"Target "+t.toFixed(2), status:st,
+        pct:clamp(v/t*100),
+        metrics:[["Your RSI",v.toFixed(2)],["Benchmark",t.toFixed(2)],["Classification",rsiClass(v)],...noteRow],
+        breakdown:rsiBreakdownHTML(),
+        bottleneck: (st==="optimal"
+          ? "Your relative strength is at or above the performance benchmark. You have the force-production base to support repeatable speed and protect the body through a full round. Not a current limiter."
+          : "Relative strength is below the performance benchmark. You don't yet have the force base to support repeatable clubhead speed — and a weaker base means the body fatigues and compensates earlier in the round. This is a foundation-level priority.")
+          + (RSI_DEFERRED_COUNT>0 ? ` <b>Scored on the ${RSI_TESTED.length} lift${RSI_TESTED.length>1?'s':''} performed today; the benchmark is rescaled to match. Deferred lift${RSI_DEFERRED_COUNT>1?'s':''} will be added once safe to load.</b>` : "")
+      });
+    }
   }
-  // 2 — Power Index (auto-calculated from power tests)
+  // 2 — Power Index (auto-calculated from power tests; excludes deferred)
   {
-    const v=Math.round(POWER_VALUE), t=S.powerTarget, st=ratioStatus(v,t);
-    list.push({
-      key:"power", name:"Power Index", short:"Power",
-      display:v+'"', target:"Target "+t+'"', status:st, pct:clamp(v/t*100),
-      metrics:[["Power Index",v+' in'],["Target",t+' in'],["Gap",(v-t>=0?"+":"")+(v-t)+' in']],
-      breakdown:powerBreakdownHTML(),
-      bottleneck: st==="optimal"
-        ? "Power output meets target. The rate at which you produce force is supporting your clubhead speed. Not a current limiter — we maintain and build from here."
-        : "Power output is below target. Power is the rate you produce force — it's the direct physical driver of clubhead speed and distance. Strength gives you the ceiling; power lets you reach it when it counts.",
-    });
+    if(POWER_TESTED.length===0){
+      list.push({
+        key:"power", name:"Power Index", short:"Power",
+        display:"—", target:"Not tested", status:"deferred", pct:null,
+        metrics:[["Status","Deferred"],["Tests run","0 of "+POWER_PARTS.length],["Note","See findings"]],
+        breakdown:powerBreakdownHTML(),
+        bottleneck:"Power testing was deferred this session. Explosive output wasn't appropriate to test today — we establish the movement and strength prerequisites first, then measure power once it can be expressed safely. Documented finding, not a low score."
+      });
+    } else {
+      const v=Math.round(POWER_VALUE), t=POWER_TARGET, st=ratioStatus(v,t);
+      const noteRow = POWER_DEFERRED_COUNT>0 ? [["Tests scored",POWER_TESTED.length+" of "+POWER_PARTS.length]] : [];
+      list.push({
+        key:"power", name:"Power Index", short:"Power",
+        display:v+'"', target:"Target "+t+'"', status:st, pct:clamp(v/t*100),
+        metrics:[["Power Index",v+' in'],["Target",t+' in'],["Gap",(v-t>=0?"+":"")+(v-t)+' in'],...noteRow],
+        breakdown:powerBreakdownHTML(),
+        bottleneck: (st==="optimal"
+          ? "Power output meets target. The rate at which you produce force is supporting your clubhead speed. Not a current limiter — we maintain and build from here."
+          : "Power output is below target. Power is the rate you produce force — it's the direct physical driver of clubhead speed and distance. Strength gives you the ceiling; power lets you reach it when it counts.")
+          + (POWER_DEFERRED_COUNT>0 ? ` <b>Scored on the ${POWER_TESTED.length} test${POWER_TESTED.length>1?'s':''} performed today; the target is rescaled to match.</b>` : "")
+      });
+    }
   }
-  // 3 — Symmetry (auto-calculated from shot put L vs R)
+  // 3 — Symmetry (auto-calculated from shot put L vs R; needs both sides)
   {
-    const v=Math.round(SYMMETRY_VALUE), t=90, st = v>=90?"optimal":(v>=80?"monitor":"restricted");
-    list.push({
-      key:"symmetry", name:"Symmetry Index", short:"Symmetry",
-      display:v+"%", target:"Target ≥90%", status:st, pct:clamp(v),
-      metrics:[["L vs R Power",v+"%"],["Target","≥ 90%"],["Side gap",(100-v)+"%"]],
-      breakdown:symmetryBreakdownHTML(),
-      bottleneck: st==="optimal"
-        ? "Left-to-right power output is balanced. Both sides contribute evenly through the swing — no meaningful side bias driving inconsistent contact. Not a current limiter."
-        : "There's a meaningful left/right power gap. One side produces more force than the other, so the swing loads unevenly — that shows up as inconsistent strike and a body that wears one side faster over a round. We close the gap with side-specific work.",
-    });
+    if(!SYM_OK){
+      list.push({
+        key:"symmetry", name:"Symmetry Index", short:"Symmetry",
+        display:"—", target:"Not tested", status:"deferred", pct:null,
+        metrics:[["Status","Deferred"],["Reason","Needs both sides"],["Note","See findings"]],
+        breakdown:symmetryBreakdownHTML(),
+        bottleneck:"Symmetry compares left vs. right power output, so it needs both shot-put throws. One side was deferred this session — we'll measure side-to-side balance once both can be tested safely."
+      });
+    } else {
+      const v=Math.round(SYMMETRY_VALUE), t=90, st = v>=90?"optimal":(v>=80?"monitor":"restricted");
+      list.push({
+        key:"symmetry", name:"Symmetry Index", short:"Symmetry",
+        display:v+"%", target:"Target ≥90%", status:st, pct:clamp(v),
+        metrics:[["L vs R Power",v+"%"],["Target","≥ 90%"],["Side gap",(100-v)+"%"]],
+        breakdown:symmetryBreakdownHTML(),
+        bottleneck: st==="optimal"
+          ? "Left-to-right power output is balanced. Both sides contribute evenly through the swing — no meaningful side bias driving inconsistent contact. Not a current limiter."
+          : "There's a meaningful left/right power gap. One side produces more force than the other, so the swing loads unevenly — that shows up as inconsistent strike and a body that wears one side faster over a round. We close the gap with side-specific work."
+      });
+    }
   }
   // 4 — Thoracic Rotation
   list.push(romScreen({
@@ -679,7 +782,7 @@ function buildScreens(){
       key:"gfh", name:"Golf Fitness Handicap", short:"Golf Fitness Hcp",
       display:g.display, target:"TPI Pro composite", status:st, pct:clamp(g.fillPct),
       metrics:[["Score",g.display],["Classification",g.class],["Source","TPI Pro"]],
-      bottleneck:"This is your composite physical-readiness grade from the TPI Pro screen — it rolls every movement pattern into one number. Use it as your headline tracker: as we resolve the limiters above, this number lowers. The individual screens tell us <b>what</b> to work; this tells us how it's all trending together.",
+      bottleneck:"This is your composite physical-readiness grade from the TPI Pro screen — it rolls every movement pattern into one number. Use it as your headline tracker: as we resolve the limiters above, this number climbs. The individual screens tell us <b>what</b> to work; this tells us how it's all trending together.",
     });
   }
   return list;
@@ -687,38 +790,54 @@ function buildScreens(){
 
 function rsiBreakdownHTML(){
   const rows = RSI_PARTS.map(p=>{
+    if(!p.on){
+      return `<tr style="opacity:.5"><td>${p.label}</td><td class="num">—</td><td class="num">${p.target.toFixed(2)}×</td><td class="num" style="color:var(--muted)">Deferred</td></tr>`;
+    }
     const input = (p.w!=null) ? `${p.w} × ${p.r}` : (p.sub||"");
-    const orm   = (p.oneRM!=null) ? Math.round(p.oneRM)+" lb" : "—";
-    return `<tr><td>${p.label}</td><td class="num">${input}</td><td class="num">${orm}</td><td class="num">${p.ratio.toFixed(2)}</td></tr>`;
+    const pill = `<span class="tstat" style="color:${TSTAT_DOT[p.tstat]};border-color:${TSTAT_DOT[p.tstat]}">${TSTAT_LBL[p.tstat]}</span>`;
+    return `<tr><td>${p.label}<span class="tinput">${input}</span></td><td class="num">${p.ratio.toFixed(2)}×</td><td class="num">${p.target.toFixed(2)}×</td><td class="num">${pill}</td></tr>`;
   }).join("");
+  const totalLabel = RSI_DEFERRED_COUNT>0 ? `RSI Total (${RSI_TESTED.length} of ${RSI_PARTS.length})` : "RSI Total";
+  const rescaleNote = RSI_DEFERRED_COUNT>0 ? ` · Benchmark rescaled to ${RSI_TARGET.toFixed(2)} for the ${RSI_TESTED.length} lift${RSI_TESTED.length>1?'s':''} performed.` : "";
   return `<table class="calc-table">
-    <tr><th>Movement</th><th class="num">Weight × Reps</th><th class="num">Est. 1RM</th><th class="num">Ratio ×BW</th></tr>
+    <tr><th>Movement</th><th class="num">You</th><th class="num">Strong Target</th><th class="num">Status</th></tr>
     ${rows}
-    <tr class="total"><td>RSI Total</td><td></td><td></td><td class="num">${RSI_VALUE.toFixed(2)}</td></tr>
+    <tr class="total"><td>${totalLabel}</td><td class="num">${RSI_VALUE.toFixed(2)}</td><td class="num">${RSI_TARGET.toFixed(2)}</td><td></td></tr>
   </table>
-  <p class="calc-note">1RM = weight × (1 + reps ÷ 30) · Ratio = 1RM ÷ bodyweight (${BW} lb) · Cable pull &amp; push averaged across L + R.</p>`;
+  <p class="calc-note">Ratio = est. 1RM ÷ bodyweight (${BW} lb). Targets are the Strong-tier benchmark per lift — your focus areas are flagged in red.${rescaleNote}</p>`;
 }
 function powerBreakdownHTML(){
-  const p=S.power;
+  const rows = POWER_PARTS.map(p=>{
+    if(!p.on) return `<tr style="opacity:.5"><td>${p.label}</td><td class="num">—</td><td class="num">${p.targetDisp}</td><td class="num" style="color:var(--muted)">Deferred</td></tr>`;
+    const pill = `<span class="tstat" style="color:${TSTAT_DOT[p.tstat]};border-color:${TSTAT_DOT[p.tstat]}">${TSTAT_LBL[p.tstat]}</span>`;
+    return `<tr><td>${p.label}</td><td class="num">${p.disp}</td><td class="num">${p.targetDisp}</td><td class="num">${pill}</td></tr>`;
+  }).join("");
+  const totalLabel = POWER_DEFERRED_COUNT>0 ? `Power Index (${POWER_TESTED.length} of ${POWER_PARTS.length})` : "Power Index";
+  const rescaleNote = POWER_DEFERRED_COUNT>0 ? ` Target rescaled to ${POWER_TARGET} in for the tests performed.` : "";
   return `<table class="calc-table">
-    <tr><th>Test</th><th class="num">Result</th></tr>
-    <tr><td>Vertical Jump</td><td class="num">${p.verticalJumpIn} in</td></tr>
-    <tr><td>Seated Chest Pass</td><td class="num">${p.chestPassFt} ft</td></tr>
-    <tr><td>Sit-Up Overhead Throw</td><td class="num">${p.situpThrowFt} ft</td></tr>
-    <tr><td>Shot Put — Right</td><td class="num">${p.shotPutRightFt} ft</td></tr>
-    <tr><td>Shot Put — Left</td><td class="num">${p.shotPutLeftFt} ft</td></tr>
-    <tr><td>Total Med-Ball Distance</td><td class="num">${TOTAL_MB_FT} ft × 12 = ${MB_INDEX_IN} in</td></tr>
-    <tr class="total"><td>Power Index</td><td class="num">${Math.round(POWER_VALUE)} in</td></tr>
+    <tr><th>Test</th><th class="num">You</th><th class="num">Strong Target</th><th class="num">Status</th></tr>
+    ${rows}
+    <tr class="total"><td>${totalLabel}</td><td class="num">${Math.round(POWER_VALUE)} in</td><td class="num">${POWER_TARGET} in</td><td></td></tr>
   </table>
-  <p class="calc-note">Power Index = Vertical Jump (in) + Total Med-Ball Distance (ft) × 12.</p>`;
+  <p class="calc-note">Each test compared to its Strong-tier benchmark; the index sums them (throws × 12 to inches). Red flags are your power focus areas.${rescaleNote}</p>`;
 }
 function symmetryBreakdownHTML(){
-  const p=S.power;
-  const lo=Math.min(p.shotPutLeftFt,p.shotPutRightFt), hi=Math.max(p.shotPutLeftFt,p.shotPutRightFt);
+  if(!SYM_OK){
+    const rR = isTested(pIn.shotPutRight) ? `${pIn.shotPutRight.ft} ft` : "Deferred";
+    const rL = isTested(pIn.shotPutLeft)  ? `${pIn.shotPutLeft.ft} ft`  : "Deferred";
+    return `<table class="calc-table">
+      <tr><th>Side</th><th class="num">Shot Put Distance</th></tr>
+      <tr><td>Right</td><td class="num">${rR}</td></tr>
+      <tr><td>Left</td><td class="num">${rL}</td></tr>
+      <tr class="total"><td>Symmetry Index</td><td class="num" style="color:var(--muted);font-size:13px;font-family:var(--mono)">Deferred</td></tr>
+    </table>
+    <p class="calc-note">Symmetry needs both sides — deferred until the second side can be tested.</p>`;
+  }
+  const lo=Math.min(spL,spR), hi=Math.max(spL,spR);
   return `<table class="calc-table">
     <tr><th>Side</th><th class="num">Shot Put Distance</th></tr>
-    <tr><td>Right</td><td class="num">${p.shotPutRightFt} ft</td></tr>
-    <tr><td>Left</td><td class="num">${p.shotPutLeftFt} ft</td></tr>
+    <tr><td>Right</td><td class="num">${spR} ft</td></tr>
+    <tr><td>Left</td><td class="num">${spL} ft</td></tr>
     <tr class="total"><td>Symmetry Index</td><td class="num">${Math.round(SYMMETRY_VALUE)}%</td></tr>
   </table>
   <p class="calc-note">Symmetry = shorter ÷ longer × 100 (${lo} ÷ ${hi} ft).</p>`;
@@ -774,7 +893,8 @@ function renderProgram(){
 const screens = buildScreens();
 
 // overall efficiency = average of all 7 normalized %
-const overall = round(screens.reduce((a,s)=>a+s.pct,0)/screens.length);
+const SCORED = screens.filter(s=>s.pct!=null);
+const overall = SCORED.length ? round(SCORED.reduce((a,s)=>a+s.pct,0)/SCORED.length) : 0;
 function overallClass(p){
   if(p>=85) return {label:"Optimal", cls:"bg-optimal"};
   if(p>=70) return {label:"Functional", cls:"bg-monitor"};
@@ -831,26 +951,30 @@ document.getElementById("effClass").className = "hero-class " + oc.cls;
     const tspans=lines.map((ln,k)=>`<tspan x="${lx}" dy="${k===0?0:lh}">${ln}</tspan>`).join("");
     g+=`<text x="${lx}" y="${y0}" fill="#8a8a8a" font-family="DM Mono, monospace" font-size="8.5" letter-spacing="0.5" text-anchor="${anchor}" dominant-baseline="middle">${tspans}</text>`;
   });
-  // data polygon
-  const dp=screens.map((s,i)=>pt(i,R*clamp(s.pct)/100).join(",")).join(" ");
+  // data polygon — deferred screens (null pct) ride the outer ring so they don't read as a zero score
+  const radiusFor = s => (s.pct==null) ? R : R*clamp(s.pct)/100;
+  const dp=screens.map((s,i)=>pt(i,radiusFor(s)).join(",")).join(" ");
   g+=`<defs><radialGradient id="rg" cx="50%" cy="50%" r="65%">
         <stop offset="0%" stop-color="#CC1010" stop-opacity="0.55"/>
         <stop offset="100%" stop-color="#CC1010" stop-opacity="0.12"/></radialGradient></defs>`;
   g+=`<polygon points="${dp}" fill="url(#rg)" stroke="#CC1010" stroke-width="2" stroke-linejoin="round" style="opacity:0"><animate attributeName="opacity" from="0" to="1" dur="0.7s" begin="0.2s" fill="freeze"/></polygon>`;
-  // vertices colored by status
+  // vertices colored by status; deferred = hollow gray ring
   screens.forEach((s,i)=>{
-    const [x,y]=pt(i,R*clamp(s.pct)/100);
-    const col=s.status==="optimal"?"#2FBF71":s.status==="monitor"?"#E0A92E":"#CC1010";
-    g+=`<circle cx="${x}" cy="${y}" r="3.5" fill="${col}"/>`;
+    const [x,y]=pt(i,radiusFor(s));
+    if(s.pct==null){
+      g+=`<circle cx="${x}" cy="${y}" r="3.8" fill="#0e0e0e" stroke="#8a8a8a" stroke-width="1.5" stroke-dasharray="2 1.5"/>`;
+    } else {
+      const col=s.status==="optimal"?"#2FBF71":s.status==="monitor"?"#E0A92E":"#CC1010";
+      g+=`<circle cx="${x}" cy="${y}" r="3.5" fill="${col}"/>`;
+    }
   });
   svg.innerHTML=g;
 })();
 
 // screen overview cards
 const grid=document.getElementById("screenGrid");
-grid.innerHTML = "";          // ← add this
 screens.forEach((s,i)=>{
-const c=document.createElement("button");
+  const c=document.createElement("button");
   c.className="screen-card"+(i===0?" active":"");
   c.setAttribute("data-key",s.key);
   c.innerHTML=`
@@ -889,33 +1013,55 @@ renderProgram();
 
 /* ---------- SWING PERFORMANCE (Pre vs Post — today's session) ---------- */
 const avg = a => a.reduce((x,y)=>x+y,0)/a.length;
+const best = a => Math.max(...a);   // higher is better for all swing metrics
+function bestLine(preArr,postArr,unit,dec){
+  const pb=best(preArr), po=best(postArr), d=po-pb;
+  const dir=d>(dec>=2?0.004:0.05)?"up":(d<-(dec>=2?0.004:0.05)?"down":"");
+  const arrow=dir==="up"?"▲":dir==="down"?"▼":"–", sign=d>=0?"+":"";
+  return `<div class="ml-best">
+    <span class="bl-tag">Best swing</span>
+    <span class="bl-val">${pb.toFixed(dec)} → <b>${po.toFixed(dec)}</b> ${unit}</span>
+    <span class="bl-delta ${dir}">${sign}${d.toFixed(dec)} ${arrow}</span>
+  </div>`;
+}
 function metricLine(label,m,unit,dec){
   const pre=avg(m.pre), post=avg(m.post), d=post-pre, pct=pre?d/pre*100:0;
   const dir=d>0.05?"up":(d<-0.05?"down":"");
   const arrow=dir==="up"?"▲":dir==="down"?"▼":"–", sign=d>=0?"+":"";
   const preW=clamp(pre/Math.max(pre,post)*100);
   return `<div class="metric-line">
-    <div class="ml-top"><span class="ml-name">${label}</span>
+    <div class="ml-top"><span class="ml-name">${label} <span style="opacity:.6">· avg</span></span>
       <span class="ml-delta ${dir}">${sign}${d.toFixed(dec)} ${unit} ${arrow} <span style="opacity:.65">${sign}${pct.toFixed(1)}%</span></span></div>
     <div class="ml-vals"><span class="ml-pre">${pre.toFixed(dec)}</span><span class="ml-arrow">→</span><span class="ml-post">${post.toFixed(dec)}</span><span class="ml-unit">${unit}</span></div>
     <div class="cmp-bar"><div class="cmp-post"></div><div class="cmp-pre" style="width:${preW}%"></div></div>
     <div class="ml-trials">PRE&nbsp; ${m.pre.join(' · ')}&nbsp;&nbsp;|&nbsp;&nbsp;POST&nbsp; ${m.post.join(' · ')}</div>
+    ${bestLine(m.pre,m.post,unit,dec)}
   </div>`;
 }
-function smashLine(pre,post){
-  const d=post-pre, dir=d>0.004?"up":(d<-0.004?"down":""), arrow=dir==="up"?"▲":dir==="down"?"▼":"–", sign=d>=0?"+":"";
-  const preW=clamp(pre/Math.max(pre,post)*100);
+function smashLine(c){
+  const preAvg=avg(c.ballSpeed.pre)/avg(c.clubSpeed.pre);
+  const postAvg=avg(c.ballSpeed.post)/avg(c.clubSpeed.post);
+  const d=postAvg-preAvg, dir=d>0.004?"up":(d<-0.004?"down":""), arrow=dir==="up"?"▲":dir==="down"?"▼":"–", sign=d>=0?"+":"";
+  const preW=clamp(preAvg/Math.max(preAvg,postAvg)*100);
+  // per-trial smash = ball ÷ club for each matched trial; best of the three
+  const smashArr=(ball,club)=>ball.map((b,i)=>b/club[i]);
+  const preBest=best(smashArr(c.ballSpeed.pre,c.clubSpeed.pre));
+  const postBest=best(smashArr(c.ballSpeed.post,c.clubSpeed.post));
+  const bd=postBest-preBest, bdir=bd>0.004?"up":(bd<-0.004?"down":""), barrow=bdir==="up"?"▲":bdir==="down"?"▼":"–", bsign=bd>=0?"+":"";
   return `<div class="metric-line">
-    <div class="ml-top"><span class="ml-name">Smash Factor</span>
+    <div class="ml-top"><span class="ml-name">Smash Factor <span style="opacity:.6">· avg</span></span>
       <span class="ml-delta ${dir}">${sign}${d.toFixed(2)} ${arrow}</span></div>
-    <div class="ml-vals"><span class="ml-pre">${pre.toFixed(2)}</span><span class="ml-arrow">→</span><span class="ml-post">${post.toFixed(2)}</span></div>
+    <div class="ml-vals"><span class="ml-pre">${preAvg.toFixed(2)}</span><span class="ml-arrow">→</span><span class="ml-post">${postAvg.toFixed(2)}</span></div>
     <div class="cmp-bar"><div class="cmp-post"></div><div class="cmp-pre" style="width:${preW}%"></div></div>
     <div class="ml-trials">Auto-calculated — ball speed ÷ club speed</div>
+    <div class="ml-best">
+      <span class="bl-tag">Best swing</span>
+      <span class="bl-val">${preBest.toFixed(2)} → <b>${postBest.toFixed(2)}</b></span>
+      <span class="bl-delta ${bdir}">${bsign}${bd.toFixed(2)} ${barrow}</span>
+    </div>
   </div>`;
 }
 function clubCard(name,c){
-  const preSmash=avg(c.ballSpeed.pre)/avg(c.clubSpeed.pre);
-  const postSmash=avg(c.ballSpeed.post)/avg(c.clubSpeed.post);
   const carryGain=avg(c.carry.post)-avg(c.carry.pre);
   const gain=(carryGain>=0?"+":"")+carryGain.toFixed(0)+" yds carry today";
   return `<div class="club-card">
@@ -923,7 +1069,7 @@ function clubCard(name,c){
     ${metricLine("Club Speed",c.clubSpeed,"mph",1)}
     ${metricLine("Ball Speed",c.ballSpeed,"mph",1)}
     ${metricLine("Carry Distance",c.carry,"yds",1)}
-    ${smashLine(preSmash,postSmash)}
+    ${smashLine(c)}
   </div>`;
 }
 document.getElementById("swingGrid").innerHTML =
@@ -931,7 +1077,7 @@ document.getElementById("swingGrid").innerHTML =
 
 /* ---------- LOAD MANAGEMENT (auto-built from restricted findings) ---------- */
 (function(){
-  const restricted = screens.filter(s=>s.status!=="optimal" && s.key!=="gfh");
+  const restricted = screens.filter(s=>s.status!=="optimal" && s.status!=="deferred" && s.key!=="gfh");
   const intro=document.getElementById("loadIntro");
   const ul=document.getElementById("loadList");
 
