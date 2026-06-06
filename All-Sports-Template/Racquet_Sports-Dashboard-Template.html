@@ -9,20 +9,20 @@
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
 
 :root {
-  --red: #A3E635;          /* Racquet Sport Tennis Yellow/Green */
-  --red-impact: #84CC16;   /* Active Bright lime-green */
+  --red: #A3E635;
+  --red-impact: #84CC16;
   --red-dim: #3F6212;
-  --black: #0A0A0A;        /* Performance Black */
-  --charcoal: #1A1A1A;     /* Deep Charcoal — cards */
+  --black: #0A0A0A;
+  --charcoal: #1A1A1A;
   --panel: #141414;
   --panel-2: #1f1f1f;
-  --slate: #2C2C2C;        /* dividers / borders */
+  --slate: #2C2C2C;
   --white: #FFFFFF;
   --silver: #C8C8C8;
   --muted: #8a8a8a;
-  --optimal: #10B981;      /* emerald green */
-  --monitor: #F59E0B;      /* amber yellow */
-  --restricted: #EF4444;   /* red */
+  --optimal: #10B981;
+  --monitor: #F59E0B;
+  --restricted: #EF4444;
   --display: 'Bebas Neue', Impact, Helvetica, sans-serif;
   --sans: 'DM Sans', Helvetica, Arial, sans-serif;
   --mono: 'DM Mono', 'Courier New', monospace;
@@ -332,6 +332,29 @@ section { margin-top: clamp(28px, 5vw, 46px); }
 }
 .bottleneck.clear { background: rgba(16,185,129,.06); border-left-color: var(--optimal); }
 
+/* Normative band */
+.norm-band {
+  background: rgba(255,255,255,.03);
+  border: 1px solid var(--slate);
+  border-radius: 8px;
+  padding: 12px 14px;
+  margin-top: 12px;
+}
+.norm-band-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+.norm-row { display: flex; gap: 16px; flex-wrap: wrap; }
+.norm-item { display: flex; flex-direction: column; gap: 2px; }
+.ni-label { font-family: var(--mono); font-size: 8px; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); }
+.ni-val { font-family: var(--display); font-size: 20px; letter-spacing: .5px; color: var(--silver); line-height: 1.1; }
+.ni-val.elite { color: var(--optimal); }
+.ni-tag { font-family: var(--mono); font-size: 8px; color: #5f5f5f; margin-top: 2px; }
+
 .drills { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; margin-top: 8px; }
 .drill {
   background: var(--black);
@@ -380,7 +403,7 @@ section { margin-top: clamp(28px, 5vw, 46px); }
 .program-full .pf-text { display: flex; flex-direction: column; gap: 3px; }
 .program-full .pf-text b { font-family: var(--display); font-size: 24px; letter-spacing: 1px; color: var(--white); }
 .program-full .pf-text span { font-family: var(--mono); font-size: 11px; letter-spacing: .5px; color: var(--silver); }
-.drill-dose { font-family: var(--mono); font-size: 10.5px; letter-spacing: .5px; color: var(--black); background: var(--red); border: 1px solid var(--red); border-radius: 5px; padding: 7px 10px; text-align: center; margin-top: auto; font-weight: 600; }
+.drill-dose { font-family: var(--mono); font-size: 10.5px; letter-spacing: .5px; color: #000; background: var(--red); border: 1px solid var(--red); border-radius: 5px; padding: 7px 10px; text-align: center; margin-top: auto; font-weight: 600; }
 
 .load-panel {
   background: linear-gradient(160deg, #1b210d, #090d05);
@@ -430,7 +453,7 @@ section { margin-top: clamp(28px, 5vw, 46px); }
 .swing-foot { font-family: var(--mono); font-size: 10.5px; color: var(--muted); letter-spacing: .4px; margin-top: 14px; line-height: 1.5; }
 .club-card { background: linear-gradient(160deg, var(--charcoal), #0d0d0d); border: 1px solid var(--slate); border-radius: 12px; overflow: hidden; border-top: 2px solid var(--red); }
 .club-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 14px 18px; border-bottom: 1px solid var(--slate); background: var(--panel); }
-.club-head .cname { font-family: var(--display); font-size: 24px; letter-spacing: 1.5px; }
+.club-head .cname { font-family: var(--display); font-size: 22px; letter-spacing: 1.5px; }
 .club-head .cgain { font-family: var(--mono); font-size: 10px; letter-spacing: .5px; text-transform: uppercase; color: var(--optimal); background: rgba(16,185,129,.12); padding: 5px 10px; border-radius: 3px; white-space: nowrap; }
 .club-head .cgain.down { color: var(--monitor); background: rgba(245,158,11,.12); }
 .metric-line { padding: 13px 18px; border-bottom: 1px solid var(--slate); }
@@ -506,6 +529,7 @@ footer .cred { font-family: var(--mono); font-size: 10px; letter-spacing: 1px; c
   .hero-class { margin: 0 auto; }
   .client-badge { display: none; }
   .eff-scale, .hero-readout .eyebrow { text-align: left; }
+  .swing-grid { grid-template-columns: 1fr; }
 }
 @media(max-width:420px) {
   .screen-grid { grid-template-columns: repeat(1, 1fr); }
@@ -527,21 +551,18 @@ footer .cred { font-family: var(--mono); font-size: 10px; letter-spacing: 1px; c
 
 <div class="wrap">
 
-  <!-- OVERALL EFFICIENCY HERO -->
   <section class="reveal" style="margin-top:clamp(24px,5vw,40px)">
     <div class="sec-label">Overall Movement Efficiency</div>
     <div class="hero">
       <div class="radar-box">
-        <svg id="radar" viewBox="-40 0 380 300" role="img" aria-label="Racquet sports efficiency radar across six axes">
-          <!-- Dynamically generated by JavaScript -->
-        </svg>
+        <svg id="radar" viewBox="-40 0 380 300" role="img" aria-label="Racquet sports efficiency radar across six axes"></svg>
       </div>
       <div class="hero-readout">
         <div class="eyebrow">Racquet Efficiency Score</div>
         <div class="hero-score"><span id="effScore">0</span><span class="unit">/100</span></div>
         <span class="hero-class bg-monitor" id="effClass">Calculating...</span>
         <div class="eff-bar-wrap">
-          <div class="eff-track"><div class="eff-mask" id="effMask" style="width: 100%;"></div></div>
+          <div class="eff-track"><div class="eff-mask" id="effMask" style="width:100%;"></div></div>
           <div class="eff-scale">
             <span class="restricted">Restricted</span>
             <span>Developing</span>
@@ -553,61 +574,44 @@ footer .cred { font-family: var(--mono); font-size: 10px; letter-spacing: 1px; c
     </div>
   </section>
 
-  <!-- SCREEN OVERVIEW -->
   <section class="reveal" style="animation-delay:.08s">
     <div class="sec-label">Physical Capacity Screens — Tap any card to analyze</div>
     <h2 class="sec-title" id="sport-sec-title">Athlete Testing Profile</h2>
-    <div class="screen-grid" id="screenGrid">
-      <!-- Generated Dynamically by JS Engine -->
-    </div>
-    
-    <!-- DETAIL DISPLAY DRAWER -->
-    <div id="detail">
-      <!-- Injected Dynamically by JS click actions -->
-    </div>
+    <div class="screen-grid" id="screenGrid"></div>
+    <div id="detail"></div>
   </section>
 
-  <!-- PRESCRIBED PROGRAM -->
   <section class="reveal" style="animation-delay:.12s">
     <div class="sec-label">Prescribed Training Program</div>
     <h2 class="sec-title">Racquet Preparedness Drills</h2>
     <p class="program-sub" id="programSub">Loading target routines...</p>
-    <div id="programHost">
-      <!-- Generated by configuration -->
-    </div>
+    <div id="programHost"></div>
   </section>
 
-  <!-- LOCALIZED LOAD MANAGEMENT -->
   <section class="reveal" style="animation-delay:.16s">
     <div class="sec-label">Localized Load Management</div>
-    <h2 class="sec-title" id="load-sec-title">Match Fatigue Endurance Curve</h2>
+    <h2 class="sec-title">Match Fatigue Endurance Curve</h2>
     <div class="load-panel">
-      <p class="intro" id="loadIntro">Evaluating physical screens to discover potential stress load zones during dynamic cutting play...</p>
-      <div class="hole-track" id="load-track-labels">
+      <p class="intro" id="loadIntro">Checking your screens for areas that will wear down as the match goes on...</p>
+      <div class="hole-track">
         <span class="hmark" style="left:5%">Set 1</span>
         <span class="hmark" style="left:50%">Set 2</span>
         <span class="hmark" style="left:95%">Set 3</span>
       </div>
-      <ul class="load-list" id="loadList">
-        <!-- Dynamically generated stress alerts based on screening limitations -->
-      </ul>
+      <ul class="load-list" id="loadList"></ul>
     </div>
   </section>
 
-  <!-- PERFORMANCE MEASUREMENTS (PRE vs POST) -->
   <section class="reveal" style="animation-delay:.2s">
     <div class="sec-label">Sport Performance Indicators</div>
-    <h2 class="sec-title">First Serve Velocity & Side Shuffle agility (Pre → Post)</h2>
-    <div class="swing-grid" id="swingGrid">
-      <!-- Pre/Post comparison metrics derived from configuration -->
-    </div>
-    <p class="swing-foot">Values represent actual multi-trial session gains, indicating real-time functional adaptation from physical setup preparation.</p>
+    <h2 class="sec-title">First Serve Speed & Court Agility (Pre → Post)</h2>
+    <div class="swing-grid" id="swingGrid"></div>
+    <p class="swing-foot">Numbers show your average from each set of trials before and after your joint prep routine. Age-group benchmarks below each card show where you stand.</p>
   </section>
 
-  <!-- BOOKING CONVERT CTA -->
   <section class="cta reveal" style="animation-delay:.24s">
     <h3>BOOK YOUR NEXT <span class="r">RACQUET SESSION</span></h3>
-    <p>Consistently close physical capacity gaps, drive explosive racket head speed, and build on-court endurance week over week.</p>
+    <p>Close the physical gaps, add speed to your serve, and build a body that holds up through tight third sets.</p>
     <a class="book-btn" id="bookBtn" href="#" target="_blank" rel="noopener">Book Training Session →</a>
   </section>
 
@@ -621,24 +625,21 @@ footer .cred { font-family: var(--mono); font-size: 10px; letter-spacing: 1px; c
 <script>
 /* ====================================================================
    ███  CONFIG — EDIT THIS BLOCK ONLY  ███
-   --------------------------------------------------------------------
-   Update values below. Code dynamically adjusts to racquet context.
    ==================================================================== */
 const CONFIG = {
   client: {
-    name: "Marcus Vance",        // Full Athlete Name
-    date: "June 5, 2026",        // Screen Date
-    age:  35,                    // Athlete Age
-    sex:  "male",                // "male" or "female"
-    hand: "right",               // "right" or "left" (dominant hand)
-    bodyweightLbs: 175,          // Used for weight ratio computations
-    primarySport: "Racquet"      // Sport designation
+    name: "Marcus Vance",
+    date: "June 5, 2026",
+    age:  35,
+    sex:  "male",
+    hand: "right",
+    bodyweightLbs: 175,
+    primarySport: "Racquet"   // "Racquet" / "Tennis" / "Pickleball" / "Squash" / "Padel"
   },
 
   bookingUrl: "https://www.revivegolfperformance.com/booking",
 
   scores: {
-    /* STRENGTH TESTING (RSI COMPILATION) */
     strength: {
       trapBarDeadlift: { weight: 225, reps: 4, tested: true },
       backSquat:       { weight: 165, reps: 5, tested: true },
@@ -649,7 +650,6 @@ const CONFIG = {
     },
     rsiTarget: 5.60,
 
-    /* EXPLOSIVE POWER TESTING (POWER INDEX COMPILATION) */
     power: {
       verticalJump:  { ft: null, in: 22, tested: true },
       chestPass:     { ft: 16, tested: true },
@@ -659,22 +659,19 @@ const CONFIG = {
     },
     powerTarget: 780,
 
-    /* TOP 3 PRIMARY ROM FOR RACQUET SPORTS (DEGREES) */
     rom: [
-      { name: "Shoulder External Rotation", lead: 85, trail: 90, target: 95, limitRange: 10 },
-      { name: "Hip Internal Rotation", lead: 32, trail: 34, target: 40, limitRange: 8 },
-      { name: "Wrist Extension Profile", lead: 65, trail: 68, target: 70, limitRange: 5 }
+      { name: "Shoulder External Rotation", lead: 85,  trail: 90,  target: 95,  limitRange: 10 },
+      { name: "Hip Internal Rotation",      lead: 32,  trail: 34,  target: 40,  limitRange: 8  },
+      { name: "Wrist Extension Profile",    lead: 65,  trail: 68,  target: 70,  limitRange: 5  }
     ],
 
-    /* MOBILITY / CLEARANCE CRITICAL STANDARDS */
     mobilityClearance: [
-      { name: "Overhead Deep Squat", status: "Pass" },    
+      { name: "Overhead Deep Squat",      status: "Pass" },
       { name: "Shoulder Mobility Screen", status: "Monitor" },
-      { name: "Single Leg Stance Balance", status: "Pass" },
-      { name: "Wrist Flexion Angle", status: "Pass" }
+      { name: "Single Leg Stance Balance",status: "Pass" },
+      { name: "Wrist Flexion Angle",      status: "Pass" }
     ],
 
-    /* PERFORMANCE INDEX COMPOSITE */
     performanceIndex: {
       name: "Court Mobility Index",
       display: "Acel",
@@ -683,33 +680,32 @@ const CONFIG = {
     }
   },
 
-  /* ── PERFORMANCE INDICATOR METRICS ──────────────────────────── */
   sportMetrics: {
     metric1: {
       name: "First Serve Ball Speed",
-      speed: { pre: [102,105,103], post: [108,111,110] }, // mph
-      outcome: { name: "Spin / Placement Index", pre: [1400,1450,1420], post: [1550,1600,1580], unit: "rpm" } 
+      speed:   { pre: [102,105,103], post: [108,111,110] },
+      outcome: { name: "Spin / Placement Index", pre: [1400,1450,1420], post: [1550,1600,1580], unit: "rpm" }
     },
     metric2: {
       name: "Pro-Lateral Shuffle Pace",
-      speed: { pre: [12,13,12], post: [14,14,15] }, // mph indicator calculated
+      speed:   { pre: [12,13,12], post: [14,14,15] },
       outcome: { name: "Court Lateral Shuffle", pre: [5.1,5.0,5.1], post: [4.7,4.6,4.7], unit: "sec" }
     }
   },
 
   program: {
-    fullProgramUrl: "", 
+    fullProgramUrl: "",
     exercises: [
-      { name: "Wall Angels Wrist glides", url: "" },
-      { name: "90/90 Hip Flexor Flow", url: "" },
-      { name: "Thoracic Open Books", url: "" },
-      { name: "Trap-Bar Deadlift", url: "" },
-      { name: "Rotational Med-Ball Slam", url: "" },
-      { name: "Lateral Single-Leg Jumps", url: "" }
+      { name: "Wall Angels Wrist Glides",  url: "" },
+      { name: "90/90 Hip Flexor Flow",     url: "" },
+      { name: "Thoracic Open Books",       url: "" },
+      { name: "Trap-Bar Deadlift",         url: "" },
+      { name: "Rotational Med-Ball Slam",  url: "" },
+      { name: "Lateral Single-Leg Jumps",  url: "" }
     ]
   }
 };
-/* ███  END CONFIG — Do not edit below  ███ */
+/* ███  END CONFIG  ███ */
 
 document.addEventListener('DOMContentLoaded', () => {
   const c = CONFIG.client;
@@ -728,12 +724,18 @@ document.addEventListener('DOMContentLoaded', () => {
   const isTested = obj => obj && obj.tested !== false;
 
   const strengthParts = [
-    { name: "Trap-Bar Deadlift", key: "trapBarDeadlift", on: isTested(st.trapBarDeadlift), w: st.trapBarDeadlift.weight, r: st.trapBarDeadlift.reps, target: 1.5 },
-    { name: "Back Squat", key: "backSquat", on: isTested(st.backSquat), w: st.backSquat.weight, r: st.backSquat.reps, target: 1.25 },
-    { name: "Pull-Ups (BW + Load)", key: "pullups", on: isTested(st.pullups), w: BW + st.pullups.addedWeight, r: st.pullups.reps, target: (SEX === "female" ? 0.65 : 0.85) },
-    { name: "Cable Pull (Avg L/R)", key: "cablePull", on: isTested(st.cablePull), ratio: (calc1RM(st.cablePull.leftWeight, st.cablePull.leftReps)/BW + calc1RM(st.cablePull.rightWeight, st.cablePull.rightReps)/BW)/2, target: (SEX === "female" ? 0.25 : 0.30) },
-    { name: "Cable Push (Avg L/R)", key: "cablePush", on: isTested(st.cablePush), ratio: (calc1RM(st.cablePush.leftWeight, st.cablePush.leftReps)/BW + calc1RM(st.cablePush.rightWeight, st.cablePush.rightReps)/BW)/2, target: (SEX === "female" ? 0.20 : 0.25) },
-    { name: "Split Squat (Avg L/R)", key: "splitSquat", on: isTested(st.splitSquat), ratio: (calc1RM(st.splitSquat.leftWeight, st.splitSquat.leftReps)/BW + calc1RM(st.splitSquat.rightWeight, st.splitSquat.rightReps)/BW)/2, target: 0.50 }
+    { name: "Trap-Bar Deadlift",    key: "trapBarDeadlift", on: isTested(st.trapBarDeadlift), w: st.trapBarDeadlift.weight, r: st.trapBarDeadlift.reps, target: 1.5 },
+    { name: "Back Squat",           key: "backSquat",       on: isTested(st.backSquat),       w: st.backSquat.weight,       r: st.backSquat.reps,       target: 1.25 },
+    { name: "Pull-Ups (BW + Load)", key: "pullups",         on: isTested(st.pullups),         w: BW + st.pullups.addedWeight, r: st.pullups.reps,       target: SEX === "female" ? 0.65 : 0.85 },
+    { name: "Cable Pull (Avg L/R)", key: "cablePull",       on: isTested(st.cablePull),
+      ratio: (calc1RM(st.cablePull.leftWeight, st.cablePull.leftReps)/BW + calc1RM(st.cablePull.rightWeight, st.cablePull.rightReps)/BW)/2,
+      target: SEX === "female" ? 0.25 : 0.30 },
+    { name: "Cable Push (Avg L/R)", key: "cablePush",       on: isTested(st.cablePush),
+      ratio: (calc1RM(st.cablePush.leftWeight, st.cablePush.leftReps)/BW + calc1RM(st.cablePush.rightWeight, st.cablePush.rightReps)/BW)/2,
+      target: SEX === "female" ? 0.20 : 0.25 },
+    { name: "Split Squat (Avg L/R)", key: "splitSquat",     on: isTested(st.splitSquat),
+      ratio: (calc1RM(st.splitSquat.leftWeight, st.splitSquat.leftReps)/BW + calc1RM(st.splitSquat.rightWeight, st.splitSquat.rightReps)/BW)/2,
+      target: 0.50 }
   ];
 
   strengthParts.forEach(p => {
@@ -748,14 +750,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const rescaledRsiTarget = s.rsiTarget * (strengthScored.length / strengthParts.length);
 
   const pt = s.power;
-  const vjIn = (pt.verticalJump.in != null) ? pt.verticalJump.in : (pt.verticalJump.ft || 0) * 12;
+  const vjIn = pt.verticalJump.in != null ? pt.verticalJump.in : (pt.verticalJump.ft || 0) * 12;
 
   const powerParts = [
-    { name: "Vertical Jump", key: "verticalJump", on: isTested(pt.verticalJump), inches: vjIn, disp: `${vjIn}"`, target: (SEX === "female" ? 14 : 18) },
-    { name: "Seated Chest Pass", key: "chestPass", on: isTested(pt.chestPass), inches: pt.chestPass.ft * 12, disp: `${pt.chestPass.ft}'`, target: (SEX === "female" ? 12 : 16) * 12 },
-    { name: "Sit-up Overhead Throw", key: "situpThrow", on: isTested(pt.situpThrow), inches: pt.situpThrow.ft * 12, disp: `${pt.situpThrow.ft}'`, target: (SEX === "female" ? 10 : 14) * 12 },
-    { name: "Shot Put Throw — Right", key: "shotPutRight", on: isTested(pt.shotPutRight), inches: pt.shotPutRight.ft * 12, disp: `${pt.shotPutRight.ft}'`, target: (SEX === "female" ? 14 : 20) * 12 },
-    { name: "Shot Put Throw — Left", key: "shotPutLeft", on: isTested(pt.shotPutLeft), inches: pt.shotPutLeft.ft * 12, disp: `${pt.shotPutLeft.ft}'`, target: (SEX === "female" ? 14 : 20) * 12 }
+    { name: "Vertical Jump",         key: "verticalJump", on: isTested(pt.verticalJump), inches: vjIn,                    disp: `${vjIn}"`,            target: SEX === "female" ? 14 : 18 },
+    { name: "Seated Chest Pass",     key: "chestPass",    on: isTested(pt.chestPass),    inches: pt.chestPass.ft*12,      disp: `${pt.chestPass.ft}'`, target: (SEX === "female" ? 12 : 16)*12 },
+    { name: "Sit-up Overhead Throw", key: "situpThrow",   on: isTested(pt.situpThrow),   inches: pt.situpThrow.ft*12,     disp: `${pt.situpThrow.ft}'`,target: (SEX === "female" ? 10 : 14)*12 },
+    { name: "Shot Put — Right",      key: "shotPutRight", on: isTested(pt.shotPutRight), inches: pt.shotPutRight.ft*12,   disp: `${pt.shotPutRight.ft}'`, target: (SEX === "female" ? 14 : 20)*12 },
+    { name: "Shot Put — Left",       key: "shotPutLeft",  on: isTested(pt.shotPutLeft),  inches: pt.shotPutLeft.ft*12,    disp: `${pt.shotPutLeft.ft}'`,  target: (SEX === "female" ? 14 : 20)*12 }
   ];
 
   const powerScored = powerParts.filter(p => p.on);
@@ -766,7 +768,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const symValue = symTested ? (Math.min(pt.shotPutRight.ft, pt.shotPutLeft.ft) / Math.max(pt.shotPutRight.ft, pt.shotPutLeft.ft)) * 100 : 0;
 
   let scoreStrength = Math.min(100, (totalRSI / rescaledRsiTarget) * 100);
-  let scorePower = Math.min(100, (totalPower / rescaledPowerTarget) * 100);
+  let scorePower    = Math.min(100, (totalPower / rescaledPowerTarget) * 100);
   let scoreSymmetry = symTested ? symValue : 50;
 
   let mobScoreTotal = 0;
@@ -789,238 +791,308 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('effScore').textContent = heroScore;
 
   const heroClassObj = document.getElementById("effClass");
-  const heroMaskObj = document.getElementById("effMask");
-  let statusClass = "bg-restricted";
-  let statusLabel = "Restricted";
-
-  if (heroScore >= 85) {
-    statusClass = "bg-status-pass";
-    statusLabel = "Optimal";
-  } else if (heroScore >= 70) {
-    statusClass = "bg-status-monitor";
-    statusLabel = "Functional";
-  } else if (heroScore >= 55) {
-    statusClass = "bg-status-monitor";
-    statusLabel = "Developing";
-  }
+  const heroMaskObj  = document.getElementById("effMask");
+  let statusClass = "bg-restricted", statusLabel = "Restricted";
+  if      (heroScore >= 85) { statusClass = "bg-optimal"; statusLabel = "Optimal"; }
+  else if (heroScore >= 70) { statusClass = "bg-monitor"; statusLabel = "Functional"; }
+  else if (heroScore >= 55) { statusClass = "bg-monitor"; statusLabel = "Developing"; }
   heroClassObj.className = `hero-class ${statusClass}`;
   heroClassObj.textContent = statusLabel;
   heroMaskObj.style.width = `${100 - heroScore}%`;
 
-  const generateRadar = () => {
+  // Radar
+  (function() {
     const svg = document.getElementById('radar');
     const cx = 150, cy = 150, radius = 100;
-    const categories = ['Strength', 'Power', 'Symmetry', 'Mobility', 'ROM', 'Perf. Index'];
+    const categories = ['Strength','Power','Symmetry','Mobility','ROM','Perf. Index'];
     const values = [scoreStrength, scorePower, scoreSymmetry, scoreMobility, scoreROM, scorePerfIndex];
-    let gElements = "";
-
+    let g = "";
     [0.25, 0.50, 0.75, 1.0].forEach(f => {
       let pts = [];
-      let r = radius * f;
       for (let i = 0; i < 6; i++) {
-        let angle = (i / 6) * 2 * Math.PI - Math.PI / 2;
-        pts.push(`${cx + r * Math.cos(angle)},${cy + r * Math.sin(angle)}`);
+        let angle = (i/6)*2*Math.PI - Math.PI/2;
+        pts.push(`${cx+radius*f*Math.cos(angle)},${cy+radius*f*Math.sin(angle)}`);
       }
-      gElements += `<polygon points="${pts.join(" ")}" fill="none" stroke="#2C2C2C" stroke-width="1" />`;
+      g += `<polygon points="${pts.join(' ')}" fill="none" stroke="#2C2C2C" stroke-width="1"/>`;
     });
-
     for (let i = 0; i < 6; i++) {
-      let angle = (i / 6) * 2 * Math.PI - Math.PI / 2;
-      let x2 = cx + radius * Math.cos(angle);
-      let y2 = cy + radius * Math.sin(angle);
-      gElements += `<line x1="${cx}" y1="${cy}" x2="${x2}" y2="${y2}" stroke="#2C2C2C" stroke-width="1" />`;
-
-      let lx = cx + (radius + 20) * Math.cos(angle);
-      let ly = cy + (radius + 15) * Math.sin(angle) + 5;
-      let anchor = Math.abs(lx - cx) < 8 ? "middle" : (lx > cx ? "start" : "end");
-      gElements += `<text x="${lx}" y="${ly}" fill="#8a8a8a" font-family="DM Mono, monospace" font-size="9" letter-spacing="0.5" text-anchor="${anchor}">${categories[i].toUpperCase()}</text>`;
+      let angle = (i/6)*2*Math.PI - Math.PI/2;
+      g += `<line x1="${cx}" y1="${cy}" x2="${cx+radius*Math.cos(angle)}" y2="${cy+radius*Math.sin(angle)}" stroke="#2C2C2C" stroke-width="1"/>`;
+      let lx = cx+(radius+20)*Math.cos(angle), ly = cy+(radius+15)*Math.sin(angle)+5;
+      let anchor = Math.abs(lx-cx)<8?"middle":(lx>cx?"start":"end");
+      g += `<text x="${lx}" y="${ly}" fill="#8a8a8a" font-family="DM Mono,monospace" font-size="9" letter-spacing="0.5" text-anchor="${anchor}">${categories[i].toUpperCase()}</text>`;
     }
-
-    let dataPts = [];
-    let vertCircles = "";
+    let dataPts = [], vCircles = "";
     for (let i = 0; i < 6; i++) {
-      let angle = (i / 6) * 2 * Math.PI - Math.PI / 2;
-      let valR = radius * (Math.min(100, Math.max(0, values[i])) / 100);
-      let dx = cx + valR * Math.cos(angle);
-      let dy = cy + valR * Math.sin(angle);
+      let angle = (i/6)*2*Math.PI - Math.PI/2;
+      let valR = radius*(Math.min(100,Math.max(0,values[i]))/100);
+      let dx = cx+valR*Math.cos(angle), dy = cy+valR*Math.sin(angle);
       dataPts.push(`${dx},${dy}`);
-
-      let dotColor = values[i] >= 85 ? "#10B981" : (values[i] >= 70 ? "#F59E0B" : "#EF4444");
-      vertCircles += `<circle cx="${dx}" cy="${dy}" r="3.5" fill="${dotColor}" />`;
+      let col = values[i]>=85?"#10B981":(values[i]>=70?"#F59E0B":"#EF4444");
+      vCircles += `<circle cx="${dx}" cy="${dy}" r="3.5" fill="${col}"/>`;
     }
+    g += `<polygon points="${dataPts.join(' ')}" fill="rgba(163,230,53,0.2)" stroke="#A3E635" stroke-width="2" stroke-linejoin="round"/>`;
+    g += vCircles;
+    svg.innerHTML = g;
+  })();
 
-    gElements += `<polygon points="${dataPts.join(" ")}" fill="rgba(163, 230, 53, 0.2)" stroke="#A3E635" stroke-width="2" stroke-linejoin="round" />`;
-    gElements += vertCircles;
+  /* ── BOTTLENECK TEXT ── */
+  function getBottleneck(key, status) {
+    const map = {
+      strength: {
+        optimal:    "Your strength is right where it needs to be. On the court, that means your legs, core, and shoulder are strong enough to back up every shot — and hold up through long rallies and tiebreakers. Keep building on this!",
+        monitor:    "Your strength is getting close. A little more work in the gym will pay off on the court. Stronger muscles mean you can hit harder at 5-5 in the third set, not just the first.",
+        restricted: "Your strength is below the target right now. In racquet sports, strength is what keeps you explosive late in a long match. Without enough of it, your shots lose steam and your balance breaks down well before the final game."
+      },
+      power: {
+        optimal:    "Your power is on target. That's the physical ingredient behind your serve speed. Your muscles are firing fast enough to support real racket head speed through the swing. Keep training to stay here!",
+        monitor:    "Power is close but not quite at the goal. You have the strength — your body just needs to learn to use it faster. The right drills will add speed to your serve quickly.",
+        restricted: "Power is below the target. Power is what drives serve speed — it's how quickly you release strength into the racket. You have muscles, but they aren't firing as fast as they could. This is one of the quickest areas to improve with the right training."
+      },
+      symmetry: {
+        optimal:    "Both sides of your body are pulling nearly equal weight. That's especially important in racquet sports, where you're loading your playing arm and shoulder on every single shot. Good balance here protects your elbow and rotator cuff.",
+        monitor:    "There's a small gap between your two sides. It's not a big problem yet — but closing it will protect your playing arm over a long season of hitting.",
+        restricted: "One side is noticeably stronger. In racquet sports, that gap puts extra stress on your playing arm and shoulder during every serve and groundstroke. Over a long season, that's often where tennis elbow and rotator cuff soreness shows up."
+      },
+      mobility: {
+        optimal:    "All your movement screens passed. Your body is moving freely through the positions the court demands — a solid foundation for your swing mechanics.",
+        monitor:    "One or more screens showed something to watch. Your body can still perform — but there's a tight spot we want to clean up before it limits your game.",
+        restricted: "One or more movement screens showed a problem area. Tight movement patterns in racquet sport players tend to lead to overuse injuries in the shoulder, elbow, and wrist — because the body compensates around the stuck spot with every swing."
+      },
+      rom: {
+        optimal:    "Your range of motion is within the healthy target range. Your shoulder, hip, and wrist are moving freely — that's the physical foundation for clean swing mechanics. Not a limiter right now.",
+        monitor:    "One or more joints is a little short of the target. Not a big problem yet — but tightness here means the joint next to it is picking up extra work during your swing.",
+        restricted: "A joint angle is below the target. When a joint can't move far enough, the one next to it has to do extra work. In racquet sports, restricted shoulder external rotation is one of the most common hidden reasons behind tennis elbow — because the elbow compensates for what the shoulder can't do."
+      },
+      perf: {
+        optimal:    "Great overall physical grade! Your screens are trending in a strong direction. Stay on your program and keep building on this.",
+        monitor:    "Your overall grade is in the middle range. There are things to improve — but the path is clear. Close the gaps we found above and this number will go up.",
+        restricted: "Your overall grade has room to grow. That's exactly what this program is built to fix. Work through the plan, and watch this score climb over time."
+      }
+    };
+    return (map[key] && map[key][status]) || (map[key] && map[key]['monitor']) || "";
+  }
 
-    svg.innerHTML = gElements;
-  };
-  generateRadar();
+  /* ── Serve speed norms ── */
+  function getServeNorms(metricName, age, sex) {
+    const nm = metricName.toLowerCase();
+    const isServe = nm.includes('serve') || nm.includes('first');
+    if (!isServe) return null;
+    const isMale = sex.toLowerCase() !== 'female';
+    let level = '', avg = '', good = '', elite = '', note = '';
+    if (age <= 14) {
+      level = isMale ? 'Junior Boys (≤14)' : 'Junior Girls (≤14)';
+      avg   = isMale ? '65–80'  : '55–70';
+      good  = isMale ? '80–90'  : '70–80';
+      elite = isMale ? '95+'    : '85+';
+      note  = 'Mechanics and spin first — speed follows';
+    } else if (age <= 18) {
+      level = isMale ? 'HS Boys (15–18)' : 'HS Girls (15–18)';
+      avg   = isMale ? '85–100' : '70–85';
+      good  = isMale ? '100–110': '85–95';
+      elite = isMale ? '115+'   : '100+';
+      note  = isMale ? 'College recruits target 100+ mph' : 'College recruits target 90+ mph';
+    } else if (age <= 30) {
+      level = isMale ? 'Competitive Adults — Men' : 'Competitive Adults — Women';
+      avg   = isMale ? '100–115': '80–95';
+      good  = isMale ? '115–125': '95–105';
+      elite = isMale ? '130+'   : '110+';
+      note  = isMale ? 'ATP Tour avg first serve ~120 mph' : 'WTA Tour avg first serve ~100 mph';
+    } else {
+      level = isMale ? 'Recreational / Senior Men' : 'Recreational / Senior Women';
+      avg   = isMale ? '85–105' : '70–90';
+      good  = isMale ? '105–115': '90–100';
+      elite = isMale ? '120+'   : '105+';
+      note  = 'NTRP 4.5+ players average 100+ (men)';
+    }
+    return { level, avg, good, elite, note };
+  }
 
+  /* ── Shuffle / agility norms ── */
+  function getShuffleNorms(metricName, age, sex) {
+    const nm = metricName.toLowerCase();
+    const isShuffle = nm.includes('shuffle') || nm.includes('lateral') || nm.includes('agility');
+    if (!isShuffle) return null;
+    const isMale = sex.toLowerCase() !== 'female';
+    let level = '', avg = '', good = '', elite = '', note = '';
+    if (age <= 18) {
+      level = isMale ? 'Junior Boys' : 'Junior Girls';
+      avg   = isMale ? '13–15' : '11–14';
+      good  = isMale ? '15–17' : '14–16';
+      elite = isMale ? '17+'   : '16+';
+      note  = 'Speed measured as mph indicator during side-shuffle drill';
+    } else if (age <= 35) {
+      level = isMale ? 'Competitive Adults — Men' : 'Competitive Adults — Women';
+      avg   = isMale ? '13–16' : '11–14';
+      good  = isMale ? '16–18' : '13–16';
+      elite = isMale ? '18+'   : '16+';
+      note  = 'Higher mph = faster court coverage';
+    } else {
+      level = isMale ? 'Masters Men (35+)' : 'Masters Women (35+)';
+      avg   = isMale ? '11–14' : '10–13';
+      good  = isMale ? '14–16' : '13–15';
+      elite = isMale ? '16+'   : '15+';
+      note  = 'Foot speed becomes a key differentiator at masters level';
+    }
+    return { level, avg, good, elite, note };
+  }
+
+  /* ── SCREEN DETAIL VIEW ── */
   const screenGrid = document.getElementById("screenGrid");
   const detailContainer = document.getElementById("detail");
 
   const buildDetailView = (key) => {
     let html = "";
+
     if (key === "strength") {
       let rows = strengthParts.map(p => {
         let input = p.on ? `${p.w} × ${p.r}` : "Deferred";
-        let status = p.on ? (p.ratio >= p.target ? "Optimal" : (p.ratio >= p.target * 0.85 ? "Monitor" : "Restricted")) : "Deferred";
-        let col = status === "Optimal" ? "var(--optimal)" : (status === "Monitor" ? "var(--monitor)" : "var(--restricted)");
-        return `
-          <tr>
-            <td>${p.name}<span class="tinput">${p.on ? input : 'Not Tested'}</span></td>
-            <td class="num">${p.on ? p.ratio.toFixed(2) + '×' : '—'}</td>
-            <td class="num">${p.target.toFixed(2)}×</td>
-            <td class="num"><span class="tstat" style="color:${col}; border-color:${col}">${status}</span></td>
-          </tr>
-        `;
+        let status = p.on ? (p.ratio>=p.target?"Optimal":(p.ratio>=p.target*0.85?"Monitor":"Restricted")) : "Deferred";
+        let col = status==="Optimal"?"var(--optimal)":(status==="Monitor"?"var(--monitor)":"var(--restricted)");
+        return `<tr>
+          <td>${p.name}<span class="tinput">${p.on ? input : 'Not Tested'}</span></td>
+          <td class="num">${p.on ? p.ratio.toFixed(2)+'×' : '—'}</td>
+          <td class="num">${p.target.toFixed(2)}×</td>
+          <td class="num"><span class="tstat" style="color:${col};border-color:${col}">${status}</span></td>
+        </tr>`;
       }).join("");
-
-      html = `
-        <div class="detail">
-          <div class="detail-head">
-            <span class="d-title">Relative Strength Index (RSI)</span>
-            <span class="d-pill ${scoreStrength >= 85 ? 'bg-optimal' : (scoreStrength >= 70 ? 'bg-monitor' : 'bg-restricted')}">${scoreStrength >= 85 ? 'Optimal' : (scoreStrength >= 70 ? 'Functional' : 'Restricted')}</span>
-          </div>
-          <div class="metric-row">
-            <div class="metric-cell"><div class="ml">YOUR RSI</div><div class="mv">${totalRSI.toFixed(2)}</div></div>
-            <div class="metric-cell"><div class="ml">TARGET</div><div class="mv">${rescaledRsiTarget.toFixed(2)}</div></div>
-            <div class="metric-cell"><div class="ml">CLASSIFICATION</div><div class="mv">${rsiClass(totalRSI)}</div></div>
-          </div>
-          <div class="block-label">RSI Capacity Calculation Matrix</div>
-          <table class="calc-table">
-            <tr><th>Movement Target Lift</th><th class="num">Your Capacity</th><th class="num">Strong Goal</th><th class="num">Status</th></tr>
-            ${rows}
-            <tr class="total"><td>RSI Index Performance</td><td class="num">${totalRSI.toFixed(2)}</td><td class="num">${rescaledRsiTarget.toFixed(2)}</td><td></td></tr>
-          </table>
+      const bnSt = scoreStrength>=85?'optimal':(scoreStrength>=70?'monitor':'restricted');
+      html = `<div class="detail">
+        <div class="detail-head">
+          <span class="d-title">Relative Strength Index (RSI)</span>
+          <span class="d-pill ${scoreStrength>=85?'bg-optimal':(scoreStrength>=70?'bg-monitor':'bg-restricted')}">${scoreStrength>=85?'Optimal':(scoreStrength>=70?'Functional':'Restricted')}</span>
         </div>
-      `;
+        <div class="metric-row">
+          <div class="metric-cell"><div class="ml">YOUR RSI</div><div class="mv">${totalRSI.toFixed(2)}</div></div>
+          <div class="metric-cell"><div class="ml">TARGET</div><div class="mv">${rescaledRsiTarget.toFixed(2)}</div></div>
+          <div class="metric-cell"><div class="ml">CLASSIFICATION</div><div class="mv">${rsiClass(totalRSI)}</div></div>
+        </div>
+        <div class="block-label">RSI Capacity Calculation</div>
+        <table class="calc-table">
+          <tr><th>Lift</th><th class="num">Your Score</th><th class="num">Target</th><th class="num">Status</th></tr>
+          ${rows}
+          <tr class="total"><td>RSI Total</td><td class="num">${totalRSI.toFixed(2)}</td><td class="num">${rescaledRsiTarget.toFixed(2)}</td><td></td></tr>
+        </table>
+        <p class="calc-note">Score = est. 1-rep max ÷ bodyweight (${BW} lb). Red = needs work.</p>
+        <div class="block-label">What This Means On The Court</div>
+        <div class="bottleneck ${bnSt==='optimal'?'clear':''}">${getBottleneck('strength', bnSt)}</div>
+      </div>`;
+
     } else if (key === "power") {
       let rows = powerParts.map(p => {
-        let status = p.on ? (p.inches >= p.target ? "Optimal" : (p.inches >= p.target * 0.85 ? "Monitor" : "Restricted")) : "Deferred";
-        let col = status === "Optimal" ? "var(--optimal)" : (status === "Monitor" ? "var(--monitor)" : "var(--restricted)");
-        return `
-          <tr>
-            <td>${p.name}</td>
-            <td class="num">${p.on ? p.disp : '—'}</td>
-            <td class="num">${p.target + '"'}</td>
-            <td class="num"><span class="tstat" style="color:${col}; border-color:${col}">${status}</span></td>
-          </tr>
-        `;
+        let status = p.on?(p.inches>=p.target?"Optimal":(p.inches>=p.target*0.85?"Monitor":"Restricted")):"Deferred";
+        let col = status==="Optimal"?"var(--optimal)":(status==="Monitor"?"var(--monitor)":"var(--restricted)");
+        return `<tr>
+          <td>${p.name}</td>
+          <td class="num">${p.on?p.disp:'—'}</td>
+          <td class="num">${p.target+'"'}</td>
+          <td class="num"><span class="tstat" style="color:${col};border-color:${col}">${status}</span></td>
+        </tr>`;
       }).join("");
+      const bnSt = scorePower>=85?'optimal':(scorePower>=70?'monitor':'restricted');
+      html = `<div class="detail">
+        <div class="detail-head">
+          <span class="d-title">Athletic Power Index</span>
+          <span class="d-pill ${scorePower>=85?'bg-optimal':(scorePower>=70?'bg-monitor':'bg-restricted')}">${scorePower>=85?'Optimal':(scorePower>=70?'Functional':'Restricted')}</span>
+        </div>
+        <div class="metric-row">
+          <div class="metric-cell"><div class="ml">TOTAL INDEX</div><div class="mv">${Math.round(totalPower)} in</div></div>
+          <div class="metric-cell"><div class="ml">TARGET</div><div class="mv">${rescaledPowerTarget} in</div></div>
+          <div class="metric-cell"><div class="ml">POWER GAP</div><div class="mv">${Math.round(totalPower-rescaledPowerTarget)} in</div></div>
+        </div>
+        <div class="block-label">Power Output Tests</div>
+        <table class="calc-table">
+          <tr><th>Test</th><th class="num">Your Result</th><th class="num">Target</th><th class="num">Status</th></tr>
+          ${rows}
+        </table>
+        <p class="calc-note">Red = below target. Power index = all tests added up (throws converted to inches).</p>
+        <div class="block-label">What This Means On The Court</div>
+        <div class="bottleneck ${bnSt==='optimal'?'clear':''}">${getBottleneck('power', bnSt)}</div>
+      </div>`;
 
-      html = `
-        <div class="detail">
-          <div class="detail-head">
-            <span class="d-title">Athletic Power Index</span>
-            <span class="d-pill ${scorePower >= 85 ? 'bg-optimal' : (scorePower >= 70 ? 'bg-monitor' : 'bg-restricted')}">${scorePower >= 85 ? 'Optimal' : (scorePower >= 70 ? 'Functional' : 'Restricted')}</span>
-          </div>
-          <div class="metric-row">
-            <div class="metric-cell"><div class="ml">TOTAL INDEX</div><div class="mv">${Math.round(totalPower)} in</div></div>
-            <div class="metric-cell"><div class="ml">TARGET</div><div class="mv">${rescaledPowerTarget} in</div></div>
-            <div class="metric-cell"><div class="ml">POWER GAP</div><div class="mv">${Math.round(totalPower - rescaledPowerTarget)} in</div></div>
-          </div>
-          <div class="block-label">Power Output Matrix</div>
-          <table class="calc-table">
-            <tr><th>Power Assessments</th><th class="num">Distance / Height</th><th class="num">Strong Target</th><th class="num">Status</th></tr>
-            ${rows}
-          </table>
-        </div>
-      `;
     } else if (key === "symmetry") {
-      html = `
-        <div class="detail">
-          <div class="detail-head">
-            <span class="d-title">Bilateral Power & ROM Symmetry</span>
-            <span class="d-pill ${scoreSymmetry >= 90 ? 'bg-optimal' : (scoreSymmetry >= 80 ? 'bg-monitor' : 'bg-restricted')}">${scoreSymmetry >= 90 ? 'Optimal' : (scoreSymmetry >= 80 ? 'Functional' : 'Restricted')}</span>
-          </div>
-          <div class="metric-row">
-            <div class="metric-cell"><div class="ml">SYMMETRY PERCENT</div><div class="mv">${symTested ? Math.round(scoreSymmetry) + '%' : 'Deferred'}</div></div>
-            <div class="metric-cell"><div class="ml">PERFORMANCE FOCUS</div><div class="mv">${scoreSymmetry >= 90 ? 'Balanced' : 'Isolate Sides'}</div></div>
-          </div>
-          <div class="block-label">Symmetry & Side Balance</div>
-          <div class="bottleneck">
-            ${scoreSymmetry >= 90 ? 
-              'Excellent bilateral balance across both ROM and Power output. Side-to-side force discrepancies are minimal, safeguarding joints.' : 
-              'Significant discrepancy detected between sides. A power or ROM imbalance greater than 10-15% forces systemic structural compensations, leading to excessive focal load.'
-            }
-          </div>
+      const bnSt = scoreSymmetry>=90?'optimal':(scoreSymmetry>=80?'monitor':'restricted');
+      html = `<div class="detail">
+        <div class="detail-head">
+          <span class="d-title">Bilateral Power Symmetry</span>
+          <span class="d-pill ${scoreSymmetry>=90?'bg-optimal':(scoreSymmetry>=80?'bg-monitor':'bg-restricted')}">${scoreSymmetry>=90?'Optimal':(scoreSymmetry>=80?'Functional':'Restricted')}</span>
         </div>
-      `;
+        <div class="metric-row">
+          <div class="metric-cell"><div class="ml">SYMMETRY %</div><div class="mv">${symTested?Math.round(scoreSymmetry)+'%':'Deferred'}</div></div>
+          <div class="metric-cell"><div class="ml">TARGET</div><div class="mv">≥ 90%</div></div>
+          <div class="metric-cell"><div class="ml">FOCUS</div><div class="mv">${scoreSymmetry>=90?'Balanced':'Isolate Sides'}</div></div>
+        </div>
+        <div class="block-label">What This Means On The Court</div>
+        <div class="bottleneck ${bnSt==='optimal'?'clear':''}">${getBottleneck('symmetry', bnSt)}</div>
+      </div>`;
+
     } else if (key === "mobility") {
       let rows = s.mobilityClearance.map(mc => {
-        let col = mc.status === "Pass" ? "var(--optimal)" : (mc.status === "Monitor" ? "var(--monitor)" : "var(--restricted)");
-        return `
-          <tr>
-            <td>${mc.name}</td>
-            <td class="num" style="color:${col}; font-weight:600">${mc.status.toUpperCase()}</td>
-          </tr>
-        `;
+        let col = mc.status==="Pass"?"var(--optimal)":(mc.status==="Monitor"?"var(--monitor)":"var(--restricted)");
+        return `<tr><td>${mc.name}</td><td class="num" style="color:${col};font-weight:600">${mc.status.toUpperCase()}</td></tr>`;
       }).join("");
-
-      html = `
-        <div class="detail">
-          <div class="detail-head">
-            <span class="d-title">Clearance & Fundamental Mobility Battery</span>
-            <span class="d-pill ${scoreMobility >= 85 ? 'bg-optimal' : (scoreMobility >= 70 ? 'bg-monitor' : 'bg-restricted')}">${scoreMobility >= 85 ? 'Optimal' : (scoreMobility >= 70 ? 'Functional' : 'Restricted')}</span>
-          </div>
-          <div class="metric-row">
-            <div class="metric-cell"><div class="ml">BATTERY SCORE</div><div class="mv">${Math.round(scoreMobility)}%</div></div>
-            <div class="metric-cell"><div class="ml">TOTAL TESTS</div><div class="mv">${s.mobilityClearance.length}</div></div>
-          </div>
-          <div class="block-label">Battery Screening Log</div>
-          <table class="calc-table">
-            <tr><th>Functional Testing Area</th><th class="num">Assessment Result</th></tr>
-            ${rows}
-          </table>
+      const bnSt = scoreMobility>=85?'optimal':(scoreMobility>=70?'monitor':'restricted');
+      html = `<div class="detail">
+        <div class="detail-head">
+          <span class="d-title">Movement Clearance Battery</span>
+          <span class="d-pill ${scoreMobility>=85?'bg-optimal':(scoreMobility>=70?'bg-monitor':'bg-restricted')}">${scoreMobility>=85?'Optimal':(scoreMobility>=70?'Functional':'Restricted')}</span>
         </div>
-      `;
+        <div class="metric-row">
+          <div class="metric-cell"><div class="ml">BATTERY SCORE</div><div class="mv">${Math.round(scoreMobility)}%</div></div>
+          <div class="metric-cell"><div class="ml">TOTAL TESTS</div><div class="mv">${s.mobilityClearance.length}</div></div>
+        </div>
+        <div class="block-label">Screen Results</div>
+        <table class="calc-table">
+          <tr><th>Test</th><th class="num">Result</th></tr>
+          ${rows}
+        </table>
+        <div class="block-label">What This Means On The Court</div>
+        <div class="bottleneck ${bnSt==='optimal'?'clear':''}">${getBottleneck('mobility', bnSt)}</div>
+      </div>`;
+
     } else if (key === "rom") {
-      let rows = s.rom.map(r => {
-        return `
-          <tr>
-            <td>${r.name}</td>
-            <td class="num">${r.lead}° / ${r.trail}°</td>
-            <td class="num">${r.target}°</td>
-            <td class="num">${Math.abs(r.lead - r.trail)}° Diff</td>
-          </tr>
-        `;
-      }).join("");
+      let rows = s.rom.map(r => `<tr>
+        <td>${r.name}</td>
+        <td class="num">${r.lead}° / ${r.trail}°</td>
+        <td class="num">${r.target}°</td>
+        <td class="num">${Math.abs(r.lead-r.trail)}° Diff</td>
+      </tr>`).join("");
+      const bnSt = scoreROM>=85?'optimal':(scoreROM>=70?'monitor':'restricted');
+      html = `<div class="detail">
+        <div class="detail-head">
+          <span class="d-title">Range of Motion (ROM)</span>
+          <span class="d-pill ${scoreROM>=85?'bg-optimal':(scoreROM>=70?'bg-monitor':'bg-restricted')}">${scoreROM>=85?'Optimal':(scoreROM>=70?'Functional':'Restricted')}</span>
+        </div>
+        <div class="metric-row">
+          <div class="metric-cell"><div class="ml">ROM SCORE</div><div class="mv">${Math.round(scoreROM)}%</div></div>
+          <div class="metric-cell"><div class="ml">JOINTS TESTED</div><div class="mv">${s.rom.length}</div></div>
+        </div>
+        <div class="block-label">Joint Angles Measured</div>
+        <table class="calc-table">
+          <tr><th>Joint</th><th class="num">Lead / Trail</th><th class="num">Target</th><th class="num">Side Diff</th></tr>
+          ${rows}
+        </table>
+        <p class="calc-note">Lead = racket side · Trail = off side · Big side differences need attention.</p>
+        <div class="block-label">What This Means On The Court</div>
+        <div class="bottleneck ${bnSt==='optimal'?'clear':''}">${getBottleneck('rom', bnSt)}</div>
+      </div>`;
 
-      html = `
-        <div class="detail">
-          <div class="detail-head">
-            <span class="d-title">Active Range Of Motion (ROM)</span>
-            <span class="d-pill ${scoreROM >= 85 ? 'bg-optimal' : (scoreROM >= 70 ? 'bg-monitor' : 'bg-restricted')}">${scoreROM >= 85 ? 'Optimal' : (scoreROM >= 70 ? 'Functional' : 'Restricted')}</span>
-          </div>
-          <div class="metric-row">
-            <div class="metric-cell"><div class="ml">ROM COMPLIANCE</div><div class="mv">${Math.round(scoreROM)}%</div></div>
-            <div class="metric-cell"><div class="ml">AXES ASSESSED</div><div class="mv">${s.rom.length}</div></div>
-          </div>
-          <div class="block-label">Measured ROM Profiles</div>
-          <table class="calc-table">
-            <tr><th>Movement Plane</th><th class="num">Lead / Trail</th><th class="num">Target Angle</th><th class="num">Variance</th></tr>
-            ${rows}
-          </table>
-        </div>
-      `;
     } else {
-      html = `
-        <div class="detail">
-          <div class="detail-head">
-            <span class="d-title">${s.performanceIndex.name}</span>
-            <span class="d-pill ${scorePerfIndex >= 85 ? 'bg-optimal' : (scorePerfIndex >= 70 ? 'bg-monitor' : 'bg-restricted')}">${s.performanceIndex.class}</span>
-          </div>
-          <div class="metric-row">
-            <div class="metric-cell"><div class="ml">SCORE DISPLAY</div><div class="mv">${s.performanceIndex.display}</div></div>
-            <div class="metric-cell"><div class="ml">PERCENTILE SCALE</div><div class="mv">${s.performanceIndex.fillPct.toFixed(1)}%</div></div>
-          </div>
-          <div class="block-label">Overall Context</div>
-          <div class="bottleneck">
-            This rating serves as your overall field mobility & capacity benchmark, pulling from all physical screening and speed performance components.
-          </div>
+      const bnSt = scorePerfIndex>=85?'optimal':(scorePerfIndex>=70?'monitor':'restricted');
+      html = `<div class="detail">
+        <div class="detail-head">
+          <span class="d-title">${s.performanceIndex.name}</span>
+          <span class="d-pill ${scorePerfIndex>=85?'bg-optimal':(scorePerfIndex>=70?'bg-monitor':'bg-restricted')}">${s.performanceIndex.class}</span>
         </div>
-      `;
+        <div class="metric-row">
+          <div class="metric-cell"><div class="ml">GRADE</div><div class="mv">${s.performanceIndex.display}</div></div>
+          <div class="metric-cell"><div class="ml">PERCENTILE</div><div class="mv">${s.performanceIndex.fillPct.toFixed(1)}%</div></div>
+        </div>
+        <div class="block-label">What This Means On The Court</div>
+        <div class="bottleneck ${bnSt==='optimal'?'clear':''}">
+          This is your overall physical grade for racquet sports. It rolls all your screens into one number. As we close the gaps above, this score will go up. Use it as your headline tracker each session.
+        </div>
+      </div>`;
     }
     detailContainer.innerHTML = html;
   };
@@ -1033,26 +1105,25 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   const screenCollection = [
-    { key: "strength", name: "Relative Strength Index", display: totalRSI.toFixed(1), target: `Target ${rescaledRsiTarget.toFixed(2)}`, status: scoreStrength >= 85 ? "optimal" : (scoreStrength >= 70 ? "monitor" : "restricted") },
-    { key: "power", name: "Explosive Power Index", display: Math.round(totalPower) + '"', target: `Target ${rescaledPowerTarget}"`, status: scorePower >= 85 ? "optimal" : (scorePower >= 70 ? "monitor" : "restricted") },
-    { key: "symmetry", name: "Bilateral Symmetry Index", display: symTested ? Math.round(scoreSymmetry) + "%" : "Deferred", target: "Target ≥90%", status: symTested ? (scoreSymmetry >= 90 ? "optimal" : (scoreSymmetry >= 80 ? "monitor" : "restricted")) : "deferred" },
-    { key: "mobility", name: "Clearance Battery Score", display: Math.round(scoreMobility) + "%", target: `Top Screens Passed`, status: scoreMobility >= 85 ? "optimal" : (scoreMobility >= 70 ? "monitor" : "restricted") },
-    { key: "rom", name: "Target ROM Average", display: Math.round(scoreROM) + "%", target: `Top ${s.rom.length} ROMs`, status: scoreROM >= 85 ? "optimal" : (scoreROM >= 70 ? "monitor" : "restricted") },
-    { key: "perf", name: s.performanceIndex.name, display: s.performanceIndex.display, target: "Sport Composite", status: scorePerfIndex >= 85 ? "optimal" : (scorePerfIndex >= 70 ? "monitor" : "restricted") }
+    { key:"strength", name:"Relative Strength Index", display:totalRSI.toFixed(1),              target:`Target ${rescaledRsiTarget.toFixed(2)}`, status:scoreStrength>=85?"optimal":(scoreStrength>=70?"monitor":"restricted") },
+    { key:"power",    name:"Explosive Power Index",   display:Math.round(totalPower)+'"',        target:`Target ${rescaledPowerTarget}"`,          status:scorePower>=85?"optimal":(scorePower>=70?"monitor":"restricted") },
+    { key:"symmetry", name:"Bilateral Symmetry",      display:symTested?Math.round(scoreSymmetry)+"%":"Deferred", target:"Target ≥90%",            status:symTested?(scoreSymmetry>=90?"optimal":(scoreSymmetry>=80?"monitor":"restricted")):"deferred" },
+    { key:"mobility", name:"Clearance Battery Score", display:Math.round(scoreMobility)+"%",     target:"Top Screens Passed",                      status:scoreMobility>=85?"optimal":(scoreMobility>=70?"monitor":"restricted") },
+    { key:"rom",      name:"Target ROM Average",      display:Math.round(scoreROM)+"%",          target:`Top ${s.rom.length} ROMs`,                status:scoreROM>=85?"optimal":(scoreROM>=70?"monitor":"restricted") },
+    { key:"perf",     name:s.performanceIndex.name,   display:s.performanceIndex.display,        target:"Sport Composite",                         status:scorePerfIndex>=85?"optimal":(scorePerfIndex>=70?"monitor":"restricted") }
   ];
 
   screenGrid.innerHTML = "";
   screenCollection.forEach((sc, i) => {
     const card = document.createElement("div");
-    card.className = `screen-card ${i === 0 ? "active" : ""}`;
+    card.className = `screen-card ${i===0?"active":""}`;
     card.setAttribute("data-key", sc.key);
     card.innerHTML = `
       <span class="stat-dot dot-${sc.status}"></span>
       <div class="sc-name">${sc.name}</div>
       <div class="sc-val s-${sc.status}">${sc.display}</div>
       <div class="sc-target">${sc.target}</div>
-      <span class="sc-pill bg-${sc.status}">${sc.status === 'optimal' ? 'Optimal' : (sc.status === 'monitor' ? 'Monitor' : 'Restricted')}</span>
-    `;
+      <span class="sc-pill bg-${sc.status}">${sc.status==='optimal'?'Optimal':(sc.status==='monitor'?'Monitor':(sc.status==='deferred'?'Deferred':'Restricted'))}</span>`;
     card.addEventListener("click", () => {
       document.querySelectorAll(".screen-card").forEach(c => c.classList.remove("active"));
       card.classList.add("active");
@@ -1063,115 +1134,131 @@ document.addEventListener('DOMContentLoaded', () => {
 
   buildDetailView(screenCollection[0].key);
 
-  const loadListObj = document.getElementById("loadList");
-  const riskSignals = [];
+  /* ── LOAD MANAGEMENT ── */
+  const loadListObj  = document.getElementById("loadList");
+  const loadIntroObj = document.getElementById("loadIntro");
+  const riskSignals  = [];
 
   if (scoreStrength < 70) {
-    riskSignals.push({ tag: "Late sets", text: "<b>Reduced Strength Foundation (RSI)</b> means lateral explosive cutting stability breaks down in Set 3, elevating shearing loads on ankle and patella joints." });
+    riskSignals.push({ tag:"Set 3 fade", text:"<b>Weaker strength base</b> means every swing costs a higher share of your max. Your shots will lose steam and your balance will break down earlier than they should in a tight third set." });
   }
   if (scorePower < 70) {
-    riskSignals.push({ tag: "Serve drop", text: "<b>Below Target Power Reserves</b> will limit explosive rate of force development. Racket head speed on first serves will degrade as match fatigue climbs." });
+    riskSignals.push({ tag:"Serve drop", text:"<b>Below-target power</b> fades fastest under fatigue. First-serve speed and racket head speed tend to drop noticeably as the match goes on — especially after long rallies." });
   }
   if (scoreSymmetry < 85) {
-    riskSignals.push({ tag: "Decel stress", text: "<b>Bilateral force imbalance</b> routes excess shear and compression force to your dominant shoulder or wrist during repeated high-load whip decelerations." });
+    riskSignals.push({ tag:"Arm overload", text:"<b>Side-to-side power gap</b> puts your playing arm and shoulder under more stress than they should handle on every serve and groundstroke. That's where tennis elbow and rotator cuff soreness builds over a season." });
   }
-
   s.rom.forEach(r => {
     let avg = (r.lead + r.trail) / 2;
     if (avg < r.target - r.limitRange) {
-      riskSignals.push({ tag: "Focal restriction", text: `<b>Limited ${r.name}</b> forces neighboring wrist/elbow segments to take on compensatory loads during extreme racquet whip-throughs.` });
+      riskSignals.push({ tag:"Tight joint", text:`<b>Limited ${r.name}</b> means the next joint has to work overtime to complete the swing arc. In racquet sports, shoulder and wrist restrictions are often the hidden cause of elbow and forearm overuse.` });
     }
   });
+  riskSignals.push({ tag:"Action item", text:"Run your prescribed racquet prep routine before every match and practice. If any joint soreness sticks around for more than a day, flag it early — don't play through it." });
 
-  riskSignals.push({ tag: "Action item", text: "Execute your targeted Racquet preparation routines prior to match play. Promptly address any local elbow/shoulder stiffness." });
+  loadIntroObj.textContent = riskSignals.length > 1
+    ? "Your screens show specific areas that will take on extra stress as the match goes on. Here's what to watch:"
+    : "Your screen shows no major physical limiters. Your body is set up well to hold up through a full match. We keep building durability every session.";
 
-  loadListObj.innerHTML = riskSignals.map(sig => `
-    <li><span class="tag">${sig.tag}</span><span class="txt">${sig.text}</span></li>
-  `).join("");
+  loadListObj.innerHTML = riskSignals.map(sig => `<li><span class="tag">${sig.tag}</span><span class="txt">${sig.text}</span></li>`).join("");
 
+  /* ── PERFORMANCE CARDS ── */
   const swingGridObj = document.getElementById("swingGrid");
+
   const makePerfCard = (m) => {
-    const avgVal = arr => Math.round(arr.reduce((a, b) => a + b, 0) / arr.length);
-    const preSpd = avgVal(m.speed.pre);
+    const avgVal = arr => Math.round(arr.reduce((a,b)=>a+b,0)/arr.length * 10) / 10;
+    const preSpd  = avgVal(m.speed.pre);
     const postSpd = avgVal(m.speed.post);
-    const preOut = avgVal(m.outcome.pre);
+    const preOut  = avgVal(m.outcome.pre);
     const postOut = avgVal(m.outcome.post);
-    const spdDiff = postSpd - preSpd;
-    const outDiff = postOut - preOut;
+    const spdDiff = Math.round((postSpd - preSpd) * 10) / 10;
+    const outDiff = Math.round((postOut - preOut) * 10) / 10;
     const pctChange = preSpd ? ((spdDiff / preSpd) * 100).toFixed(1) : "0";
 
-    return `
-      <div class="club-card">
-        <div class="club-head">
-          <span class="cname">${m.name}</span>
-          <span class="cgain ${spdDiff >= 0 ? '' : 'down'}">${spdDiff >= 0 ? '+' : ''}${spdDiff} mph change today</span>
-        </div>
-        <div class="metric-line">
-          <div class="ml-top">
-            <span class="ml-name">Speed metric <span style="opacity:.6">· avg</span></span>
-            <span class="ml-delta ${spdDiff >= 0 ? 'up' : 'down'}">${spdDiff >= 0 ? '▲' : '▼'} ${spdDiff >= 0 ? '+' : ''}${spdDiff} mph (${pctChange}%)</span>
+    const serveNorms   = getServeNorms(m.name, c.age, c.sex);
+    const shuffleNorms = getShuffleNorms(m.name, c.age, c.sex);
+    const norms = serveNorms || shuffleNorms;
+    let normHtml = '';
+    if (norms) {
+      normHtml = `
+        <div class="norm-band">
+          <div class="norm-band-label">Competitive Benchmarks — ${norms.level}</div>
+          <div class="norm-row">
+            <div class="norm-item"><span class="ni-label">Average</span><span class="ni-val">${norms.avg} mph</span></div>
+            <div class="norm-item"><span class="ni-label">Good Goal</span><span class="ni-val">${norms.good} mph</span></div>
+            <div class="norm-item"><span class="ni-label">Elite</span><span class="ni-val elite">${norms.elite} mph</span></div>
           </div>
-          <div class="ml-vals">
-            <span class="ml-pre">${preSpd}</span>
-            <span class="ml-arrow">→</span>
-            <span class="ml-post">${postSpd}</span>
-            <span class="ml-unit">mph</span>
-          </div>
-          <div class="cmp-bar">
-            <div class="cmp-post"></div>
-            <div class="cmp-pre" style="width: ${Math.min(100, (preSpd / Math.max(preSpd, postSpd)) * 100)}%"></div>
-          </div>
-          <div class="ml-trials">PRE: [${m.speed.pre.join(', ')}]  |  POST: [${m.speed.post.join(', ')}]</div>
-        </div>
-        <div class="metric-line">
-          <div class="ml-top">
-            <span class="ml-name">${m.outcome.name} <span style="opacity:.6">· avg</span></span>
-            <span class="ml-delta ${outDiff >= 0 ? 'up' : 'down'}">${outDiff >= 0 ? '▲' : '▼'} ${outDiff >= 0 ? '+' : ''}${outDiff}</span>
-          </div>
-          <div class="ml-vals">
-            <span class="ml-pre">${preOut}</span>
-            <span class="ml-arrow">→</span>
-            <span class="ml-post">${postOut}</span>
-            <span class="ml-unit">${m.outcome.unit || ''}</span>
-          </div>
-          <div class="ml-trials">PRE: [${m.outcome.pre.join(', ')}]  |  POST: [${m.outcome.post.join(', ')}]</div>
-        </div>
+          <div class="ni-tag" style="margin-top:6px">${norms.note}</div>
+        </div>`;
+    }
+
+    return `<div class="club-card">
+      <div class="club-head">
+        <span class="cname">${m.name}</span>
+        <span class="cgain ${spdDiff>=0?'':'down'}">${spdDiff>=0?'+':''}${spdDiff} mph today</span>
       </div>
-    `;
+      <div class="metric-line">
+        <div class="ml-top">
+          <span class="ml-name">Speed <span style="opacity:.6">· avg</span></span>
+          <span class="ml-delta ${spdDiff>=0?'up':'down'}">${spdDiff>=0?'▲':'▼'} ${spdDiff>=0?'+':''}${spdDiff} mph (${pctChange}%)</span>
+        </div>
+        <div class="ml-vals">
+          <span class="ml-pre">${preSpd}</span>
+          <span class="ml-arrow">→</span>
+          <span class="ml-post">${postSpd}</span>
+          <span class="ml-unit">mph</span>
+        </div>
+        <div class="cmp-bar">
+          <div class="cmp-post"></div>
+          <div class="cmp-pre" style="width:${Math.min(100,(preSpd/Math.max(preSpd,postSpd))*100)}%"></div>
+        </div>
+        <div class="ml-trials">PRE: [${m.speed.pre.join(', ')}] | POST: [${m.speed.post.join(', ')}]</div>
+        ${normHtml}
+      </div>
+      <div class="metric-line">
+        <div class="ml-top">
+          <span class="ml-name">${m.outcome.name} <span style="opacity:.6">· avg</span></span>
+          <span class="ml-delta ${outDiff>=0?'up':'down'}">${outDiff>=0?'▲':'▼'} ${outDiff>=0?'+':''}${outDiff}</span>
+        </div>
+        <div class="ml-vals">
+          <span class="ml-pre">${preOut}</span>
+          <span class="ml-arrow">→</span>
+          <span class="ml-post">${postOut}</span>
+          <span class="ml-unit">${m.outcome.unit||''}</span>
+        </div>
+        <div class="ml-trials">PRE: [${m.speed.pre.join(', ')}] | POST: [${m.speed.post.join(', ')}]</div>
+      </div>
+    </div>`;
   };
 
   swingGridObj.innerHTML = makePerfCard(CONFIG.sportMetrics.metric1) + makePerfCard(CONFIG.sportMetrics.metric2);
 
+  /* ── PROGRAM ── */
   const programHost = document.getElementById("programHost");
-  const programSub = document.getElementById("programSub");
+  const programSub  = document.getElementById("programSub");
 
   if (CONFIG.program.fullProgramUrl) {
-    programSub.textContent = "Your customized prehab and capacity workouts are active inside TrainHeroic.";
-    programHost.innerHTML = `
-      <a class="program-full" href="${CONFIG.program.fullProgramUrl}" target="_blank" rel="noopener">
-        <span class="pf-icon"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
-        <span class="pf-text"><b>Access Full Athlete Workout Suite</b><span>Launch your dynamic prehab & conditioning profile →</span></span>
-      </a>
-    `;
+    programSub.textContent = "Your workouts are active inside TrainHeroic.";
+    programHost.innerHTML = `<a class="program-full" href="${CONFIG.program.fullProgramUrl}" target="_blank" rel="noopener">
+      <span class="pf-icon"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
+      <span class="pf-text"><b>Access Full Athlete Workout Suite</b><span>Launch your prehab & conditioning profile →</span></span>
+    </a>`;
   } else {
-    programSub.textContent = "Execute this routine to optimize target joint positions between competitive rounds.";
-    programHost.innerHTML = `
-      <div class="drills">
-        ${CONFIG.program.exercises.map((ex, idx) => `
-          <div class="drill">
-            <div class="drill-thumb no-video">
-              <span class="play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
-              <span class="vlabel">Prescribed Preparation</span>
-            </div>
-            <div class="drill-body">
-              <span class="ex-num">DRILL 0${idx + 1}</span>
-              <h4>${ex.name}</h4>
-              <div class="drill-dose">3 Sets × 10 Dynamic Repetitions</div>
-            </div>
+    programSub.textContent = "Run this routine before every match and practice to prime your joints.";
+    programHost.innerHTML = `<div class="drills">
+      ${CONFIG.program.exercises.map((ex, idx) => `
+        <div class="drill">
+          <div class="drill-thumb no-video">
+            <span class="play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
+            <span class="vlabel">Prescribed Prep</span>
           </div>
-        `).join("")}
-      </div>
-    `;
+          <div class="drill-body">
+            <span class="ex-num">DRILL 0${idx+1}</span>
+            <h4>${ex.name}</h4>
+            <div class="drill-dose">3 Sets × 10 Dynamic Reps</div>
+          </div>
+        </div>`).join("")}
+    </div>`;
   }
 });
 </script>
