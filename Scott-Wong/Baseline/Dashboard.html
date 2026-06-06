@@ -473,13 +473,14 @@ const CONFIG = {
     name: "Scott Wong",       // client full name
     date: "May 9, 2026",      // assessment date
     age:  14,                  // age
+    sex:  "male",              // "male" or "female" — selects the benchmark table
     hand: "Left",             // "right" or "left" handed (sets lead side)
-    bodyweightLbs: 115         // used only for context display
+    bodyweightLbs: 115         // used for relative-strength ratios and context
   },
 
   /* ── BOOKING LINK ────────────────────────────────────────────── */
   /* Paste your Wix Bookings URL here once — applies to the button.  */
-  bookingUrl: "https://www.revivegolfperformance.com/booking-calendar/golf-training?referral=service_list_widget",
+  bookingUrl: "https://www.revivegolfperformance.com/booking-calendar/training?referral=service_list_widget",
 
   /* ── SCREEN SCORES ───────────────────────────────────────────── */
   /* Enter the numbers. Leave "video" as "" if you have no clip yet. */
@@ -488,27 +489,43 @@ const CONFIG = {
     /* ── STRENGTH TESTS  →  RSI auto-calculates ────────────────── */
     /* Enter the WEIGHT used and REPS performed for each lift.       */
     /* Formula: 1RM = weight × (1 + reps ÷ 30) · Ratio = 1RM ÷ BW.   */
+    /*                                                              */
+    /* DEFERRED A LIFT? If a movement wasn't loaded (immobility,     */
+    /* discomfort, not appropriate today), set  tested: false  on    */
+    /* that line. It drops out of the RSI, the target rescales to    */
+    /* the lifts you DID perform, and the screen notes it as         */
+    /* deferred instead of scoring a misleading 0. Leave tested off  */
+    /* or set true to include the lift normally.                     */
     strength: {
       trapBarDeadlift: { weight: 160, reps: 8 },    // external load, lbs
       backSquat:       { weight: 115, reps: 10 },    // external load, lbs
       pullups:         { addedWeight: 0, reps: 0 }, // ADDED load only — bodyweight is included automatically (negative = assisted)
       cablePull:       { leftWeight: 50, leftReps: 5, rightWeight: 50, rightReps: 5 }, // resistance, lbs
       cablePush:       { leftWeight: 45, leftReps: 5, rightWeight: 45, rightReps: 5 }, // resistance, lbs
-      splitSquat:      { weight: 50, reps: 10 }      // total working weight held, lbs
+      splitSquat:      { leftWeight: 50, leftReps: 10, rightWeight: 50, rightReps: 10 } // total working weight per side, lbs
+      // Example of a deferred lift:
+      // trapBarDeadlift: { weight: 0, reps: 0, tested: false },
     },
-    rsiTarget: 5.80,                                // TPI fitness benchmark
+    rsiTarget: 5.80,                                // full 6-lift TPI benchmark (auto-rescales if any lift deferred)
 
     /* ── POWER TESTS  →  Power Index + Symmetry auto-calculate ──── */
     /* Enter the BEST of 3 trials. Jump in inches; throws in feet.   */
     /* Power Index = Vertical Jump(in) + Total Throw Distance(ft)×12.*/
+    /*                                                              */
+    /* DEFERRED A TEST? Set  tested: false  on that line — it drops  */
+    /* from the Power Index and the target rescales. If EITHER shot  */
+    /* put is deferred, the Symmetry screen shows "Deferred" (a side */
+    /* comparison needs both sides).                                 */
     power: {
-      verticalJumpIn: 18,   // best vertical jump, inches
-      chestPassFt:    12,   // seated chest pass, feet
-      situpThrowFt:   10,   // sit-up overhead throw, feet
-      shotPutRightFt: 24,   // shot put throw — right, feet
-      shotPutLeftFt:  20.5    // shot put throw — left, feet
+      verticalJump:  { ft: null, in: 18 },   // best vertical jump — enter inches in `in`
+      chestPass:     { ft: 12 },             // seated chest pass, feet
+      situpThrow:    { ft: 10 },             // sit-up overhead throw, feet
+      shotPutRight:  { ft: 24 },             // shot put throw — right, feet
+      shotPutLeft:   { ft: 20.5 }              // shot put throw — left, feet
+      // Example of a deferred test:
+      // verticalJump: { in: 0, tested: false },
     },
-    powerTarget: 800,       // Total Power Index target, inches — set to your population benchmark
+    powerTarget: 800,       // full Power Index target, inches (auto-rescales if any component deferred)
 
     /* ── RANGE OF MOTION — enter lead & trail in degrees ───────── */
     tspine:     { lead: 52, trail: 48 },   // Seated Thoracic Rotation
@@ -519,7 +536,7 @@ const CONFIG = {
     //   display  = exactly what you want shown (e.g. "62" or "Functional")
     //   fillPct  = 0–100 value that drives the radar + color (higher = better)
     //   class    = "Restricted" | "Developing" | "Functional" | "Optimal"
-    golfFitnessHandicap: { display: "22", fillPct: 37, class: "Developing" }
+    golfFitnessHandicap: { display: "22", fillPct: 38.89, class: "Developing" }
   },
 
   /* ── SWING DATA — today's session (Pre vs Post · 3 trials each) ── */
@@ -529,10 +546,10 @@ const CONFIG = {
   swing: {
     fiveIron: {
       clubSpeed: { pre:[80,81,81],    post:[76,78,81]    },  // mph
-      ballSpeed: { pre:[87,99,106], post:[97,104,99] },  // mph
+      ballSpeed: { pre:[87,99,106],   post:[97,104,99]   },  // mph
       carry:     { pre:[116,138,151], post:[135,147,138] }   // yards
     },
-    driver: {
+     driver: {
       clubSpeed: { pre:[86,87,88],    post:[86,85,87]    },  // mph
       ballSpeed: { pre:[127,128,128], post:[119,124,125] },  // mph
       carry:     { pre:[198,200,201], post:[178,191,193] }   // yards
@@ -601,7 +618,7 @@ const TSTAT_DOT = {optimal:"#2FBF71", monitor:"#E0A92E", restricted:"#CC1010"};
 const TSTAT_LBL = {optimal:"On Target", monitor:"Close", restricted:"Focus Area"};
 
 /* AUTO-CALC: Relative Strength Index from strength tests */
-const oneRM = (w,r)=> w*(1+r/30);
+const oneRM = (w, r) => r === 0 ? 0 : w * (1 + r / 30);
 const stIn = S.strength;
 const isTested = o => o.tested !== false;   // tested unless explicitly false
 const RSI_PARTS = [
