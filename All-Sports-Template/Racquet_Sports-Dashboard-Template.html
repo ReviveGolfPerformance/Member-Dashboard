@@ -719,7 +719,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById("bookBtn").href = CONFIG.bookingUrl;
   document.getElementById("sport-sec-title").textContent = `Your ${sport} Profile Screens`;
 
-  const calc1RM = (w, r) => w * (1 + r / 30);
+  const calc1RM = (w, r) => r === 0 ? 0 : w * (1 + r / 30);
   const st = s.strength;
   const isTested = obj => obj && obj.tested !== false;
 
