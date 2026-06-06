@@ -618,7 +618,7 @@ const TSTAT_DOT = {optimal:"#2FBF71", monitor:"#E0A92E", restricted:"#CC1010"};
 const TSTAT_LBL = {optimal:"On Target", monitor:"Close", restricted:"Focus Area"};
 
 /* AUTO-CALC: Relative Strength Index from strength tests */
-const oneRM = (w,r)=> w*(1+r/30);
+const oneRM = (w, r) => r === 0 ? 0 : w * (1 + r / 30);
 const stIn = S.strength;
 const isTested = o => o.tested !== false;   // tested unless explicitly false
 const RSI_PARTS = [
