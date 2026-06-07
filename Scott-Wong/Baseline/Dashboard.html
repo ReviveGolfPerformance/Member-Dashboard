@@ -692,6 +692,70 @@ function ratioStatus(v, target, monitorFloor=0.85){
 }
 const STAT_LABEL = {optimal:"Within Target", monitor:"Monitor", restricted:"Below Target", deferred:"Deferred"};
 
+/* ---------- PER-TEST BOTTLENECK ANALYSIS ----------
+   Reads each test inside a section instead of the section total, so one
+   weak lift or a left/right gap still gets named even when the averaged
+   section score reads fine. */
+function statusGroups(parts){
+  const on=[], close=[], focus=[];
+  parts.filter(p=>p.on).forEach(p=>{
+    if(p.tstat==="optimal") on.push(p.label);
+    else if(p.tstat==="monitor") close.push(p.label);
+    else focus.push(p.label);
+  });
+  return {on:on, close:close, focus:focus};
+}
+function strengthAsym(){
+  const flags=[];
+  [{label:"Cable Pull",d:stIn.cablePull},
+   {label:"Cable Push",d:stIn.cablePush},
+   {label:"Split Squat",d:stIn.splitSquat}].forEach(t=>{
+    if(!isTested(t.d)) return;
+    const l=oneRM(t.d.leftWeight,t.d.leftReps), r=oneRM(t.d.rightWeight,t.d.rightReps);
+    if(l<=0||r<=0) return;
+    const gap=Math.round((1-Math.min(l,r)/Math.max(l,r))*100);
+    if(gap>=10) flags.push({label:t.label, gap:gap, weak:(l<r?"left":"right")});
+  });
+  return flags;
+}
+function listJoin(a){ return a.length<=1 ? (a[0]||"") : a.slice(0,-1).join(", ")+" and "+a[a.length-1]; }
+
+function rsiBottleneck(st){
+  const g=statusGroups(RSI_PARTS), asym=strengthAsym(), out=[];
+  out.push(st==="optimal"
+    ? "Your overall relative strength sits at or above the performance benchmark — the force base is there to support repeatable speed."
+    : "Overall relative strength is below the benchmark — the force base isn't yet supporting repeatable clubhead speed, so the body fatigues and compensates earlier in a round.");
+  if(g.focus.length){
+    out.push("The section average hides where the work is: <b>"+listJoin(g.focus)+"</b> "+(g.focus.length>1?"are":"is")+" below target on "+(g.focus.length>1?"their own":"its own")+". Pooling a strong lift with a weak one makes the group read more balanced than it trains.");
+  } else if(g.close.length){
+    out.push("<b>"+listJoin(g.close)+"</b> "+(g.close.length>1?"are":"is")+" close but still under target — the next "+(g.close.length>1?"lifts":"lift")+" to push.");
+  }
+  if(g.on.length && (g.focus.length||g.close.length)) out.push("Already on target: "+listJoin(g.on)+".");
+  if(asym.length){
+    out.push(asym.map(function(a){ return "<b>"+a.label+"</b> shows a "+a.gap+"% side gap — the "+a.weak+" side is weaker, and that imbalance loads the swing unevenly every rep."; }).join(" "));
+  }
+  if(st==="optimal" && !g.focus.length && !g.close.length && !asym.length) out.push("No single lift or side is dragging — not a current limiter.");
+  else if(st!=="optimal") out.push("Foundation-level priority.");
+  if(RSI_DEFERRED_COUNT>0) out.push("<b>Scored on the "+RSI_TESTED.length+" lift"+(RSI_TESTED.length>1?"s":"")+" performed today; the benchmark is rescaled to match. Deferred lift"+(RSI_DEFERRED_COUNT>1?"s":"")+" will be added once safe to load.</b>");
+  return out.join(" ");
+}
+
+function powerBottleneck(st){
+  const g=statusGroups(POWER_PARTS), out=[];
+  out.push(st==="optimal"
+    ? "Overall power output meets target — the rate you produce force is supporting your clubhead speed."
+    : "Overall power output is below target. Power is the rate you produce force — the direct driver of clubhead speed and distance. Strength sets the ceiling; power is how you reach it.");
+  if(g.focus.length){
+    out.push("The index total smooths over the detail: <b>"+listJoin(g.focus)+"</b> "+(g.focus.length>1?"are":"is")+" below target individually. A strong throw can carry a weak jump in the sum while the weak pattern still costs you speed.");
+  } else if(g.close.length){
+    out.push("<b>"+listJoin(g.close)+"</b> "+(g.close.length>1?"are":"is")+" close but under target.");
+  }
+  if(g.on.length && (g.focus.length||g.close.length)) out.push("On target: "+listJoin(g.on)+".");
+  if(st==="optimal" && !g.focus.length && !g.close.length) out.push("No single test is lagging — not a current limiter, we maintain and build from here.");
+  if(POWER_DEFERRED_COUNT>0) out.push("<b>Scored on the "+POWER_TESTED.length+" test"+(POWER_TESTED.length>1?"s":"")+" performed today; the target is rescaled to match.</b>");
+  return out.join(" ");
+}
+
 // build the 7 screen definitions with computed status, normalized %, golf-impact copy, drills
 function buildScreens(){
   const list = [];
@@ -715,10 +779,7 @@ function buildScreens(){
         pct:clamp(v/t*100),
         metrics:[["Your RSI",v.toFixed(2)],["Benchmark",t.toFixed(2)],["Classification",rsiClass(v)],...noteRow],
         breakdown:rsiBreakdownHTML(),
-        bottleneck: (st==="optimal"
-          ? "Your relative strength is at or above the performance benchmark. You have the force-production base to support repeatable speed and protect the body through a full round. Not a current limiter."
-          : "Relative strength is below the performance benchmark. You don't yet have the force base to support repeatable clubhead speed — and a weaker base means the body fatigues and compensates earlier in the round. This is a foundation-level priority.")
-          + (RSI_DEFERRED_COUNT>0 ? ` <b>Scored on the ${RSI_TESTED.length} lift${RSI_TESTED.length>1?'s':''} performed today; the benchmark is rescaled to match. Deferred lift${RSI_DEFERRED_COUNT>1?'s':''} will be added once safe to load.</b>` : "")
+        bottleneck: rsiBottleneck(st)
       });
     }
   }
@@ -740,10 +801,7 @@ function buildScreens(){
         display:v+'"', target:"Target "+t+'"', status:st, pct:clamp(v/t*100),
         metrics:[["Power Index",v+' in'],["Target",t+' in'],["Gap",(v-t>=0?"+":"")+(v-t)+' in'],...noteRow],
         breakdown:powerBreakdownHTML(),
-        bottleneck: (st==="optimal"
-          ? "Power output meets target. The rate at which you produce force is supporting your clubhead speed. Not a current limiter — we maintain and build from here."
-          : "Power output is below target. Power is the rate you produce force — it's the direct physical driver of clubhead speed and distance. Strength gives you the ceiling; power lets you reach it when it counts.")
-          + (POWER_DEFERRED_COUNT>0 ? ` <b>Scored on the ${POWER_TESTED.length} test${POWER_TESTED.length>1?'s':''} performed today; the target is rescaled to match.</b>` : "")
+        bottleneck: powerBottleneck(st)
       });
     }
   }
