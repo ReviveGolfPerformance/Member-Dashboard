@@ -893,9 +893,9 @@ document.addEventListener('DOMContentLoaded', () => {
         restricted: "One side is noticeably stronger. In lacrosse, that gap means your dominant shooting shoulder or your cutting leg is doing more than its fair share. Over time, that leads to overuse soreness in the shoulder and knee."
       },
       mobility: {
-        optimal:    "Your TPI Level 1 screen came back clean across all 16 tests. That means your pelvis, hips, thoracic spine, and shoulders are all moving freely through the ranges the game demands. This is a strong foundation for explosive cutting, dodging, and shot mechanics — no compensations stealing power or loading joints unevenly.",
-        monitor:    "One or more TPI Level 1 tests flagged something to watch — likely a Monitor on hip, thoracic, or shoulder mobility. Your body can still perform well, but that restricted spot is creating a compensation upstream or downstream. In lacrosse, the most common chain is: tight hips → overloaded lower back → shoulder trying to compensate in the shot. Address it early.",
-        restricted: "Multiple TPI Level 1 tests failed. Restricted pelvic, hip, or thoracic mobility forces the rest of your kinetic chain to work around the stuck joint. In lacrosse that shows up as limited shot power (the hips can't load), groin and hip flexor overuse during cutting, and shoulder soreness from trying to create rotation the body should be getting from the spine and hips. This is the highest-priority thing to address."
+        optimal:    "Your movement screen came back clean across all 16 tests. That means your pelvis, hips, thoracic spine, and shoulders are all moving freely through the ranges the game demands. This is a strong foundation for explosive cutting, dodging, and shot mechanics — no compensations stealing power or loading joints unevenly.",
+        monitor:    "One or more movement tests flagged something to watch — likely a Monitor on hip, thoracic, or shoulder mobility. Your body can still perform well, but that restricted spot is creating a compensation upstream or downstream. In lacrosse, the most common chain is: tight hips → overloaded lower back → shoulder trying to compensate in the shot. Address it early.",
+        restricted: "Multiple movement tests failed. Restricted pelvic, hip, or thoracic mobility forces the rest of your kinetic chain to work around the stuck joint. In lacrosse that shows up as limited shot power (the hips can't load), groin and hip flexor overuse during cutting, and shoulder soreness from trying to create rotation the body should be getting from the spine and hips. This is the highest-priority thing to address."
       },
       rom: {
         optimal:    "Your range of motion is within the healthy target range. Your hips, shoulders, and spine are moving freely to support your shooting and dodging mechanics. Not a limiter right now.",
@@ -1119,7 +1119,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const bnSt = scoreMobility>=85?'optimal':(scoreMobility>=70?'monitor':'restricted');
       html = `<div class="detail">
         <div class="detail-head">
-          <span class="d-title">TPI Level 1 Movement Screen</span>
+          <span class="d-title">Movement Screen</span>
           <span class="d-pill ${scoreMobility>=85?'bg-optimal':(scoreMobility>=70?'bg-monitor':'bg-restricted')}">${scoreMobility>=85?'Optimal':(scoreMobility>=70?'Functional':'Restricted')}</span>
         </div>
         <div class="metric-row">
@@ -1128,12 +1128,12 @@ document.addEventListener('DOMContentLoaded', () => {
           <div class="metric-cell"><div class="ml">PASS / MON / FAIL</div><div class="mv" style="font-size:18px;letter-spacing:.5px"><span style="color:var(--optimal)">${mobPassCount}</span> / <span style="color:var(--monitor)">${mobMonitorCount}</span> / <span style="color:var(--restricted)">${mobFailCount}</span></div></div>
           ${mobSkipCount > 0 ? `<div class="metric-cell"><div class="ml">SKIPPED</div><div class="mv" style="color:var(--muted)">${mobSkipCount}</div></div>` : ''}
         </div>
-        <div class="block-label">TPI Level 1 — All 16 Tests</div>
+        <div class="block-label">Movement — All 16 Tests</div>
         <table class="calc-table">
           <tr><th>Test</th><th class="num">Result</th><th class="num">Status</th></tr>
           ${rows}
         </table>
-        <p class="calc-note">TPI Level 1 physical screen. Monitor = compensatory pattern present. Fail = movement dysfunction requiring targeted intervention. Skipped tests are excluded from score.</p>
+        <p class="calc-note">Movement screen. Monitor = compensatory pattern present. Fail = movement dysfunction requiring targeted intervention. Skipped tests are excluded from score.</p>
         <div class="block-label">What This Means For Your Game</div>
         <div class="bottleneck ${bnSt==='optimal'?'clear':''}">${getBottleneck('mobility', bnSt)}</div>
       </div>`;
@@ -1196,7 +1196,7 @@ document.addEventListener('DOMContentLoaded', () => {
     { key:"strength", name:"Relative Strength Index", display:totalRSI.toFixed(1),              target:`Target ${rescaledRsiTarget.toFixed(2)}`, status:scoreStrength>=85?"optimal":(scoreStrength>=70?"monitor":"restricted") },
     { key:"power",    name:"Explosive Power Index",   display:Math.round(totalPower)+'"',        target:`Target ${rescaledPowerTarget}"`,          status:scorePower>=85?"optimal":(scorePower>=70?"monitor":"restricted") },
     { key:"symmetry", name:"Bilateral Symmetry",      display:symTested?Math.round(scoreSymmetry)+"%":"Deferred", target:"Target ≥90%",            status:symTested?(scoreSymmetry>=90?"optimal":(scoreSymmetry>=80?"monitor":"restricted")):"deferred" },
-    { key:"mobility", name:"TPI Level 1 Screen",       display:Math.round(scoreMobility)+"%",     target:`${mobTested} of ${s.mobilityClearance.length} Tests Run`,  status:scoreMobility>=85?"optimal":(scoreMobility>=70?"monitor":"restricted") },
+    { key:"mobility", name:"Movement Screen",       display:Math.round(scoreMobility)+"%",     target:`${mobTested} of ${s.mobilityClearance.length} Tests Run`,  status:scoreMobility>=85?"optimal":(scoreMobility>=70?"monitor":"restricted") },
     { key:"rom",      name:"Target ROM Average",      display:Math.round(scoreROM)+"%",          target:`Top ${s.rom.length} ROMs`,                status:scoreROM>=85?"optimal":(scoreROM>=70?"monitor":"restricted") },
     { key:"perf",     name:s.performanceIndex.name,   display:s.performanceIndex.display,        target:"Sport Composite",                         status:scorePerfIndex>=85?"optimal":(scorePerfIndex>=70?"monitor":"restricted") }
   ];
