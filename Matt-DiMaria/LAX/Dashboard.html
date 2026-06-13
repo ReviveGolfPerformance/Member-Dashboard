@@ -1241,10 +1241,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const tpiFailedTests = s.mobilityClearance.filter(mc => mc.tested && mc.status === "Fail").map(mc => mc.name);
   const tpiMonitorTests = s.mobilityClearance.filter(mc => mc.tested && mc.status === "Monitor").map(mc => mc.name);
   if (tpiFailedTests.length > 0) {
-    riskSignals.push({ tag:"TPI screen fail", text:`<b>Failed TPI tests: ${tpiFailedTests.join(', ')}</b> — these dysfunctions create compensatory loading patterns during game play. Watch for soreness building in the hip, groin, low back, or throwing shoulder as game fatigue sets in.` });
+    riskSignals.push({ tag:"Movement screen fail", text:`<b>Failed Movement tests: ${tpiFailedTests.join(', ')}</b> — these dysfunctions create compensatory loading patterns during game play. Watch for soreness building in the hip, groin, low back, or throwing shoulder as game fatigue sets in.` });
   }
   if (tpiMonitorTests.length > 0) {
-    riskSignals.push({ tag:"TPI monitor", text:`<b>Monitor flags: ${tpiMonitorTests.join(', ')}</b> — compensatory patterns are present but not yet a full dysfunction. These joints are working harder than they should, especially in the 3rd and 4th quarter when fatigue reduces motor control.` });
+    riskSignals.push({ tag:"Movement monitor", text:`<b>Monitor flags: ${tpiMonitorTests.join(', ')}</b> — compensatory patterns are present but not yet a full dysfunction. These joints are working harder than they should, especially in the 3rd and 4th quarter when fatigue reduces motor control.` });
   }
   s.rom.forEach(r => {
     let avg = (r.lead + r.trail) / 2;
