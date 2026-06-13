@@ -1296,10 +1296,12 @@ document.addEventListener('DOMContentLoaded', () => {
       ? `<div style="font-family:var(--mono);font-size:10px;color:#9a9a9a;margin-top:10px;line-height:1.5;font-style:italic;border-top:1px solid var(--slate);padding-top:10px;">📝 ${m.notes}</div>`
       : '';
 
-    /* ── SINGLE-TRIAL MODE: only m.Time array provided (no pre/post) ── */
-    if (m.Time && !m.pre) {
-      const avg = roundDec(sum(m.Time) / m.Time.length, isAgility ? 2 : 1);
-      const best = isAgility ? Math.min(...m.Time) : Math.max(...m.Time);
+    /* ── SINGLE-TRIAL MODE: only m.Time / m.time array provided (no pre/post) ── */
+    const timeTrials = m.Time || m.time;
+    if (timeTrials && !m.pre) {
+      const validTrials = timeTrials.filter(v => v != null && !isNaN(v));
+      const avg = validTrials.length ? roundDec(sum(validTrials) / validTrials.length, isAgility ? 2 : 1) : 0;
+      const best = validTrials.length ? (isAgility ? Math.min(...validTrials) : Math.max(...validTrials)) : 0;
       return `<div class="club-card">
         <div class="club-head">
           <span class="cname">${m.name}</span>
@@ -1317,7 +1319,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <span class="ml-unit">${m.unit} avg</span>
           </div>
           <div class="ml-trials" style="margin-top:8px">
-            <b>TRIALS:</b> [${m.Time.join(', ')}] ${m.unit}
+            <b>TRIALS:</b> [${validTrials.join(', ')}] ${m.unit}
           </div>
           ${normHtml}
           ${cardNoteHtml}
@@ -1388,7 +1390,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let perfHtml = "";
   for (const k in CONFIG.sportMetrics) {
-    if (CONFIG.sportMetrics.hasOwnProperty(k)) perfHtml += makePerfCard(CONFIG.sportMetrics[k]);
+    if (CONFIG.sportMetrics.hasOwnProperty(k)) {
+      const m = CONFIG.sportMetrics[k];
+      if (m.tested === false) continue;
+      perfHtml += makePerfCard(m);
+    }
   }
   swingGridObj.innerHTML = perfHtml;
 
