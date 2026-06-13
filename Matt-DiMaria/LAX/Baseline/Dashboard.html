@@ -654,7 +654,7 @@ const CONFIG = {
       cablePush:       { leftWeight: 70, leftReps: 8, rightWeight: 70, rightReps: 9, tested: true },
       splitSquat:      { leftWeight: 110, leftReps: 3, rightWeight: 120, rightReps: 6, tested: true, notes: "Pressure in right knee (surgical side) when testing the Left" }
     },
-    rsiTarget: 6.00,
+    rsiTarget: 5.554,
 
     power: {
       verticalJump:  { ft: null, in: 23, tested: true },
@@ -663,7 +663,7 @@ const CONFIG = {
       shotPutRight:  { ft: 31.66, tested: true },
       shotPutLeft:   { ft: 29.5, tested: true }
     },
-    powerTarget: 850,
+    powerTarget: 1444,
 
     rom: [
       { name: "Shoulder ER",       lead: 90, trail: 90, target: 90, limitRange: 5  },
@@ -763,18 +763,18 @@ document.addEventListener('DOMContentLoaded', () => {
   const isTested = obj => obj && obj.tested !== false;
 
   const strengthParts = [
-    { name: "Trap-Bar Deadlift",    key: "trapBarDeadlift", on: isTested(st.trapBarDeadlift), w: st.trapBarDeadlift.weight, r: st.trapBarDeadlift.reps, target: 1.5 },
-    { name: "Back Squat",           key: "backSquat",       on: isTested(st.backSquat),       w: st.backSquat.weight,       r: st.backSquat.reps,       target: 1.25 },
-    { name: "Pull-Ups (BW + Load)", key: "pullups",         on: isTested(st.pullups),         w: BW + st.pullups.addedWeight, r: st.pullups.reps,       target: SEX === "female" ? 0.65 : 0.85 },
+    { name: "Trap-Bar Deadlift",    key: "trapBarDeadlift", on: isTested(st.trapBarDeadlift), w: st.trapBarDeadlift.weight, r: st.trapBarDeadlift.reps, target: 1.75 },
+    { name: "Back Squat",           key: "backSquat",       on: isTested(st.backSquat),       w: st.backSquat.weight,       r: st.backSquat.reps,       target: 1.5 },
+    { name: "Pull-Ups (BW + Load)", key: "pullups",         on: isTested(st.pullups),         w: BW + st.pullups.addedWeight, r: st.pullups.reps,       target: SEX === "female" ? 0.85 : 1.00 },
     { name: "Cable Pull (Avg L/R)", key: "cablePull",       on: isTested(st.cablePull),
       ratio: (calc1RM(st.cablePull.leftWeight, st.cablePull.leftReps)/BW + calc1RM(st.cablePull.rightWeight, st.cablePull.rightReps)/BW)/2,
-      target: SEX === "female" ? 0.25 : 0.30 },
+      target: SEX === "female" ? 0.31 : 0.373 },
     { name: "Cable Push (Avg L/R)", key: "cablePush",       on: isTested(st.cablePush),
       ratio: (calc1RM(st.cablePush.leftWeight, st.cablePush.leftReps)/BW + calc1RM(st.cablePush.rightWeight, st.cablePush.rightReps)/BW)/2,
-      target: SEX === "female" ? 0.20 : 0.25 },
+      target: SEX === "female" ? 0.248 : 0.31 },
     { name: "Split Squat (Avg L/R)", key: "splitSquat",     on: isTested(st.splitSquat),
       ratio: (calc1RM(st.splitSquat.leftWeight, st.splitSquat.leftReps)/BW + calc1RM(st.splitSquat.rightWeight, st.splitSquat.rightReps)/BW)/2,
-      target: 0.50 }
+      target: 0.621 }
   ];
 
   strengthParts.forEach(p => {
@@ -792,11 +792,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const vjIn = pt.verticalJump.in != null ? pt.verticalJump.in : (pt.verticalJump.ft || 0) * 12;
 
   const powerParts = [
-    { name: "Vertical Jump",         key: "verticalJump", on: isTested(pt.verticalJump), inches: vjIn,                    disp: `${vjIn}"`,            target: SEX === "female" ? 14 : 18 },
-    { name: "Seated Chest Pass",     key: "chestPass",    on: isTested(pt.chestPass),    inches: pt.chestPass.ft*12,      disp: `${pt.chestPass.ft}'`, target: (SEX === "female" ? 12 : 16)*12 },
-    { name: "Sit-up Overhead Throw", key: "situpThrow",   on: isTested(pt.situpThrow),   inches: pt.situpThrow.ft*12,     disp: `${pt.situpThrow.ft}'`,target: (SEX === "female" ? 10 : 14)*12 },
-    { name: "Shot Put — Right",      key: "shotPutRight", on: isTested(pt.shotPutRight), inches: pt.shotPutRight.ft*12,   disp: `${pt.shotPutRight.ft}'`, target: (SEX === "female" ? 14 : 20)*12 },
-    { name: "Shot Put — Left",       key: "shotPutLeft",  on: isTested(pt.shotPutLeft),  inches: pt.shotPutLeft.ft*12,    disp: `${pt.shotPutLeft.ft}'`,  target: (SEX === "female" ? 14 : 20)*12 }
+    { name: "Vertical Jump",         key: "verticalJump", on: isTested(pt.verticalJump), inches: vjIn,                    disp: `${vjIn}"`,            target: SEX === "female" ? 25 : 28 },
+    { name: "Seated Chest Pass",     key: "chestPass",    on: isTested(pt.chestPass),    inches: pt.chestPass.ft*12,      disp: `${pt.chestPass.ft}'`, target: (SEX === "female" ? 18 : 23)*12 },
+    { name: "Sit-up Overhead Throw", key: "situpThrow",   on: isTested(pt.situpThrow),   inches: pt.situpThrow.ft*12,     disp: `${pt.situpThrow.ft}'`,target: (SEX === "female" ? 18 : 23)*12 },
+    { name: "Shot Put — Right",      key: "shotPutRight", on: isTested(pt.shotPutRight), inches: pt.shotPutRight.ft*12,   disp: `${pt.shotPutRight.ft}'`, target: (SEX === "female" ? 28 : 36)*12 },
+    { name: "Shot Put — Left",       key: "shotPutLeft",  on: isTested(pt.shotPutLeft),  inches: pt.shotPutLeft.ft*12,    disp: `${pt.shotPutLeft.ft}'`,  target: (SEX === "female" ? 28 : 36)*12 }
   ];
 
   const powerScored = powerParts.filter(p => p.on);
