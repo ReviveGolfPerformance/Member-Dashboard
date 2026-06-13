@@ -649,7 +649,7 @@ const CONFIG = {
     strength: {
       trapBarDeadlift: { weight: 255, reps: 6, tested: true },
       backSquat:       { weight: 205, reps: 5, tested: true },
-      pullups:         { addedWeight: 0, reps: 0, tested: False },
+      pullups:         { addedWeight: 0, reps: 0, tested: false },
       cablePull:       { leftWeight: 80, leftReps: 7, rightWeight: 80, rightReps: 5, tested: true },
       cablePush:       { leftWeight: 70, leftReps: 8, rightWeight: 70, rightReps: 9, tested: true },
       splitSquat:      { leftWeight: 110, leftReps: 3, rightWeight: 120, rightReps: 6, tested: true, notes: "Pressure in right knee (surgical side) when testing the Left" }
@@ -1005,8 +1005,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         let status = p.on ? (p.ratio>=p.target?"Optimal":(p.ratio>=p.target*0.85?"Monitor":"Restricted")) : "Deferred";
         let col = status==="Optimal"?"var(--optimal)":(status==="Monitor"?"var(--monitor)":"var(--restricted)");
+        const rawEntry = st[p.key];
+        const liftNote = (rawEntry && rawEntry.notes) ? rawEntry.notes : "";
+        const liftNoteHtml = liftNote ? `<div style="font-family:var(--mono);font-size:10px;color:#9a9a9a;margin-top:3px;line-height:1.4;font-style:italic">📝 ${liftNote}</div>` : '';
         return `<tr>
-          <td>${p.name}<span class="tinput">${p.on ? input : 'Not Tested'}</span></td>
+          <td>${p.name}<span class="tinput">${p.on ? input : 'Not Tested'}</span>${liftNoteHtml}</td>
           <td class="num">${p.on ? p.ratio.toFixed(2)+'×' : '—'}</td>
           <td class="num">${p.target.toFixed(2)}×</td>
           <td class="num"><span class="tstat" style="color:${col};border-color:${col}">${status}</span></td>
@@ -1127,7 +1130,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <div class="metric-cell"><div class="ml">PASS / MON / FAIL</div><div class="mv" style="font-size:18px;letter-spacing:.5px"><span style="color:var(--optimal)">${mobPassCount}</span> / <span style="color:var(--monitor)">${mobMonitorCount}</span> / <span style="color:var(--restricted)">${mobFailCount}</span></div></div>
           ${mobSkipCount > 0 ? `<div class="metric-cell"><div class="ml">SKIPPED</div><div class="mv" style="color:var(--muted)">${mobSkipCount}</div></div>` : ''}
         </div>
-        <div class="block-label">Movement — All 16 Tests</div>
+        <div class="block-label">Movement Screen — All ${s.mobilityClearance.length} Tests</div>
         <table class="calc-table">
           <tr><th>Test</th><th class="num">Result</th><th class="num">Status</th></tr>
           ${rows}
@@ -1264,6 +1267,61 @@ document.addEventListener('DOMContentLoaded', () => {
     const sum = arr => arr.reduce((a,b) => a+b, 0);
     const roundDec = (val, dec) => parseFloat(val.toFixed(dec));
     const isAgility = m.lowerIsBetter;
+
+    // Norms (shared by both modes)
+    const shotNorms = getShotNorms(m.name, c.age, c.sex);
+    const agilNorms = getAgilityNorms(m.name, c.age, c.sex);
+    const norms = shotNorms || agilNorms;
+    let normHtml = '';
+    if (norms) {
+      const unit = isAgility ? 'sec' : 'mph';
+      normHtml = `
+        <div class="norm-band">
+          <div class="norm-band-label">Age-Group Benchmarks — ${norms.level}</div>
+          <div class="norm-row">
+            <div class="norm-item"><span class="ni-label">Average</span><span class="ni-val">${norms.avg} ${unit}</span></div>
+            <div class="norm-item"><span class="ni-label">Good Goal</span><span class="ni-val">${norms.good} ${unit}</span></div>
+            <div class="norm-item"><span class="ni-label">Elite</span><span class="ni-val elite">${norms.elite}</span></div>
+          </div>
+          <div class="ni-tag" style="margin-top:6px">${norms.note}</div>
+        </div>`;
+    }
+
+    // Notes (shared)
+    const cardNoteHtml = m.notes
+      ? `<div style="font-family:var(--mono);font-size:10px;color:#9a9a9a;margin-top:10px;line-height:1.5;font-style:italic;border-top:1px solid var(--slate);padding-top:10px;">📝 ${m.notes}</div>`
+      : '';
+
+    /* ── SINGLE-TRIAL MODE: only m.Time array provided (no pre/post) ── */
+    if (m.Time && !m.pre) {
+      const avg = roundDec(sum(m.Time) / m.Time.length, isAgility ? 2 : 1);
+      const best = isAgility ? Math.min(...m.Time) : Math.max(...m.Time);
+      return `<div class="club-card">
+        <div class="club-head">
+          <span class="cname">${m.name}</span>
+          <span class="cgain down" style="color:var(--muted);background:rgba(138,138,138,.12)">
+            ${m.Time.length} Trial${m.Time.length !== 1 ? 's' : ''}
+          </span>
+        </div>
+        <div class="metric-line">
+          <div class="ml-top">
+            <span class="ml-name">Avg — ${m.Time.length} Trials</span>
+            <span class="ml-delta" style="color:var(--muted)">${isAgility ? 'Best: ' + best.toFixed(2) : 'Best: ' + best} ${m.unit}</span>
+          </div>
+          <div class="ml-vals">
+            <span class="ml-post">${avg}</span>
+            <span class="ml-unit">${m.unit} avg</span>
+          </div>
+          <div class="ml-trials" style="margin-top:8px">
+            <b>TRIALS:</b> [${m.Time.join(', ')}] ${m.unit}
+          </div>
+          ${normHtml}
+          ${cardNoteHtml}
+        </div>
+      </div>`;
+    }
+
+    /* ── COMPARISON MODE: m.pre and m.post arrays provided ── */
     const preAvg  = roundDec(sum(m.pre)/m.pre.length,   isAgility ? 2 : 1);
     const postAvg = roundDec(sum(m.post)/m.post.length, isAgility ? 2 : 1);
     const rawDiff = postAvg - preAvg;
@@ -1288,25 +1346,6 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
       prePct = Math.min(100, Math.max(10, (preAvg/postAvg)*100));
       postPct = 100;
-    }
-
-    // Norms
-    const shotNorms = getShotNorms(m.name, c.age, c.sex);
-    const agilNorms = getAgilityNorms(m.name, c.age, c.sex);
-    const norms = shotNorms || agilNorms;
-    let normHtml = '';
-    if (norms) {
-      const unit = isAgility ? 'sec' : 'mph';
-      normHtml = `
-        <div class="norm-band">
-          <div class="norm-band-label">Age-Group Benchmarks — ${norms.level}</div>
-          <div class="norm-row">
-            <div class="norm-item"><span class="ni-label">Average</span><span class="ni-val">${norms.avg} ${unit}</span></div>
-            <div class="norm-item"><span class="ni-label">Good Goal</span><span class="ni-val">${norms.good} ${unit}</span></div>
-            <div class="norm-item"><span class="ni-label">Elite</span><span class="ni-val elite">${norms.elite}</span></div>
-          </div>
-          <div class="ni-tag" style="margin-top:6px">${norms.note}</div>
-        </div>`;
     }
 
     return `<div class="club-card">
@@ -1338,6 +1377,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <b>POST:</b> [${m.post.join(', ')}]
         </div>
         ${normHtml}
+        ${cardNoteHtml}
       </div>
     </div>`;
   };
