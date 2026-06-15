@@ -1446,12 +1446,12 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="club-head">
           <span class="cname">${m.name}</span>
           <span class="cgain down" style="color:var(--muted);background:rgba(138,138,138,.12)">
-            ${m.Time.length} Trial${m.Time.length !== 1 ? 's' : ''}
+            ${timeTrials.length} Trial${timeTrials.length !== 1 ? 's' : ''}
           </span>
         </div>
         <div class="metric-line">
           <div class="ml-top">
-            <span class="ml-name">Avg — ${m.Time.length} Trials</span>
+            <span class="ml-name">Avg — ${timeTrials.length} Trials</span>
             <span class="ml-delta" style="color:var(--muted)">${isAgility ? 'Best: ' + best.toFixed(2) : 'Best: ' + best} ${m.unit}</span>
           </div>
           <div class="ml-vals">
