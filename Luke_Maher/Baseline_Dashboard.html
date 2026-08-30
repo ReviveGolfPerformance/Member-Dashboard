@@ -1,0 +1,1751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Football Physical Capacity Dashboard — Revive Performance</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
+
+:root {
+  --red: #D946EF;
+  --red-impact: #F43F5E;
+  --red-dim: #701A75;
+  --black: #0A0A0A;
+  --charcoal: #1A1A1A;
+  --panel: #141414;
+  --panel-2: #1f1f1f;
+  --slate: #2C2C2C;
+  --white: #FFFFFF;
+  --silver: #C8C8C8;
+  --muted: #8a8a8a;
+  --optimal: #10B981;
+  --monitor: #F59E0B;
+  --restricted: #EF4444;
+  --display: 'Bebas Neue', Impact, Helvetica, sans-serif;
+  --sans: 'DM Sans', Helvetica, Arial, sans-serif;
+  --mono: 'DM Mono', 'Courier New', monospace;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--black);
+  background-image:
+    radial-gradient(circle at 80% -10%, rgba(217,70,239,.12), transparent 45%),
+    radial-gradient(circle at 0% 100%, rgba(244,63,94,.05), transparent 40%);
+  color: var(--white);
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  padding-bottom: 40px;
+}
+
+header {
+  background: linear-gradient(180deg, #000, #0d0d0d);
+  border-bottom: 2px solid var(--red);
+  padding: 22px clamp(16px, 4vw, 48px);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  box-shadow: 0 6px 24px rgba(0,0,0,.6);
+}
+.brand-text { display: flex; flex-direction: column; gap: 5px; }
+.brand-logo-txt {
+  font-family: var(--display);
+  font-size: clamp(24px, 6vw, 36px);
+  color: var(--white);
+  line-height: 0.9;
+  letter-spacing: 2px;
+}
+.brand-logo-txt span { color: var(--red); }
+.brand-text p {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding-left: 2px;
+}
+.client-badge { margin-left: auto; text-align: right; }
+.client-badge .name {
+  font-family: var(--display);
+  font-size: clamp(16px, 3.5vw, 22px);
+  letter-spacing: 1px;
+  color: var(--white);
+  line-height: 1;
+}
+.client-badge .meta {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-top: 4px;
+}
+
+.wrap { max-width: 1080px; margin: 0 auto; padding: 0 clamp(14px, 4vw, 40px); }
+section { margin-top: clamp(28px, 5vw, 46px); }
+.sec-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--red);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+.sec-label::after { content: ""; flex: 1; height: 1px; background: var(--slate); }
+.sec-title {
+  font-family: var(--display);
+  font-size: clamp(26px, 5vw, 38px);
+  letter-spacing: 1.5px;
+  line-height: 1;
+  margin-bottom: 18px;
+}
+
+.position-bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: linear-gradient(160deg, var(--charcoal), #0e0e0e);
+  border: 1px solid var(--slate);
+  border-left: 3px solid var(--red);
+  border-radius: 10px;
+  padding: 14px 18px;
+}
+.position-pill {
+  flex-shrink: 0;
+  font-family: var(--display);
+  font-size: 22px;
+  letter-spacing: 1px;
+  color: var(--white);
+  background: rgba(217,70,239,.15);
+  border: 1px solid var(--red);
+  border-radius: 8px;
+  padding: 6px 14px;
+  text-align: center;
+  min-width: 56px;
+}
+.position-copy { display: flex; flex-direction: column; gap: 3px; }
+.position-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--red);
+}
+.position-desc { font-size: 13.5px; color: var(--silver); line-height: 1.5; }
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 300px) 1fr;
+  gap: clamp(20px, 4vw, 40px);
+  align-items: center;
+  background: linear-gradient(160deg, var(--charcoal), #0e0e0e);
+  border: 1px solid var(--slate);
+  border-radius: 14px;
+  padding: clamp(20px, 4vw, 34px);
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 14px;
+  border-top: 2px solid var(--red);
+  pointer-events: none;
+  opacity: .5;
+}
+.radar-box { display: flex; align-items: center; justify-content: center; }
+.radar-box svg { width: 100%; max-width: 320px; height: auto; overflow: visible; }
+.hero-readout .eyebrow {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.hero-score {
+  font-family: var(--display);
+  font-size: clamp(54px, 12vw, 88px);
+  line-height: .85;
+  letter-spacing: 1px;
+  margin: 6px 0 2px;
+}
+.hero-score .unit { font-size: .35em; color: var(--muted); letter-spacing: 2px; vertical-align: super; }
+.hero-class {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 5px 14px;
+  border-radius: 3px;
+  font-weight: 500;
+}
+
+.eff-bar-wrap { margin-top: 20px; }
+.eff-track {
+  position: relative;
+  height: 14px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: linear-gradient(90deg, #701a75 0%, #D946EF 22%, #F59E0B 55%, #10B981 100%);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.06);
+}
+.eff-mask {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  background: rgba(10,10,10,.82);
+  backdrop-filter: saturate(.3);
+  border-left: 2px solid var(--white);
+  transition: width 1.4s cubic-bezier(.2,.8,.2,1);
+}
+.eff-scale {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 8px;
+}
+.eff-scale .restricted { color: var(--restricted); }
+.eff-scale .optimal { color: var(--optimal); }
+
+.screen-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 12px;
+}
+.screen-card {
+  background: var(--charcoal);
+  border: 1px solid var(--slate);
+  border-radius: 10px;
+  padding: 16px;
+  cursor: pointer;
+  position: relative;
+  transition: transform .18s ease, border-color .18s ease, background .18s ease;
+  text-align: left;
+}
+.screen-card:hover, .screen-card:focus-visible {
+  transform: translateY(-3px);
+  border-color: var(--red);
+  background: var(--panel-2);
+  outline: none;
+}
+.screen-card.active {
+  border-color: var(--red);
+  background: var(--panel-2);
+  box-shadow: 0 0 0 1px var(--red), 0 8px 24px rgba(217,70,239,.18);
+}
+.screen-card .stat-dot {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+}
+.screen-card .sc-name {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--silver);
+  margin-bottom: 10px;
+  padding-right: 18px;
+  min-height: 26px;
+}
+.screen-card .sc-val {
+  font-family: var(--display);
+  font-size: 32px;
+  line-height: .9;
+  letter-spacing: .5px;
+}
+.screen-card .sc-target {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  color: var(--muted);
+  margin-top: 4px;
+  letter-spacing: .5px;
+}
+.screen-card .sc-pill {
+  display: inline-block;
+  margin-top: 10px;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 3px;
+  font-weight: 500;
+}
+
+.s-optimal { color: var(--optimal); }
+.bg-optimal { background: rgba(16,185,129,.15); color: var(--optimal); }
+.dot-optimal { background: var(--optimal); box-shadow: 0 0 8px var(--optimal); }
+
+.s-monitor { color: var(--monitor); }
+.bg-monitor { background: rgba(245,158,11,.15); color: var(--monitor); }
+.dot-monitor { background: var(--monitor); box-shadow: 0 0 8px var(--monitor); }
+
+.s-restricted { color: var(--restricted); }
+.bg-restricted { background: rgba(239,68,68,.18); color: #ff6e6e; }
+.dot-restricted { background: var(--restricted); box-shadow: 0 0 8px var(--restricted); }
+
+.s-deferred { color: var(--muted); }
+.bg-deferred { background: rgba(138,138,138,.14); color: var(--silver); }
+.dot-deferred { background: var(--muted); box-shadow: none; }
+
+.detail {
+  margin-top: 14px;
+  background: linear-gradient(160deg, var(--charcoal), #0d0d0d);
+  border: 1px solid var(--slate);
+  border-radius: 12px;
+  border-top: 2px solid var(--red);
+  padding: clamp(18px, 4vw, 30px);
+  animation: fade .35s ease both;
+}
+@keyframes fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+.detail-head { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 14px; margin-bottom: 6px; }
+.detail-head .d-title { font-family: var(--display); font-size: clamp(24px, 5vw, 34px); letter-spacing: 1px; line-height: .9; }
+.detail-head .d-pill { font-family: var(--mono); font-size: 10px; letter-spacing: 1px; text-transform: uppercase; padding: 4px 11px; border-radius: 3px; font-weight: 500; }
+.metric-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 12px;
+  margin: 18px 0;
+}
+.metric-cell { background: var(--black); border: 1px solid var(--slate); border-radius: 8px; padding: 12px 14px; }
+.metric-cell .ml { font-family: var(--mono); font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); }
+.metric-cell .mv { font-family: var(--display); font-size: 26px; line-height: 1; margin-top: 6px; letter-spacing: .5px; }
+
+.calc-table { width: 100%; border-collapse: collapse; margin-top: 2px; font-size: 13.5px; background: var(--black); border: 1px solid var(--slate); border-radius: 8px; overflow: hidden; }
+.calc-table th, .calc-table td { text-align: left; padding: 9px 13px; border-bottom: 1px solid var(--slate); }
+.calc-table th { font-family: var(--mono); font-size: 9px; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); background: var(--panel); }
+.calc-table td { color: var(--silver); }
+.calc-table .num { font-family: var(--mono); text-align: right; color: var(--white); white-space: nowrap; }
+.calc-table th.num { color: var(--muted); }
+.calc-table tr:last-child td { border-bottom: none; }
+.calc-table tr.total td { border-top: 2px solid var(--red); background: rgba(217,70,239,.06); color: var(--white); font-weight: 600; }
+.calc-table tr.total .num { color: #f472b6; font-size: 16px; font-family: var(--display); letter-spacing: .5px; }
+.calc-note { font-family: var(--mono); font-size: 10px; color: var(--muted); margin-top: 8px; letter-spacing: .4px; line-height: 1.5; }
+.tstat { display: inline-block; font-family: var(--mono); font-size: 8.5px; letter-spacing: .5px; text-transform: uppercase; padding: 2px 7px; border: 1px solid; border-radius: 3px; background: rgba(255,255,255,.02); white-space: nowrap; }
+.tinput { display: block; font-family: var(--mono); font-size: 9px; color: #6f6f6f; letter-spacing: .3px; margin-top: 2px; }
+
+.block-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--red);
+  margin: 20px 0 8px;
+}
+.bottleneck {
+  background: rgba(217,70,239,.06);
+  border-left: 3px solid var(--red);
+  padding: 14px 16px;
+  border-radius: 0 8px 8px 0;
+  color: var(--silver);
+  font-size: 14.5px;
+}
+.bottleneck.clear { background: rgba(16,185,129,.06); border-left-color: var(--optimal); }
+
+/* Normative band */
+.norm-band {
+  background: rgba(255,255,255,.03);
+  border: 1px solid var(--slate);
+  border-radius: 8px;
+  padding: 12px 14px;
+  margin-top: 12px;
+}
+.norm-band-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+.norm-row { display: flex; gap: 16px; flex-wrap: wrap; }
+.norm-item { display: flex; flex-direction: column; gap: 2px; }
+.ni-label { font-family: var(--mono); font-size: 8px; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); }
+.ni-val { font-family: var(--display); font-size: 20px; letter-spacing: .5px; color: var(--silver); line-height: 1.1; }
+.ni-val.elite { color: var(--optimal); }
+.ni-tag { font-family: var(--mono); font-size: 8px; color: #5f5f5f; margin-top: 2px; }
+
+.drills { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; margin-top: 8px; }
+.drill {
+  background: var(--black);
+  border: 1px solid var(--slate);
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: border-color .18s ease, transform .18s ease;
+}
+.drill:hover { border-color: var(--red); transform: translateY(-2px); }
+.drill-thumb {
+  height: 108px;
+  background: linear-gradient(145deg, #222, #0c0c0c);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  border-bottom: 1px solid var(--slate);
+  text-decoration: none;
+}
+.drill-thumb .play {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: var(--red);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform .2s ease, background .2s ease;
+  box-shadow: 0 6px 18px rgba(217,70,239,.4);
+}
+.drill-thumb:hover .play { transform: scale(1.1); background: var(--red-impact); }
+.drill-thumb .play svg { width: 18px; height: 18px; margin-left: 3px; fill: #fff; }
+.drill-thumb .vlabel { position: absolute; bottom: 8px; left: 10px; font-family: var(--mono); font-size: 9px; letter-spacing: 1px; text-transform: uppercase; color: var(--silver); }
+.drill-thumb.no-video { cursor: default; }
+.drill-thumb.no-video .play { background: var(--slate); box-shadow: none; }
+.drill-body { padding: 13px 15px 16px; flex: 1; display: flex; flex-direction: column; }
+.drill-body h4 { font-family: var(--sans); font-weight: 600; font-size: 15px; color: var(--white); margin-bottom: 8px; }
+.drill-body .ex-num { display: block; font-family: var(--mono); font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--red); margin-bottom: 6px; }
+.program-sub { font-family: var(--mono); font-size: 11px; letter-spacing: .4px; color: var(--muted); margin: -6px 0 16px; }
+.program-full { display: flex; align-items: center; gap: 18px; text-decoration: none; background: linear-gradient(160deg, var(--charcoal), #0d0d0d); border: 1px solid var(--slate); border-top: 2px solid var(--red); border-radius: 12px; padding: 22px 24px; transition: border-color .18s ease, transform .18s ease; }
+.program-full:hover { border-color: var(--red); transform: translateY(-2px); }
+.program-full .pf-icon { width: 54px; height: 54px; flex-shrink: 0; border-radius: 50%; background: var(--red); display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 24px rgba(217,70,239,.4); }
+.program-full .pf-icon svg { width: 22px; height: 22px; margin-left: 3px; fill: #fff; }
+.program-full .pf-text { display: flex; flex-direction: column; gap: 3px; }
+.program-full .pf-text b { font-family: var(--display); font-size: 24px; letter-spacing: 1px; color: var(--white); }
+.program-full .pf-text span { font-family: var(--mono); font-size: 11px; letter-spacing: .5px; color: var(--silver); }
+.drill-dose { font-family: var(--mono); font-size: 10.5px; letter-spacing: .5px; color: var(--white); background: var(--charcoal); border: 1px solid var(--slate); border-radius: 5px; padding: 7px 10px; text-align: center; margin-top: auto; }
+
+.load-panel {
+  background: linear-gradient(160deg, #2e102e, #0d080d);
+  border: 1px solid var(--red-dim);
+  border-radius: 12px;
+  padding: clamp(18px, 4vw, 28px);
+}
+.load-panel .intro { color: var(--silver); font-size: 14.5px; margin-bottom: 16px; }
+.hole-track {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin: 18px 0 22px;
+  height: 8px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, var(--optimal), #a3e635 45%, var(--monitor) 70%, var(--restricted));
+  position: relative;
+}
+.hole-track .hmark { position: absolute; top: -22px; transform: translateX(-50%); font-family: var(--mono); font-size: 9px; letter-spacing: 1px; color: var(--muted); }
+.hole-track .hmark::after { content: ""; position: absolute; left: 50%; top: 18px; width: 1px; height: 14px; background: var(--slate); }
+.load-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.load-list li {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  background: rgba(0,0,0,.35);
+  border: 1px solid var(--slate);
+  border-radius: 8px;
+  padding: 13px 15px;
+}
+.load-list .tag {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--monitor);
+  border: 1px solid var(--monitor);
+  border-radius: 3px;
+  padding: 3px 7px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.load-list .txt { font-size: 14px; color: var(--silver); }
+.load-list .txt b { color: var(--white); font-weight: 600; }
+
+.swing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+.swing-foot { font-family: var(--mono); font-size: 10.5px; color: var(--muted); letter-spacing: .4px; margin-top: 14px; line-height: 1.5; }
+.club-card { background: linear-gradient(160deg, var(--charcoal), #0d0d0d); border: 1px solid var(--slate); border-radius: 12px; overflow: hidden; border-top: 2px solid var(--red); display: flex; flex-direction: column; }
+.club-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 14px 18px; border-bottom: 1px solid var(--slate); background: var(--panel); }
+.club-head .cname { font-family: var(--display); font-size: 22px; letter-spacing: 1px; text-transform: uppercase; }
+.club-head .cgain { font-family: var(--mono); font-size: 10px; letter-spacing: .5px; text-transform: uppercase; color: var(--optimal); background: rgba(16,185,129,.12); padding: 5px 10px; border-radius: 3px; white-space: nowrap; }
+.club-head .cgain.down { color: var(--monitor); background: rgba(245,158,11,.12); }
+.club-head .cgain.alert-bad { color: var(--restricted); background: rgba(239,68,68,.12); }
+.metric-line { padding: 14px 18px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+.ml-top { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.ml-name { font-family: var(--mono); font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); }
+.ml-delta { font-family: var(--mono); font-size: 12px; font-weight: 500; color: var(--muted); }
+.ml-delta.up { color: var(--optimal); }
+.ml-delta.down { color: var(--monitor); }
+.ml-delta.bad { color: var(--restricted); }
+.ml-vals { display: flex; align-items: baseline; gap: 9px; margin-top: 7px; }
+.ml-pre { font-family: var(--display); font-size: 20px; letter-spacing: .5px; color: var(--muted); line-height: 1; }
+.ml-arrow { color: var(--red); font-size: 15px; }
+.ml-post { font-family: var(--display); font-size: 32px; letter-spacing: .5px; color: var(--white); line-height: 1; }
+.ml-unit { font-family: var(--mono); font-size: 11px; color: var(--silver); }
+.cmp-bar { position: relative; height: 5px; border-radius: 3px; background: var(--slate); margin-top: 9px; overflow: hidden; }
+.cmp-post { position: absolute; inset: 0; background: linear-gradient(90deg, var(--red), var(--optimal)); border-radius: 3px; }
+.cmp-pre { position: absolute; left: 0; top: 0; height: 100%; background: #4a4a4a; border-radius: 3px; }
+.ml-trials { font-family: var(--mono); font-size: 8.5px; color: #5f5f5f; margin-top: 8px; letter-spacing: .5px; white-space: normal; line-height: 1.3; }
+
+.cta {
+  margin-top: clamp(30px, 6vw, 52px);
+  text-align: center;
+  background: linear-gradient(160deg, var(--charcoal), #0c0c0c);
+  border: 1px solid var(--slate);
+  border-radius: 14px;
+  padding: clamp(28px, 6vw, 44px) 20px;
+  position: relative;
+  overflow: hidden;
+}
+.cta::before { content: ""; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 60%; height: 2px; background: var(--red); }
+.cta h3 { font-family: var(--display); font-size: clamp(28px, 6vw, 44px); letter-spacing: 1.5px; line-height: .95; margin-bottom: 8px; }
+.cta h3 .r { color: var(--red); }
+.cta p { color: var(--muted); font-size: 14px; max-width: 440px; margin: 0 auto 22px; }
+.book-btn {
+  display: inline-block;
+  background: var(--red);
+  color: #fff;
+  text-decoration: none;
+  font-family: var(--mono);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 16px 42px;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background .18s ease, transform .18s ease, box-shadow .18s ease;
+  box-shadow: 0 8px 28px rgba(217,70,239,.35);
+}
+.book-btn:hover { background: var(--red-impact); transform: translateY(-2px); box-shadow: 0 12px 34px rgba(217,70,239,.5); }
+
+footer {
+  max-width: 1080px;
+  margin: 40px auto 0;
+  padding: 24px clamp(14px, 4vw, 40px);
+  border-top: 1px solid var(--slate);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: space-between;
+  align-items: center;
+}
+footer .scope { font-family: var(--mono); font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); }
+footer .cred { font-family: var(--mono); font-size: 10px; letter-spacing: 1px; color: var(--silver); }
+
+.reveal { opacity: 0; transform: translateY(14px); animation: rise .7s cubic-bezier(.2,.8,.2,1) forwards; }
+@keyframes rise { to { opacity: 1; transform: none; } }
+
+/* ── TABLET (≤ 760px) ─────────────────────────────────────────── */
+@media(max-width:760px) {
+
+  /* Header */
+  header { padding: 14px 16px; gap: 10px; }
+  .client-badge { display: none; }
+  .brand-logo-txt { font-size: 26px; }
+
+  /* Hero — stack radar above readout */
+  .hero {
+    grid-template-columns: 1fr;
+    text-align: center;
+    padding: 20px 16px;
+    gap: 16px;
+  }
+  .radar-box { order: -1; }
+  .radar-box svg { max-width: 220px; }
+  .hero-class { margin: 0 auto; }
+  .eff-scale, .hero-readout .eyebrow { text-align: left; }
+  .eff-bar-wrap { margin-top: 14px; }
+
+  /* Section spacing */
+  section { margin-top: 28px; }
+  .sec-title { margin-bottom: 12px; }
+
+  /* Screen cards — 2-up grid */
+  .screen-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .screen-card { padding: 13px; }
+  .screen-card .sc-val { font-size: 26px; }
+  .screen-card .sc-name { font-size: 9px; min-height: 22px; }
+
+  /* Detail panel tables — horizontal scroll */
+  .calc-table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    font-size: 12.5px;
+  }
+  .calc-table th, .calc-table td { padding: 8px 10px; }
+  .metric-row { grid-template-columns: repeat(2, 1fr); gap: 8px; margin: 12px 0; }
+  .metric-cell { padding: 10px 12px; }
+  .metric-cell .mv { font-size: 22px; }
+
+  /* Load panel — hide decorative quarter track, keep list */
+  .hole-track { display: none; }
+  .load-panel { padding: 16px; }
+  .load-panel .intro { font-size: 13.5px; margin-bottom: 12px; }
+  .load-list li { padding: 11px 12px; gap: 10px; }
+  .load-list .txt { font-size: 13px; }
+
+  /* Performance cards */
+  .swing-grid { grid-template-columns: 1fr; gap: 12px; }
+  .club-head { padding: 12px 14px; flex-wrap: wrap; }
+  .club-head .cname { font-size: 18px; }
+  .metric-line { padding: 12px 14px; }
+  .ml-post { font-size: 26px; }
+  .norm-row { gap: 12px; }
+
+  /* Program link */
+  .program-full { padding: 16px 18px; gap: 14px; }
+  .program-full .pf-icon { width: 44px; height: 44px; }
+  .program-full .pf-text b { font-size: 20px; }
+
+  /* CTA */
+  .cta { padding: 28px 16px; }
+  .book-btn {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 16px 20px;
+    box-sizing: border-box;
+  }
+
+  /* Footer */
+  footer { flex-direction: column; text-align: center; gap: 6px; padding: 20px 16px; }
+}
+
+/* ── PHONE (≤ 480px) ──────────────────────────────────────────── */
+@media(max-width:480px) {
+
+  /* Header */
+  header { padding: 12px 14px; }
+  .brand-logo-txt { font-size: 22px; letter-spacing: 1px; }
+  .brand-text p { font-size: 8.5px; letter-spacing: 1.5px; }
+
+  /* Hero */
+  .hero { padding: 16px 14px; border-radius: 10px; }
+  .radar-box svg { max-width: 180px; }
+  .hero-score { font-size: clamp(46px, 14vw, 64px); }
+  .eff-scale { font-size: 8px; letter-spacing: .5px; }
+
+  /* Section labels & titles */
+  .sec-label { font-size: 9px; letter-spacing: 2px; }
+  .sec-title { font-size: clamp(22px, 6vw, 30px); margin-bottom: 10px; }
+
+  /* Position bar */
+  .position-bar { padding: 12px 14px; gap: 12px; }
+  .position-pill { font-size: 18px; padding: 5px 10px; min-width: 46px; }
+  .position-desc { font-size: 12.5px; }
+
+  /* Screen cards — single column */
+  .screen-grid { grid-template-columns: 1fr; gap: 8px; }
+  .screen-card { padding: 14px; }
+  .screen-card .sc-val { font-size: 30px; }
+  .screen-card .sc-name { font-size: 10px; min-height: auto; }
+
+  /* Detail panel */
+  .detail { padding: 14px; border-radius: 10px; }
+  .detail-head { gap: 10px; margin-bottom: 4px; }
+  .block-label { margin: 14px 0 6px; font-size: 9px; }
+  .bottleneck { font-size: 13.5px; padding: 12px 14px; }
+  .calc-note { font-size: 9.5px; }
+  .metric-row { grid-template-columns: repeat(2, 1fr); gap: 7px; }
+
+  /* Tables — tighter on small screens */
+  .calc-table { font-size: 11.5px; }
+  .calc-table th, .calc-table td { padding: 7px 8px; }
+  .tstat { font-size: 7.5px; padding: 1px 5px; }
+
+  /* Load list — stack tag above text */
+  .load-list li { flex-direction: column; gap: 6px; }
+  .load-list .tag { align-self: flex-start; }
+
+  /* Performance cards */
+  .club-head { padding: 11px 13px; }
+  .club-head .cname { font-size: 16px; }
+  .club-head .cgain { font-size: 9px; padding: 4px 8px; }
+  .metric-line { padding: 11px 13px; }
+  .ml-post { font-size: 24px; }
+  .ml-pre { font-size: 17px; }
+  .norm-band { padding: 10px 12px; }
+  .ni-val { font-size: 17px; }
+
+  /* Wrapping .wrap padding */
+  .wrap { padding: 0 12px; }
+
+  /* Program link */
+  .program-full { padding: 14px 16px; gap: 12px; flex-direction: row; }
+  .program-full .pf-icon { width: 40px; height: 40px; flex-shrink: 0; }
+  .program-full .pf-text b { font-size: 17px; }
+  .program-full .pf-text span { font-size: 10px; }
+
+  /* CTA */
+  .cta { padding: 24px 14px; border-radius: 10px; }
+  .book-btn { font-size: 12px; letter-spacing: 1.5px; padding: 14px 20px; }
+}
+
+/* ── SMALL PHONE (≤ 360px) ────────────────────────────────────── */
+@media(max-width:360px) {
+  .brand-logo-txt { font-size: 19px; }
+  .hero-score { font-size: 44px; }
+  .metric-row { grid-template-columns: 1fr 1fr; }
+  .eff-scale { display: none; } /* too cramped at 360px — bar itself communicates position */
+  .calc-table th, .calc-table td { padding: 6px 7px; }
+  .wrap { padding: 0 10px; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand-text">
+    <div class="brand-logo-txt">REVIVE <span>FOOTBALL</span></div>
+    <p>Physical Capacity Dashboard</p>
+  </div>
+  <div class="client-badge">
+    <div class="name" id="hClientName">Loading...</div>
+    <div class="meta" id="hClientMeta">Loading...</div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <section class="reveal" style="margin-top:clamp(24px,5vw,40px)">
+    <div class="sec-label">Position Group</div>
+    <div class="position-bar">
+      <span class="position-pill" id="positionPill">—</span>
+      <div class="position-copy">
+        <div class="position-label" id="positionLabel">Loading...</div>
+        <div class="position-desc" id="positionDesc">Loading...</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="reveal" style="animation-delay:.04s">
+    <div class="sec-label">Overall Movement Efficiency</div>
+    <div class="hero">
+      <div class="radar-box">
+        <svg id="radar" viewBox="-40 0 380 300" role="img" aria-label="Football efficiency radar across six axes"></svg>
+      </div>
+      <div class="hero-readout">
+        <div class="eyebrow">Football Efficiency Score</div>
+        <div class="hero-score"><span id="effScore">0</span><span class="unit">/100</span></div>
+        <span class="hero-class bg-monitor" id="effClass">Calculating...</span>
+        <div class="eff-bar-wrap">
+          <div class="eff-track"><div class="eff-mask" id="effMask" style="width:100%;"></div></div>
+          <div class="eff-scale">
+            <span class="restricted">Restricted</span>
+            <span>Developing</span>
+            <span>Functional</span>
+            <span class="optimal">Optimal</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="reveal" style="animation-delay:.08s">
+    <div class="sec-label">Physical Capacity Screens — Tap any card to analyze</div>
+    <h2 class="sec-title" id="sport-sec-title">Athlete Testing Profile</h2>
+    <div class="screen-grid" id="screenGrid"></div>
+    <div id="detail"></div>
+  </section>
+
+  <section class="reveal" style="animation-delay:.12s">
+    <div class="sec-label">Prescribed Training Program</div>
+    <h2 class="sec-title">Football Preparedness Drills</h2>
+    <p class="program-sub" id="programSub">Loading target routines...</p>
+    <div id="programHost"></div>
+  </section>
+
+  <section class="reveal" style="animation-delay:.16s">
+    <div class="sec-label">Localized Load Management</div>
+    <h2 class="sec-title">Your Body Over 4 Quarters</h2>
+    <div class="load-panel">
+      <p class="intro" id="loadIntro">Checking your screens for areas that will take on extra stress during the game...</p>
+      <div class="hole-track">
+        <span class="hmark" style="left:5%">Q1 Start</span>
+        <span class="hmark" style="left:35%">Halftime</span>
+        <span class="hmark" style="left:65%">Q3 End</span>
+        <span class="hmark" style="left:95%">Q4 Finish</span>
+      </div>
+      <ul class="load-list" id="loadList"></ul>
+    </div>
+  </section>
+
+  <section class="reveal" style="animation-delay:.2s">
+    <div class="sec-label">Sport Performance Indicators</div>
+    <h2 class="sec-title">Speed & Agility Benchmarks</h2>
+    <div class="swing-grid" id="swingGrid"></div>
+    <p class="swing-foot">Each number is your average across recorded trials. Age-group benchmarks below each card show where you stand.</p>
+  </section>
+
+  <section class="cta reveal" style="animation-delay:.24s">
+    <h3>BOOK YOUR NEXT <span class="r">FOOTBALL SESSION</span></h3>
+    <p>Close the physical gaps, add explosive power, and build a body that can take on contact and stay strong through all 4 quarters.</p>
+    <a class="book-btn" id="bookBtn" href="#" target="_blank" rel="noopener">Book Training Session →</a>
+  </section>
+
+</div>
+
+<footer>
+  <span class="scope">Performance · Wellness · Prevention Scope Only</span>
+  <span class="cred">Nick Kirsch, ATC | Football Conditioning & Capacity Specialist</span>
+</footer>
+
+<script>
+/* ====================================================================
+   ███  CONFIG — EDIT THIS BLOCK FOR EACH NEW ATHLETE BEFORE PUBLISHING  ███
+   All strength/power/mobility/agility entries below are blank placeholders
+   ("tested: false" / zero values). Fill in real numbers and flip
+   "tested" to true as each screen is completed — untested items are
+   automatically excluded from scoring and shown as "Deferred"/"Skipped".
+   ==================================================================== */
+const CONFIG = {
+  client: {
+    name: "Luke Maher",              // REPLACE
+    date: "August 30, 2026",            // REPLACE — assessment date
+    age:  17,                          // REPLACE
+    sex:  "male",                      // "male" or "female"
+    hand: "right",                     // dominant hand (reference only)
+    bodyweightLbs: 165,                // REPLACE — required for strength ratios, keep > 0
+    primarySport: "Football",
+    position: "QB"                     // REPLACE — one of: "QB", "OL", "DL", "LB", "DB", "SKILL" (WR/RB/TE)
+  },
+
+  bookingUrl: "https://www.revivegolfperformance.com/booking-calendar/training?referral=service_list_widget",
+
+  scores: {
+    strength: {
+      trapBarDeadlift: { weight: 225, reps: 6, tested: true },
+      backSquat:       { weight: 205, reps: 12, tested: true },
+      pullups:         { addedWeight: 0, reps: 8, tested: true },
+      cablePull:       { leftWeight: 80, leftReps: 5, rightWeight: 80, rightReps: 5, tested: true },
+      cablePush:       { leftWeight: 60, leftReps: 5, rightWeight: 60, rightReps: 5, tested: true },
+      splitSquat:      { leftWeight: 85, leftReps: 5, rightWeight: 85, rightReps: 5, tested: true, notes: "" }
+    },
+    rsiTarget: 5.554,
+
+     power: {
+      verticalJump:  { ft: null, in: 18, tested: true },
+      chestPass:     { ft: 16, tested: true },
+      situpThrow:    { ft: 14, tested: true },
+      shotPutRight:  { ft: 29, tested: true },
+      shotPutLeft:   { ft: 27, tested: true }
+    },
+    powerTarget: 1444,
+
+    rom: [
+      { name: "Shoulder ER",       lead: 90, trail: 77, target: 90, limitRange: 5  },
+      { name: "Hip IR",            lead: 25, trail: 25, target: 45, limitRange: 10 },
+      { name: "T-Spine Rotation",  lead: 54, trail: 55, target: 60, limitRange: 15 }
+    ],
+
+     mobilityClearance: [
+      { name: "Pelvic Tilt Test",             tested: true, status: "Fail", notes: "Cannot Pelvic Tilt in either direction when in an Athletic stance" },
+      { name: "Pelvic Rotation Test",         tested: true, status: "Monitor", notes: "Improved with Assistance." },
+      { name: "Torso Rotation Test",          tested: true, status: "Pass", notes: "" },
+      { name: "Overhead Deep Squat",          tested: true, status: "Monitor", notes: "Ankle ROM Limtited: Prevents knees fromcoming over toes to allow for full deep squat" },
+      { name: "Toe Touch Test",               tested: true, status: "Fail", notes: "Unable to touch toes on either side" },
+      { name: "Shoulder External Rotation",   tested: true, status: "Monitor", notes: "Non-Throwing shoulder limited ER ROM. Throwing shoulder should have more ROM to generate more velocity and power behind the ball" },
+      { name: "Single Leg Balance Test",      tested: true, status: "Monitor", notes: "Left side: Pass (+15sec) , Right Side: Needs Improvement (6-10s)" },
+      { name: "Lat Flexibility Test",         tested: true, status: "Fail", notes: "Low back comes off wall before arms raise to cover the nose" },
+      { name: "Lower Quarter Rotation",       tested: true, status: "Monitor", notes: "Slight limitation rotating into Left hip while standing" },
+      { name: "Seated Trunk Rotation",        tested: true, status: "Monitor", notes: "Goal for mobilituy is 60 degrees. Barely below. No concern for injury, but monitor to improve performance." },
+      { name: "Bridge w/ Leg Extension",      tested: true, status: "Pass", notes: "" },
+      { name: "Hip Internal Rotation",        tested: true, status: "Monitor", notes: "25 degrees on both sides. The goal is 90 degrees for Hip internal rotation and External Rotation when Added together" },
+      { name: "Hip External Rotation",        tested: true, status: "Monitor", notes: "32 degrees on both sides. The goal is 90 degrees for Hip internal rotation and External Rotation when Added together." },
+      { name: "Cervical Rotation Test",       tested: true, status: "Pass", notes: "" },
+      { name: "Forearm Rotation Test",        tested: true, status: "Pass", notes: "" },
+      { name: "Wrist Hinge Test",             tested: true, status: "Pass", notes: "" },
+      { name: "Wrist Flexion/Extension",      tested: true, status: "Monitor", notes: "Fractured Left wrist 1 year ago. Limited Wrist flexion." }
+    ],
+
+     performanceIndex: {
+      name: "Dynamic Football Index",
+      display: "24",
+      fillPct: 33,
+      class: "Developing"
+    }
+  },
+
+  sportMetrics: {
+    agility5105: {
+      name: "5-10-5 Pro Agility Drill",
+      unit: "sec",
+      lowerIsBetter: true,
+      time: [ 5.18, 5.28, 5.03],
+      tested: true
+    },
+    agilityLDrill: {
+      name: "L-Drill (3-Cone)",
+      unit: "sec",
+      lowerIsBetter: true,
+      time: [8.17, 8.23, 8.37],
+      tested: true
+    }
+  },
+
+  program: {
+    fullProgramUrl: "https://pro.theprehabguys.com/patient-portal/programs/Y4L6BO37",
+    exercises: [
+      { name: "Thoracic Spine Foam Roll",     url: "" },
+      { name: "90/90 Dynamic Hip Flow",       url: "" },
+      { name: "Shoulder Sleeper Stretch",     url: "" },
+      { name: "Lateral Goblet Squats",        url: "" },
+      { name: "Rotational Med-Ball Slams",    url: "" },
+      { name: "Single-Leg Balance Touches",   url: "" }
+    ]
+  }
+};
+/* ███  END CONFIG  ███ */
+
+/* ── Position-group reference data — labels, blurbs, and the load-management
+     risk lines that read differently depending on what position is training ── */
+const POSITION_META = {
+  QB:    { label: "Quarterback",                  blurb: "Screens and drills below are prioritized for pocket mobility, rotational power through the throw, and protecting your arm over a full season." },
+  OL:    { label: "Offensive Line",                blurb: "Screens and drills below are prioritized for leverage, anchor strength, and hip/ankle mobility for a low, stable stance." },
+  DL:    { label: "Defensive Line",                blurb: "Screens and drills below are prioritized for first-step power, hand-fighting range of motion, and the strength to shed blocks." },
+  LB:    { label: "Linebacker",                    blurb: "Screens and drills below are prioritized for hip mobility in coverage, closing power, and tackling strength in traffic." },
+  DB:    { label: "Defensive Back",                blurb: "Screens and drills below are prioritized for hip mobility, backpedal-to-break transition, and closing speed to the ball." },
+  SKILL: { label: "Wide Receiver / Running Back / Tight End", blurb: "Screens and drills below are prioritized for top-end speed, change-of-direction power, and contact balance through the whistle." }
+};
+
+const POSITION_RISK = {
+  strength: {
+    QB:    "<b>Weaker strength base</b> means your pocket stability and base control break down late in games. Throws made under pressure or on the move lose accuracy when your legs and core are depleted.",
+    OL:    "<b>Weaker strength base</b> means your anchor and leverage break down in the 3rd and 4th quarters. You'll get driven back in pass protection and lose ground in the run game as your legs and core fatigue.",
+    DL:    "<b>Weaker strength base</b> means you get controlled and washed out of plays more easily late in games, as your ability to hold leverage and finish tackles fades with fatigue.",
+    LB:    "<b>Weaker strength base</b> means you get knocked off your angle and out-leveraged in run fits late in games, as your legs and core wear down.",
+    DB:    "<b>Weaker strength base</b> means you get out-muscled at the catch point and miss more open-field tackles late in games, as your legs and core fatigue.",
+    SKILL: "<b>Weaker strength base</b> means you break fewer tackles and lose contact balance late in games, as your legs and core wear down."
+  },
+  power: {
+    QB:    "<b>Below-target power</b> fades fastest under fatigue. Ball velocity on off-platform throws and your ability to escape pressure both drop noticeably in the back half of a game.",
+    OL:    "<b>Below-target power</b> fades fastest under fatigue. Your first punch off the snap and your ability to generate movement in the run game both drop noticeably in the back half of a game.",
+    DL:    "<b>Below-target power</b> fades fastest under fatigue. Your get-off and pass-rush burst both drop noticeably in the back half of a game as your fast-twitch system tires.",
+    LB:    "<b>Below-target power</b> fades fastest under fatigue. Your closing speed to the ball carrier and hit power both drop noticeably in the back half of a game.",
+    DB:    "<b>Below-target power</b> fades fastest under fatigue. Your transition speed out of the backpedal and closing burst to the catch point both drop noticeably in the back half of a game.",
+    SKILL: "<b>Below-target power</b> fades fastest under fatigue. Your first-step quickness and top-end speed both drop noticeably in the back half of a game as your fast-twitch system tires."
+  },
+  symmetry: {
+    QB:    "<b>Side-to-side strength gap</b> puts extra stress on your plant leg and throwing shoulder. Look for arm soreness building as throw volume adds up over a game.",
+    OL:    "<b>Side-to-side strength gap</b> puts extra stress on one side of your stance in pass protection and drive blocking. Look for shoulder or hip soreness building on that side.",
+    DL:    "<b>Side-to-side strength gap</b> gives blockers a predictable weak side to attack, and puts extra stress on your dominant hand and hip over the course of a game.",
+    LB:    "<b>Side-to-side strength gap</b> puts extra stress on your dominant shed side and tackling shoulder. Look for soreness building on one side during and after contact-heavy games.",
+    DB:    "<b>Side-to-side strength gap</b> gives receivers a side to attack in your backpedal and puts extra stress on your dominant tackling shoulder.",
+    SKILL: "<b>Side-to-side strength gap</b> puts extra stress on your dominant cutting leg or ball-carrying side. Look for soreness building on one side during and after contact-heavy games."
+  }
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+  const c = CONFIG.client;
+  const s = CONFIG.scores;
+  const BW = c.bodyweightLbs;
+  const SEX = c.sex.toLowerCase() === "female" ? "female" : "male";
+  const isMale = SEX === "male";
+  const POS = POSITION_META[c.position] ? c.position : "DB";
+  const posMeta = POSITION_META[POS];
+
+  document.getElementById("hClientName").textContent = c.name;
+  document.getElementById("hClientMeta").textContent = `${c.date} · Age ${c.age} · Football · ${posMeta.label}`;
+  document.getElementById("bookBtn").href = CONFIG.bookingUrl;
+  document.getElementById("sport-sec-title").textContent = "Your Football Profile Screens";
+  document.getElementById("positionPill").textContent = POS;
+  document.getElementById("positionLabel").textContent = posMeta.label;
+  document.getElementById("positionDesc").textContent = posMeta.blurb;
+
+  const calc1RM = (w, r) => r === 0 ? 0 : w * (1 + r / 30);
+  const st = s.strength;
+  const isTested = obj => obj && obj.tested !== false;
+
+  const strengthParts = [
+    { name: "Trap-Bar Deadlift",    key: "trapBarDeadlift", on: isTested(st.trapBarDeadlift), w: st.trapBarDeadlift.weight, r: st.trapBarDeadlift.reps, target: 1.75 },
+    { name: "Back Squat",           key: "backSquat",       on: isTested(st.backSquat),       w: st.backSquat.weight,       r: st.backSquat.reps,       target: 1.5 },
+    { name: "Pull-Ups (BW + Load)", key: "pullups",         on: isTested(st.pullups),         w: BW + st.pullups.addedWeight, r: st.pullups.reps,       target: SEX === "female" ? 0.85 : 1.00 },
+    { name: "Cable Pull (Avg L/R)", key: "cablePull",       on: isTested(st.cablePull),
+      ratio: (calc1RM(st.cablePull.leftWeight, st.cablePull.leftReps)/BW + calc1RM(st.cablePull.rightWeight, st.cablePull.rightReps)/BW)/2,
+      target: SEX === "female" ? 0.31 : 0.373 },
+    { name: "Cable Push (Avg L/R)", key: "cablePush",       on: isTested(st.cablePush),
+      ratio: (calc1RM(st.cablePush.leftWeight, st.cablePush.leftReps)/BW + calc1RM(st.cablePush.rightWeight, st.cablePush.rightReps)/BW)/2,
+      target: SEX === "female" ? 0.248 : 0.31 },
+    { name: "Split Squat (Avg L/R)", key: "splitSquat",     on: isTested(st.splitSquat),
+      ratio: (calc1RM(st.splitSquat.leftWeight, st.splitSquat.leftReps)/BW + calc1RM(st.splitSquat.rightWeight, st.splitSquat.rightReps)/BW)/2,
+      target: 0.621 }
+  ];
+
+  strengthParts.forEach(p => {
+    if (p.ratio == null && p.on) {
+      p.oneRM = calc1RM(p.w, p.r);
+      p.ratio = p.oneRM / BW;
+    }
+  });
+
+  const strengthScored = strengthParts.filter(p => p.on);
+  const totalRSI = strengthScored.reduce((sum, p) => sum + p.ratio, 0);
+  const rescaledRsiTarget = s.rsiTarget * (strengthScored.length / strengthParts.length);
+
+  const pt = s.power;
+  const vjIn = pt.verticalJump.in != null ? pt.verticalJump.in : (pt.verticalJump.ft || 0) * 12;
+
+  const powerParts = [
+    { name: "Vertical Jump",         key: "verticalJump", on: isTested(pt.verticalJump), inches: vjIn,                    disp: `${vjIn}"`,            target: SEX === "female" ? 25 : 28 },
+    { name: "Seated Chest Pass",     key: "chestPass",    on: isTested(pt.chestPass),    inches: pt.chestPass.ft*12,      disp: `${pt.chestPass.ft}'`, target: (SEX === "female" ? 18 : 23)*12 },
+    { name: "Sit-up Overhead Throw", key: "situpThrow",   on: isTested(pt.situpThrow),   inches: pt.situpThrow.ft*12,     disp: `${pt.situpThrow.ft}'`,target: (SEX === "female" ? 18 : 23)*12 },
+    { name: "Shot Put — Right",      key: "shotPutRight", on: isTested(pt.shotPutRight), inches: pt.shotPutRight.ft*12,   disp: `${pt.shotPutRight.ft}'`, target: (SEX === "female" ? 28 : 36)*12 },
+    { name: "Shot Put — Left",       key: "shotPutLeft",  on: isTested(pt.shotPutLeft),  inches: pt.shotPutLeft.ft*12,    disp: `${pt.shotPutLeft.ft}'`,  target: (SEX === "female" ? 28 : 36)*12 }
+  ];
+
+  const powerScored = powerParts.filter(p => p.on);
+  const totalPower = powerScored.reduce((sum, p) => sum + p.inches, 0);
+  const rescaledPowerTarget = Math.round(s.powerTarget * (powerScored.length / powerParts.length));
+
+  const symTested = isTested(pt.shotPutRight) && isTested(pt.shotPutLeft);
+  const symValue = symTested ? (Math.min(pt.shotPutRight.ft, pt.shotPutLeft.ft) / Math.max(pt.shotPutRight.ft, pt.shotPutLeft.ft)) * 100 : 0;
+
+  let scoreStrength = rescaledRsiTarget > 0 ? Math.min(100, (totalRSI / rescaledRsiTarget) * 100) : 0;
+  let scorePower    = rescaledPowerTarget > 0 ? Math.min(100, (totalPower / rescaledPowerTarget) * 100) : 0;
+  let scoreSymmetry = symTested ? symValue : 50;
+
+  let mobScoreTotal = 0, mobTested = 0;
+  s.mobilityClearance.forEach(mc => {
+    if (!mc.tested) return;
+    mobTested++;
+    if (mc.status === "Pass") mobScoreTotal += 100;
+    else if (mc.status === "Monitor") mobScoreTotal += 50;
+  });
+  let scoreMobility = mobTested ? (mobScoreTotal / mobTested) : 0;
+
+  let romScoreTotal = 0;
+  s.rom.forEach(r => {
+    let avg = (r.lead + r.trail) / 2;
+    romScoreTotal += Math.min(100, (avg / r.target) * 100);
+  });
+  let scoreROM = s.rom.length ? (romScoreTotal / s.rom.length) : 0;
+
+  let scorePerfIndex = s.performanceIndex.fillPct;
+
+  let heroScore = Math.round((scoreStrength + scorePower + scoreSymmetry + scoreMobility + scoreROM + scorePerfIndex) / 6);
+  document.getElementById('effScore').textContent = heroScore;
+
+  const heroClassObj = document.getElementById("effClass");
+  const heroMaskObj  = document.getElementById("effMask");
+  let statusClass = "bg-restricted", statusLabel = "Restricted";
+  if      (heroScore >= 85) { statusClass = "bg-optimal"; statusLabel = "Optimal"; }
+  else if (heroScore >= 70) { statusClass = "bg-monitor"; statusLabel = "Functional"; }
+  else if (heroScore >= 55) { statusClass = "bg-monitor"; statusLabel = "Developing"; }
+  heroClassObj.className = `hero-class ${statusClass}`;
+  heroClassObj.textContent = statusLabel;
+  heroMaskObj.style.width = `${100 - heroScore}%`;
+
+  // Radar
+  (function() {
+    const svg = document.getElementById('radar');
+    const cx = 150, cy = 150, radius = 100;
+    const categories = ['Strength','Power','Symmetry','Mobility','ROM','Perf. Index'];
+    const values = [scoreStrength, scorePower, scoreSymmetry, scoreMobility, scoreROM, scorePerfIndex];
+    let g = "";
+    [0.25, 0.50, 0.75, 1.0].forEach(f => {
+      let pts = [];
+      for (let i = 0; i < 6; i++) {
+        let angle = (i/6)*2*Math.PI - Math.PI/2;
+        pts.push(`${cx+radius*f*Math.cos(angle)},${cy+radius*f*Math.sin(angle)}`);
+      }
+      g += `<polygon points="${pts.join(' ')}" fill="none" stroke="#2C2C2C" stroke-width="1"/>`;
+    });
+    for (let i = 0; i < 6; i++) {
+      let angle = (i/6)*2*Math.PI - Math.PI/2;
+      g += `<line x1="${cx}" y1="${cy}" x2="${cx+radius*Math.cos(angle)}" y2="${cy+radius*Math.sin(angle)}" stroke="#2C2C2C" stroke-width="1"/>`;
+      let lx = cx+(radius+20)*Math.cos(angle), ly = cy+(radius+15)*Math.sin(angle)+5;
+      let anchor = Math.abs(lx-cx)<8?"middle":(lx>cx?"start":"end");
+      g += `<text x="${lx}" y="${ly}" fill="#8a8a8a" font-family="DM Mono,monospace" font-size="9" letter-spacing="0.5" text-anchor="${anchor}">${categories[i].toUpperCase()}</text>`;
+    }
+    let dataPts = [], vCircles = "";
+    for (let i = 0; i < 6; i++) {
+      let angle = (i/6)*2*Math.PI - Math.PI/2;
+      let valR = radius*(Math.min(100,Math.max(0,values[i]))/100);
+      let dx = cx+valR*Math.cos(angle), dy = cy+valR*Math.sin(angle);
+      dataPts.push(`${dx},${dy}`);
+      let col = values[i]>=85?"#10B981":(values[i]>=70?"#F59E0B":"#EF4444");
+      vCircles += `<circle cx="${dx}" cy="${dy}" r="3.5" fill="${col}"/>`;
+    }
+    g += `<polygon points="${dataPts.join(' ')}" fill="rgba(217,70,239,0.2)" stroke="#D946EF" stroke-width="2" stroke-linejoin="round"/>`;
+    g += vCircles;
+    svg.innerHTML = g;
+  })();
+
+  /* ── BOTTLENECK TEXT — position-specific for strength/power/symmetry/mobility/rom.
+       "perf" is a composite grade and stays position-neutral (see buildDetailView). ── */
+  function getBottleneck(key, status, position) {
+    const map = {
+      strength: {
+        QB: {
+          optimal:    "Your strength is right where it needs to be. For a quarterback, that means a stable base in the pocket, the ability to reset your feet under pressure, and enough core and lower-body strength to drive the ball on the move without sacrificing accuracy.",
+          monitor:    "Your strength is getting close. A little more lower-body and core work will show up fast — as a quarterback, that translates to a more stable base under pressure and more velocity on throws made off-platform.",
+          restricted: "Your strength is below the target. For a quarterback, strength is what keeps your base stable in the pocket, lets you reset and throw accurately under pressure, and protects your legs and throwing shoulder when you're forced to scramble or absorb a hit."
+        },
+        OL: {
+          optimal:    "Your strength is right where it needs to be. As a lineman, that's what lets you control the point of attack, anchor against a bull rush, and sustain blocks through the whistle instead of getting driven backward.",
+          monitor:    "Your strength is getting close. A little more work in the weight room will pay off fast — for a lineman, more strength means winning more reps at the point of attack and holding your anchor deeper into games.",
+          restricted: "Your strength is below the target. For a lineman, strength is everything — it's what lets you win leverage at the snap, anchor in pass protection, and finish blocks in the run game instead of getting stood up or driven back."
+        },
+        DL: {
+          optimal:    "Your strength is right where it needs to be. For a defensive lineman, that means winning leverage at the snap, shedding blocks, and finishing tackles instead of getting locked up and controlled by an offensive lineman.",
+          monitor:    "Your strength is getting close. A little more strength work will pay off fast — for a defensive lineman, that means beating blocks with power instead of relying only on speed, and finishing more plays.",
+          restricted: "Your strength is below the target. For a defensive lineman, strength is your foundation — it's what lets you win leverage at the snap, shed blocks, and finish tackles instead of getting controlled and washed out of the play."
+        },
+        LB: {
+          optimal:    "Your strength is right where it needs to be. For a linebacker, that means taking on blockers and shedding them, finishing tackles in the hole, and holding up physically over four quarters of contact.",
+          monitor:    "Your strength is getting close. A little more strength work will pay off fast — for a linebacker, that means shedding blocks quicker and finishing more tackles instead of getting knocked off your angle.",
+          restricted: "Your strength is below the target. For a linebacker, strength is what lets you take on and shed blockers, finish tackles in traffic, and hold your ground against the run — without it, you get moved off your spot."
+        },
+        DB: {
+          optimal:    "Your strength is right where it needs to be. For a defensive back, that means winning at the catch point, finishing open-field tackles, and holding up physically against bigger receivers and tight ends.",
+          monitor:    "Your strength is getting close. A little more strength work will pay off fast — for a defensive back, that means more physical press coverage and more finished tackles in the open field.",
+          restricted: "Your strength is below the target. For a defensive back, strength is what lets you press at the line, win contested catches, and finish tackles in space instead of getting bounced off or run through."
+        },
+        SKILL: {
+          optimal:    "Your strength is right where it needs to be. For a skill player, that means breaking arm tackles, finishing runs and routes through contact, and staying available over a full season of hits.",
+          monitor:    "Your strength is getting close. A little more strength work will pay off fast — for a skill player, that means breaking more tackles and finishing more plays through contact.",
+          restricted: "Your strength is below the target. For a skill player, strength is what lets you break arm tackles, finish runs and catches through contact, and hold up over a full season of hits."
+        }
+      },
+      power: {
+        QB: {
+          optimal:    "Your power is on target. For a quarterback, that explosive engine is what puts velocity on the ball, especially on throws made off-platform or on the move, and helps you escape and create outside the pocket.",
+          monitor:    "Power is close but not quite there. You already have the strength — it just needs to convert to arm speed and escapability faster. The right training will unlock more velocity and quicker movement in the pocket.",
+          restricted: "Power is below the target. For a quarterback, power is what drives ball velocity and your ability to create outside a collapsing pocket. This is your biggest area to gain, and it responds quickly to the right work."
+        },
+        OL: {
+          optimal:    "Your power is on target. For a lineman, that's what turns your strength into a fast, violent first punch off the snap and lets you generate movement in the run game instead of just holding your ground.",
+          monitor:    "Power is close but not quite there. You already have the strength — it just needs to fire faster. The right training will unlock a quicker first punch and more movement in the run game.",
+          restricted: "Power is below the target. For a lineman, power is what turns strength into a fast first punch and real movement at the point of attack. This is your biggest area to gain, and it responds quickly to the right work."
+        },
+        DL: {
+          optimal:    "Your power is on target. For a defensive lineman, that explosive first step off the snap is what gets you into the backfield before the offensive line can set their feet.",
+          monitor:    "Power is close but not quite there. You already have the strength — it just needs to convert to a faster get-off. The right training will unlock a quicker first step and more pressure on the quarterback.",
+          restricted: "Power is below the target. For a defensive lineman, power is your first-step get-off — it's the main ingredient behind winning the snap count and beating blocks before they're set. This is your biggest area to gain."
+        },
+        LB: {
+          optimal:    "Your power is on target. For a linebacker, that's what lets you fill gaps fast, close on ball carriers, and deliver a hard, effective tackle instead of just an arm wrap.",
+          monitor:    "Power is close but not quite there. You already have the strength — it just needs to convert to closing speed faster. The right training will unlock quicker gap-fills and harder tackles.",
+          restricted: "Power is below the target. For a linebacker, power is what lets you close space and deliver force at contact. This is your biggest area to gain, and it responds quickly to the right work."
+        },
+        DB: {
+          optimal:    "Your power is on target. For a defensive back, that explosive hip-and-leg power is what drives your backpedal-to-break transition and your closing speed on the ball.",
+          monitor:    "Power is close but not quite there. You already have the strength — it just needs to convert to a faster transition out of your backpedal. The right training will unlock quicker breaks on the ball.",
+          restricted: "Power is below the target. For a defensive back, power is what drives your transition out of the backpedal and your closing speed to the catch point. This is your biggest area to gain."
+        },
+        SKILL: {
+          optimal:    "Your power is on target. For a skill player, that's what puts you in the open field faster — a quicker first step out of your cut, more top-end speed, and harder contact on runs through the hole.",
+          monitor:    "Power is close but not quite there. You already have the strength — it just needs to release faster. The right training will unlock a quicker first step and more top-end speed.",
+          restricted: "Power is below the target. For a skill player, power is the main ingredient behind separation speed, breakaway ability, and contact balance through arm tackles. This is your biggest area to gain."
+        }
+      },
+      symmetry: {
+        QB: {
+          optimal:    "Both sides of your body are pulling nearly equal weight. For a quarterback, that means your plant leg and throwing-side hip and shoulder are sharing the load evenly through your delivery — good news for arm health over a long season.",
+          monitor:    "There's a small gap between your two sides. For a quarterback, that often shows up as your plant leg or throwing shoulder working harder than it should. Closing it will protect your arm over a full season of throws.",
+          restricted: "One side is noticeably stronger. For a quarterback, that gap usually means your throwing arm and shoulder are compensating for a weaker base underneath you. Over time, that's a common path to shoulder and elbow overuse."
+        },
+        OL: {
+          optimal:    "Both sides of your body are pulling nearly equal weight. For a lineman, that means you can anchor and drive block evenly out of either side of your stance, which matters on down blocks, reach blocks, and pass sets both directions.",
+          monitor:    "There's a small gap between your two sides. For a lineman, that can show up as a weaker anchor or slower set to one side. Closing it will make you more consistent regardless of which way the play goes.",
+          restricted: "One side is noticeably stronger. For a lineman, that gap means one side of your stance is doing more work in pass protection and drive blocking. Over time, that's a common source of hip and shoulder overuse on the weaker side."
+        },
+        DL: {
+          optimal:    "Both sides of your body are pulling nearly equal weight. For a defensive lineman, that means you can win with either hand and rush from either side without a clear weak spot for blockers to target.",
+          monitor:    "There's a small gap between your two sides. For a defensive lineman, offensive linemen will find and target your weaker side over the course of a game. Closing the gap removes that predictable weakness.",
+          restricted: "One side is noticeably stronger. For a defensive lineman, that's a weakness blockers can identify and exploit all game long, and it puts extra strain on your dominant side's shoulder and hip."
+        },
+        LB: {
+          optimal:    "Both sides of your body are pulling nearly equal weight. For a linebacker, that means you can shed blocks and tackle equally well to either side, without a soft spot in your run fits.",
+          monitor:    "There's a small gap between your two sides. For a linebacker, that can show up as a weaker shed or a less confident tackle to one side. Closing it rounds out your game.",
+          restricted: "One side is noticeably stronger. For a linebacker, that gap means one side is absorbing more contact in run fits and tackles. Over time, that's a common source of shoulder and hip soreness on the dominant side."
+        },
+        DB: {
+          optimal:    "Both sides of your body are pulling nearly equal weight. For a defensive back, that means your backpedal, transition, and tackling are equally strong to either side — no obvious side for receivers to attack.",
+          monitor:    "There's a small gap between your two sides. For a defensive back, receivers and route runners will find your weaker side over a season. Closing it removes that predictable weak spot.",
+          restricted: "One side is noticeably stronger. For a defensive back, that gap shows up as a slower transition or weaker tackle to one side — exactly what good offenses are coached to attack."
+        },
+        SKILL: {
+          optimal:    "Both sides of your body are pulling nearly equal weight. For a skill player, that means your cuts, catches, and contact balance are just as strong to either side, which keeps you unpredictable and durable.",
+          monitor:    "There's a small gap between your two sides. For a skill player, that can show up as a weaker cut or less balance through contact to one side. Closing it protects your joints as the hits and cuts add up.",
+          restricted: "One side is noticeably stronger. For a skill player, that gap usually shows up in your plant leg or ball-carrying side doing more than its fair share on cuts and contact. Over time, that's a common source of overuse injury on the weaker side."
+        }
+      },
+      mobility: {
+        QB: {
+          optimal:    "Your movement screen came back clean across all 17 tests. For a quarterback, that means your hips and thoracic spine are free to rotate through your throwing motion, and your base is stable enough to reset and throw accurately from any platform.",
+          monitor:    "One or more movement tests flagged something to watch — likely a Monitor on hip, thoracic, or shoulder mobility. For a quarterback, tight hips or a restricted thoracic spine forces your throwing shoulder to do work it shouldn't, which is a common source of arm soreness. Address it early.",
+          restricted: "Multiple movement tests failed. For a quarterback, restricted hip or thoracic mobility means your lower body can't drive the throw, so your arm has to generate velocity on its own — a fast track to shoulder and elbow overuse. This is the highest-priority thing to address."
+        },
+        OL: {
+          optimal:    "Your movement screen came back clean across all 17 tests. For a lineman, that means your hips and ankles can get low and stay low in your stance, and your shoulders and thoracic spine move freely enough to punch, latch, and turn blockers without compensation.",
+          monitor:    "One or more movement tests flagged something to watch — likely a Monitor on hip, ankle, or shoulder mobility. For a lineman, that limits how low and stable your stance can get, which shows up as getting driven back or losing leverage late in games. Address it early.",
+          restricted: "Multiple movement tests failed. For a lineman, restricted hip or ankle mobility means you can't get into (or stay in) a strong, low stance, which forces your lower back and shoulders to compensate for the leverage you're missing. This is the highest-priority thing to address."
+        },
+        DL: {
+          optimal:    "Your movement screen came back clean across all 17 tests. For a defensive lineman, that means your hips can load explosively off the snap and your thoracic spine and shoulders move freely enough to rip through blocks and change direction to the ball.",
+          monitor:    "One or more movement tests flagged something to watch — likely a Monitor on hip, thoracic, or shoulder mobility. For a defensive lineman, that limits your get-off and your ability to rip free from blocks, which shows up as a slower first step and getting locked up more easily. Address it early.",
+          restricted: "Multiple movement tests failed. For a defensive lineman, restricted hip or thoracic mobility means you can't load your get-off or rip through contact efficiently, forcing your shoulders and low back to do work they shouldn't. This is the highest-priority thing to address."
+        },
+        LB: {
+          optimal:    "Your movement screen came back clean across all 17 tests. For a linebacker, that means your hips can open and close freely for coverage drops, and your thoracic spine and shoulders move well enough to shed blocks and tackle from any angle.",
+          monitor:    "One or more movement tests flagged something to watch — likely a Monitor on hip, thoracic, or shoulder mobility. For a linebacker, that limits your hip turn in coverage and your ability to disengage from blocks cleanly. Address it early.",
+          restricted: "Multiple movement tests failed. For a linebacker, restricted hip or thoracic mobility limits your read-and-react ability and forces your shoulders and low back to compensate when shedding blocks and tackling in space. This is the highest-priority thing to address."
+        },
+        DB: {
+          optimal:    "Your movement screen came back clean across all 17 tests. For a defensive back, that means your hips can open and flip cleanly out of your backpedal, and your thoracic spine and shoulders move freely enough to play the ball at full speed.",
+          monitor:    "One or more movement tests flagged something to watch — likely a Monitor on hip or thoracic mobility. For a defensive back, that limits how cleanly you can flip your hips and transition out of a backpedal — a common source of getting beat on double moves. Address it early.",
+          restricted: "Multiple movement tests failed. For a defensive back, restricted hip mobility directly limits your transition speed out of the backpedal, which shows up as getting beat deep and struggling to close on the ball. This is the highest-priority thing to address."
+        },
+        SKILL: {
+          optimal:    "Your movement screen came back clean across all 17 tests. For a skill player, that means your hips and thoracic spine are free to move through sharp cuts, and your shoulders move well enough to make contested catches or break tackles without compensation.",
+          monitor:    "One or more movement tests flagged something to watch — likely a Monitor on hip, thoracic, or shoulder mobility. For a skill player, that limits how sharp your cuts can be and puts extra strain on your low back and shoulders during contact. Address it early.",
+          restricted: "Multiple movement tests failed. For a skill player, restricted hip or thoracic mobility limits your ability to cut, separate, and absorb contact efficiently, forcing your low back and shoulders to compensate. This is the highest-priority thing to address."
+        }
+      },
+      rom: {
+        QB: {
+          optimal:    "Your range of motion is within the healthy target range. Your throwing shoulder, hips, and thoracic spine are moving freely to support arm speed and accuracy. Not a limiter right now.",
+          monitor:    "One or more joints is a little short of the target. For a quarterback, tightness in the throwing shoulder or thoracic spine means your arm is picking up extra work to generate velocity.",
+          restricted: "A joint is tighter than the target. For a quarterback, restricted throwing-shoulder or thoracic rotation forces your arm to do work your hips and trunk should be doing — a common source of shoulder and elbow soreness."
+        },
+        OL: {
+          optimal:    "Your range of motion is within the healthy target range. Your hips, shoulders, and spine are moving freely to support a low, stable stance and full extension in your punch. Not a limiter right now.",
+          monitor:    "One or more joints is a little short of the target. For a lineman, tightness here limits how low you can get in your stance and how far you can extend your punch.",
+          restricted: "A joint is tighter than the target. For a lineman, restricted hip or shoulder rotation limits your stance depth and punch extension, forcing your lower back to compensate for the leverage you're missing."
+        },
+        DL: {
+          optimal:    "Your range of motion is within the healthy target range. Your hips, shoulders, and spine are moving freely to support your get-off and your ability to rip through blocks. Not a limiter right now.",
+          monitor:    "One or more joints is a little short of the target. For a defensive lineman, tightness here limits your get-off depth and how well you can rip free from contact.",
+          restricted: "A joint is tighter than the target. For a defensive lineman, restricted hip or shoulder rotation limits your get-off and your ability to disengage from blocks, forcing your low back to compensate."
+        },
+        LB: {
+          optimal:    "Your range of motion is within the healthy target range. Your hips, shoulders, and spine are moving freely to support your reads, drops, and tackling angles. Not a limiter right now.",
+          monitor:    "One or more joints is a little short of the target. For a linebacker, tightness here limits your hip turn on coverage drops and your ability to square up for a tackle.",
+          restricted: "A joint is tighter than the target. For a linebacker, restricted hip or shoulder rotation limits your coverage drops and tackling angles, forcing the next joint in the chain to compensate."
+        },
+        DB: {
+          optimal:    "Your range of motion is within the healthy target range. Your hips, shoulders, and spine are moving freely to support your backpedal-to-break transition and ball skills. Not a limiter right now.",
+          monitor:    "One or more joints is a little short of the target. For a defensive back, tightness in the hip is the most common limiter of a clean backpedal-to-break transition.",
+          restricted: "A joint is tighter than the target. For a defensive back, restricted hip rotation is one of the biggest limiters of transition speed — it shows up directly as getting beat on breaks and double moves."
+        },
+        SKILL: {
+          optimal:    "Your range of motion is within the healthy target range. Your hips, shoulders, and spine are moving freely to support sharp cuts, ball skills, and contact balance. Not a limiter right now.",
+          monitor:    "One or more joints is a little short of the target. For a skill player, tightness here limits how sharp your cuts can be and how well you absorb contact.",
+          restricted: "A joint is tighter than the target. For a skill player, restricted hip or shoulder rotation limits cutting sharpness and puts extra strain on the low back and shoulders during contact."
+        }
+      }
+    };
+    const posBlock = map[key] && (map[key][position] || map[key]['DB']);
+    return (posBlock && (posBlock[status] || posBlock['monitor'])) || "";
+  }
+
+  /* ── Agility norms ── */
+  function getAgilityNorms(metricName, age, sex) {
+    const nm = metricName.toLowerCase();
+    const is5105 = nm.includes('5-10-5') || nm.includes('5105') || nm.includes('pro agility');
+    const isLDrill = nm.includes('l-drill') || nm.includes('3-cone') || nm.includes('3 cone');
+    if (!is5105 && !isLDrill) return null;
+    const isMale = sex.toLowerCase() !== 'female';
+    let level = '', avg = '', good = '', elite = '', note = '';
+    if (is5105) {
+      // 5-10-5 pro agility shuttle norms (lower = faster = better)
+      if (age <= 14) {
+        level = isMale ? 'Youth Boys (11–14)' : 'Youth Girls (11–14)';
+        avg   = isMale ? '5.2–5.6' : '5.4–5.8';
+        good  = isMale ? '5.0–5.2' : '5.2–5.4';
+        elite = isMale ? '<5.0 sec' : '<5.2 sec';
+        note  = 'Focus on change-of-direction technique first';
+      } else if (age <= 18) {
+        level = isMale ? 'HS Boys (15–18)' : 'HS Girls (15–18)';
+        avg   = isMale ? '4.6–5.0' : '4.9–5.3';
+        good  = isMale ? '4.3–4.6' : '4.6–4.9';
+        elite = isMale ? '<4.3 sec' : '<4.6 sec';
+        note  = 'College programs target sub-4.3 for skill positions';
+      } else {
+        level = isMale ? 'College / Pro' : 'College / Pro (Women)';
+        avg   = isMale ? '4.3–4.6' : '4.6–5.0';
+        good  = isMale ? '4.0–4.3' : '4.3–4.6';
+        elite = isMale ? '<4.0 sec' : '<4.3 sec';
+        note  = 'Combine elite: sub-4.0 sec (DB/WR)';
+      }
+    } else {
+      // L-drill / 3-cone norms
+      if (age <= 18) {
+        level = isMale ? 'HS Boys' : 'HS Girls';
+        avg   = isMale ? '7.3–7.8' : '7.7–8.3';
+        good  = isMale ? '7.0–7.3' : '7.3–7.7';
+        elite = isMale ? '<7.0 sec' : '<7.3 sec';
+        note  = 'Tests multi-directional quickness and body control';
+      } else {
+        level = isMale ? 'College / Pro' : 'College / Pro (Women)';
+        avg   = isMale ? '7.0–7.3' : '7.3–7.8';
+        good  = isMale ? '6.7–7.0' : '7.0–7.3';
+        elite = isMale ? '<6.7 sec' : '<7.0 sec';
+        note  = 'Combine elite: sub-6.7 sec (skill positions)';
+      }
+    }
+    return { level, avg, good, elite, note };
+  }
+
+  /* ── SCREEN DETAIL VIEW ── */
+  const screenGrid = document.getElementById("screenGrid");
+  const detailContainer = document.getElementById("detail");
+
+  const buildDetailView = (key) => {
+    let html = "";
+
+    if (key === "strength") {
+      let rows = strengthParts.map(p => {
+        let input = "Deferred";
+        if (p.on) {
+          const raw = st[p.key];
+          input = raw.leftWeight !== undefined
+            ? `L: ${raw.leftWeight}×${raw.leftReps} | R: ${raw.rightWeight}×${raw.rightReps}`
+            : `${p.w} × ${p.r}`;
+        }
+        let status = p.on ? (p.ratio>=p.target?"Optimal":(p.ratio>=p.target*0.85?"Monitor":"Restricted")) : "Deferred";
+        let col = status==="Optimal"?"var(--optimal)":(status==="Monitor"?"var(--monitor)":"var(--restricted)");
+        const rawEntry = st[p.key];
+        const liftNote = (rawEntry && rawEntry.notes) ? rawEntry.notes : "";
+        const liftNoteHtml = liftNote ? `<div style="font-family:var(--mono);font-size:10px;color:#9a9a9a;margin-top:3px;line-height:1.4;font-style:italic">📝 ${liftNote}</div>` : '';
+        return `<tr>
+          <td>${p.name}<span class="tinput">${p.on ? input : 'Not Tested'}</span>${liftNoteHtml}</td>
+          <td class="num">${p.on ? p.ratio.toFixed(2)+'×' : '—'}</td>
+          <td class="num">${p.target.toFixed(2)}×</td>
+          <td class="num"><span class="tstat" style="color:${col};border-color:${col}">${status}</span></td>
+        </tr>`;
+      }).join("");
+      const bnSt = scoreStrength>=85?'optimal':(scoreStrength>=70?'monitor':'restricted');
+      html = `<div class="detail">
+        <div class="detail-head">
+          <span class="d-title">Relative Strength Index (RSI)</span>
+          <span class="d-pill ${scoreStrength>=85?'bg-optimal':(scoreStrength>=70?'bg-monitor':'bg-restricted')}">${scoreStrength>=85?'Optimal':(scoreStrength>=70?'Functional':'Restricted')}</span>
+        </div>
+        <div class="metric-row">
+          <div class="metric-cell"><div class="ml">YOUR RSI</div><div class="mv">${totalRSI.toFixed(2)}</div></div>
+          <div class="metric-cell"><div class="ml">TARGET</div><div class="mv">${rescaledRsiTarget.toFixed(2)}</div></div>
+          <div class="metric-cell"><div class="ml">CLASSIFICATION</div><div class="mv">${rsiClass(totalRSI)}</div></div>
+        </div>
+        <div class="block-label">RSI Capacity Calculation</div>
+        <table class="calc-table">
+          <tr><th>Lift</th><th class="num">Your Score</th><th class="num">Target</th><th class="num">Status</th></tr>
+          ${rows}
+          <tr class="total"><td>RSI Total</td><td class="num">${totalRSI.toFixed(2)}</td><td class="num">${rescaledRsiTarget.toFixed(2)}</td><td></td></tr>
+        </table>
+        <p class="calc-note">Score = est. 1-rep max ÷ bodyweight (${BW} lb). Red = needs work.</p>
+        <div class="block-label">What This Means For Your Game</div>
+        <div class="bottleneck ${bnSt==='optimal'?'clear':''}">${getBottleneck('strength', bnSt, POS)}</div>
+      </div>`;
+
+    } else if (key === "power") {
+      let rows = powerParts.map(p => {
+        let status = p.on?(p.inches>=p.target?"Optimal":(p.inches>=p.target*0.85?"Monitor":"Restricted")):"Deferred";
+        let col = status==="Optimal"?"var(--optimal)":(status==="Monitor"?"var(--monitor)":"var(--restricted)");
+        return `<tr>
+          <td>${p.name}</td>
+          <td class="num">${p.on?p.disp:'—'}</td>
+          <td class="num">${p.target+'"'}</td>
+          <td class="num"><span class="tstat" style="color:${col};border-color:${col}">${status}</span></td>
+        </tr>`;
+      }).join("");
+      const bnSt = scorePower>=85?'optimal':(scorePower>=70?'monitor':'restricted');
+      html = `<div class="detail">
+        <div class="detail-head">
+          <span class="d-title">Athletic Power Index</span>
+          <span class="d-pill ${scorePower>=85?'bg-optimal':(scorePower>=70?'bg-monitor':'bg-restricted')}">${scorePower>=85?'Optimal':(scorePower>=70?'Functional':'Restricted')}</span>
+        </div>
+        <div class="metric-row">
+          <div class="metric-cell"><div class="ml">TOTAL INDEX</div><div class="mv">${Math.round(totalPower)} in</div></div>
+          <div class="metric-cell"><div class="ml">TARGET</div><div class="mv">${rescaledPowerTarget} in</div></div>
+          <div class="metric-cell"><div class="ml">POWER GAP</div><div class="mv">${Math.round(totalPower-rescaledPowerTarget)} in</div></div>
+        </div>
+        <div class="block-label">Power Output Tests</div>
+        <table class="calc-table">
+          <tr><th>Test</th><th class="num">Your Result</th><th class="num">Target</th><th class="num">Status</th></tr>
+          ${rows}
+        </table>
+        <p class="calc-note">Red = below target. Power index = all tests added up (throws converted to inches).</p>
+        <div class="block-label">What This Means For Your Game</div>
+        <div class="bottleneck ${bnSt==='optimal'?'clear':''}">${getBottleneck('power', bnSt, POS)}</div>
+      </div>`;
+
+    } else if (key === "symmetry") {
+      const bnSt = scoreSymmetry>=90?'optimal':(scoreSymmetry>=80?'monitor':'restricted');
+      html = `<div class="detail">
+        <div class="detail-head">
+          <span class="d-title">Bilateral Power Symmetry</span>
+          <span class="d-pill ${scoreSymmetry>=90?'bg-optimal':(scoreSymmetry>=80?'bg-monitor':'bg-restricted')}">${scoreSymmetry>=90?'Optimal':(scoreSymmetry>=80?'Functional':'Restricted')}</span>
+        </div>
+        <div class="metric-row">
+          <div class="metric-cell"><div class="ml">SYMMETRY %</div><div class="mv">${symTested?Math.round(scoreSymmetry)+'%':'Deferred'}</div></div>
+          <div class="metric-cell"><div class="ml">TARGET</div><div class="mv">≥ 90%</div></div>
+          <div class="metric-cell"><div class="ml">FOCUS</div><div class="mv">${scoreSymmetry>=90?'Balanced':'Isolate Sides'}</div></div>
+        </div>
+        <div class="block-label">What This Means For Your Game</div>
+        <div class="bottleneck ${bnSt==='optimal'?'clear':''}">${getBottleneck('symmetry', bnSt, POS)}</div>
+      </div>`;
+
+    } else if (key === "mobility") {
+      const mobPassCount    = s.mobilityClearance.filter(mc => mc.tested && mc.status === "Pass").length;
+      const mobMonitorCount = s.mobilityClearance.filter(mc => mc.tested && mc.status === "Monitor").length;
+      const mobFailCount    = s.mobilityClearance.filter(mc => mc.tested && mc.status === "Fail").length;
+      const mobSkipCount    = s.mobilityClearance.filter(mc => !mc.tested).length;
+      let rows = s.mobilityClearance.map((mc, idx) => {
+        if (!mc.tested) {
+          return `<tr>
+            <td style="color:var(--muted)">
+              ${mc.name}
+              <span style="display:inline-block;font-family:var(--mono);font-size:8px;letter-spacing:.5px;color:#5f5f5f;border:1px solid #3a3a3a;border-radius:3px;padding:1px 5px;margin-left:6px;">SKIPPED</span>
+            </td>
+            <td class="num" style="color:var(--muted)">—</td>
+            <td style="color:#5f5f5f;font-size:12px;font-style:italic">Not tested</td>
+          </tr>`;
+        }
+        let col = mc.status==="Pass"?"var(--optimal)":(mc.status==="Monitor"?"var(--monitor)":"var(--restricted)");
+        let statusDot = mc.status==="Pass"?"dot-optimal":(mc.status==="Monitor"?"dot-monitor":"dot-restricted");
+        let noteHtml = mc.notes ? `<div style="font-family:var(--mono);font-size:10px;color:#9a9a9a;margin-top:4px;line-height:1.4;font-style:italic">📝 ${mc.notes}</div>` : '';
+        return `<tr>
+          <td>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span class="stat-dot ${statusDot}" style="position:relative;top:0;right:0;flex-shrink:0;"></span>
+              ${mc.name}
+            </div>
+            ${noteHtml}
+          </td>
+          <td class="num" style="color:${col};font-weight:600">${mc.status.toUpperCase()}</td>
+          <td class="num">
+            <span style="font-family:var(--mono);font-size:8px;letter-spacing:.5px;color:var(--optimal);border:1px solid var(--optimal);border-radius:3px;padding:1px 5px;opacity:.7;">TESTED</span>
+          </td>
+        </tr>`;
+      }).join("");
+      const bnSt = scoreMobility>=85?'optimal':(scoreMobility>=70?'monitor':'restricted');
+      html = `<div class="detail">
+        <div class="detail-head">
+          <span class="d-title">Movement Screen</span>
+          <span class="d-pill ${scoreMobility>=85?'bg-optimal':(scoreMobility>=70?'bg-monitor':'bg-restricted')}">${scoreMobility>=85?'Optimal':(scoreMobility>=70?'Functional':'Restricted')}</span>
+        </div>
+        <div class="metric-row">
+          <div class="metric-cell"><div class="ml">SCREEN SCORE</div><div class="mv">${Math.round(scoreMobility)}%</div></div>
+          <div class="metric-cell"><div class="ml">TESTS RUN</div><div class="mv">${mobTested} / ${s.mobilityClearance.length}</div></div>
+          <div class="metric-cell"><div class="ml">PASS / MON / FAIL</div><div class="mv" style="font-size:18px;letter-spacing:.5px"><span style="color:var(--optimal)">${mobPassCount}</span> / <span style="color:var(--monitor)">${mobMonitorCount}</span> / <span style="color:var(--restricted)">${mobFailCount}</span></div></div>
+          ${mobSkipCount > 0 ? `<div class="metric-cell"><div class="ml">SKIPPED</div><div class="mv" style="color:var(--muted)">${mobSkipCount}</div></div>` : ''}
+        </div>
+        <div class="block-label">Movement Screen — All ${s.mobilityClearance.length} Tests</div>
+        <table class="calc-table">
+          <tr><th>Test</th><th class="num">Result</th><th class="num">Status</th></tr>
+          ${rows}
+        </table>
+        <p class="calc-note">Movement screen. Monitor = compensatory pattern present. Fail = movement dysfunction requiring targeted intervention. Skipped tests are excluded from score.</p>
+        <div class="block-label">What This Means For Your Game</div>
+        <div class="bottleneck ${bnSt==='optimal'?'clear':''}">${getBottleneck('mobility', bnSt, POS)}</div>
+      </div>`;
+
+    } else if (key === "rom") {
+      let rows = s.rom.map(r => `<tr>
+        <td>${r.name}</td>
+        <td class="num">${r.lead}° / ${r.trail}°</td>
+        <td class="num">${r.target}°</td>
+        <td class="num">${Math.abs(r.lead-r.trail)}° Diff</td>
+      </tr>`).join("");
+      const bnSt = scoreROM>=85?'optimal':(scoreROM>=70?'monitor':'restricted');
+      html = `<div class="detail">
+        <div class="detail-head">
+          <span class="d-title">Range of Motion (ROM)</span>
+          <span class="d-pill ${scoreROM>=85?'bg-optimal':(scoreROM>=70?'bg-monitor':'bg-restricted')}">${scoreROM>=85?'Optimal':(scoreROM>=70?'Functional':'Restricted')}</span>
+        </div>
+        <div class="metric-row">
+          <div class="metric-cell"><div class="ml">ROM SCORE</div><div class="mv">${Math.round(scoreROM)}%</div></div>
+          <div class="metric-cell"><div class="ml">JOINTS TESTED</div><div class="mv">${s.rom.length}</div></div>
+        </div>
+        <div class="block-label">Joint Angles Measured</div>
+        <table class="calc-table">
+          <tr><th>Joint</th><th class="num">Lead / Trail</th><th class="num">Target</th><th class="num">Side Diff</th></tr>
+          ${rows}
+        </table>
+        <p class="calc-note">Lead = front side · Trail = back side · Big side differences need attention.</p>
+        <div class="block-label">What This Means For Your Game</div>
+        <div class="bottleneck ${bnSt==='optimal'?'clear':''}">${getBottleneck('rom', bnSt, POS)}</div>
+      </div>`;
+
+    } else {
+      const bnSt = scorePerfIndex>=85?'optimal':(scorePerfIndex>=70?'monitor':'restricted');
+      html = `<div class="detail">
+        <div class="detail-head">
+          <span class="d-title">${s.performanceIndex.name}</span>
+          <span class="d-pill ${scorePerfIndex>=85?'bg-optimal':(scorePerfIndex>=70?'bg-monitor':'bg-restricted')}">${s.performanceIndex.class}</span>
+        </div>
+        <div class="metric-row">
+          <div class="metric-cell"><div class="ml">GRADE</div><div class="mv">${s.performanceIndex.display}</div></div>
+          <div class="metric-cell"><div class="ml">PERCENTILE</div><div class="mv">${s.performanceIndex.fillPct.toFixed(1)}%</div></div>
+        </div>
+        <div class="block-label">What This Means For Your Game</div>
+        <div class="bottleneck ${bnSt==='optimal'?'clear':''}">
+          This is your overall physical grade. It combines all your screens into one number. As we close the gaps above, this score will come down. Use it as your headline tracker each session.
+        </div>
+      </div>`;
+    }
+    detailContainer.innerHTML = html;
+  };
+
+  function rsiClass(v) {
+    if (v < 4.0) return "Developing";
+    if (v < 5.5) return "Intermediate";
+    if (v <= 7.0) return "Advanced";
+    return "Elite";
+  }
+
+  const screenCollection = [
+    { key:"strength", name:"Relative Strength Index", display:totalRSI.toFixed(1),              target:`Target ${rescaledRsiTarget.toFixed(2)}`, status:scoreStrength>=85?"optimal":(scoreStrength>=70?"monitor":"restricted") },
+    { key:"power",    name:"Explosive Power Index",   display:Math.round(totalPower)+'"',        target:`Target ${rescaledPowerTarget}"`,          status:scorePower>=85?"optimal":(scorePower>=70?"monitor":"restricted") },
+    { key:"symmetry", name:"Bilateral Symmetry",      display:symTested?Math.round(scoreSymmetry)+"%":"Deferred", target:"Target ≥90%",            status:symTested?(scoreSymmetry>=90?"optimal":(scoreSymmetry>=80?"monitor":"restricted")):"deferred" },
+    { key:"mobility", name:"Movement Screen",       display:Math.round(scoreMobility)+"%",     target:`${mobTested} of ${s.mobilityClearance.length} Tests Run`,  status:scoreMobility>=85?"optimal":(scoreMobility>=70?"monitor":"restricted") },
+    { key:"rom",      name:"Target ROM Average",      display:Math.round(scoreROM)+"%",          target:`Top ${s.rom.length} ROMs`,                status:scoreROM>=85?"optimal":(scoreROM>=70?"monitor":"restricted") },
+    { key:"perf",     name:s.performanceIndex.name,   display:s.performanceIndex.display,        target:"Sport Composite",                         status:scorePerfIndex>=85?"optimal":(scorePerfIndex>=70?"monitor":"restricted") }
+  ];
+
+  screenGrid.innerHTML = "";
+  screenCollection.forEach((sc, i) => {
+    const card = document.createElement("div");
+    card.className = `screen-card ${i===0?"active":""}`;
+    card.setAttribute("data-key", sc.key);
+    card.innerHTML = `
+      <span class="stat-dot dot-${sc.status}"></span>
+      <div class="sc-name">${sc.name}</div>
+      <div class="sc-val s-${sc.status}">${sc.display}</div>
+      <div class="sc-target">${sc.target}</div>
+      <span class="sc-pill bg-${sc.status}">${sc.status==='optimal'?'Optimal':(sc.status==='monitor'?'Monitor':(sc.status==='deferred'?'Deferred':'Restricted'))}</span>`;
+    card.addEventListener("click", () => {
+      document.querySelectorAll(".screen-card").forEach(c => c.classList.remove("active"));
+      card.classList.add("active");
+      buildDetailView(sc.key);
+    });
+    screenGrid.appendChild(card);
+  });
+
+  buildDetailView(screenCollection[0].key);
+
+  /* ── LOAD MANAGEMENT ── */
+  const loadListObj  = document.getElementById("loadList");
+  const loadIntroObj = document.getElementById("loadIntro");
+  const riskSignals  = [];
+
+  if (scoreStrength < 70) {
+    riskSignals.push({ tag:"Q3–Q4 breakdown", text: POSITION_RISK.strength[POS] || POSITION_RISK.strength.DB });
+  }
+  if (scorePower < 70) {
+    riskSignals.push({ tag:"Burst speed drop", text: POSITION_RISK.power[POS] || POSITION_RISK.power.DB });
+  }
+  if (scoreSymmetry < 85) {
+    riskSignals.push({ tag:"Overload side", text: POSITION_RISK.symmetry[POS] || POSITION_RISK.symmetry.DB });
+  }
+  const tpiFailedTests = s.mobilityClearance.filter(mc => mc.tested && mc.status === "Fail").map(mc => mc.name);
+  const tpiMonitorTests = s.mobilityClearance.filter(mc => mc.tested && mc.status === "Monitor").map(mc => mc.name);
+  if (tpiFailedTests.length > 0) {
+    riskSignals.push({ tag:"Movement screen fail", text:`<b>Failed Movement tests: ${tpiFailedTests.join(', ')}</b> — these dysfunctions create compensatory loading patterns during game play. Watch for soreness building in the hip, groin, low back, or shoulder as game fatigue sets in.` });
+  }
+  if (tpiMonitorTests.length > 0) {
+    riskSignals.push({ tag:"Movement monitor", text:`<b>Monitor flags: ${tpiMonitorTests.join(', ')}</b> — compensatory patterns are present but not yet a full dysfunction. These joints are working harder than they should, especially in the 3rd and 4th quarter when fatigue reduces motor control.` });
+  }
+  s.rom.forEach(r => {
+    let avg = (r.lead + r.trail) / 2;
+    if (avg < r.target - r.limitRange) {
+      riskSignals.push({ tag:"Tight joint", text:`<b>Limited ${r.name}</b> forces the joints nearby to overwork. In football, restricted hip or shoulder rotation often shows up as low back tightness and shoulder soreness during blocking and tackling sequences.` });
+    }
+  });
+  riskSignals.push({ tag:"Action item", text:"Run your prescribed football warm-up before every practice and game. Flag any joint pain that doesn't go away within 24 hours — address it early." });
+
+  loadIntroObj.textContent = riskSignals.length > 1
+    ? "Your screens show specific spots that will get stressed as the game goes on. Here's what to watch:"
+    : "Your screen shows no major physical limiters. Your body is set up well for a full 4 quarters. We keep building durability every session.";
+
+  loadListObj.innerHTML = riskSignals.map(sig => `<li><span class="tag">${sig.tag}</span><span class="txt">${sig.text}</span></li>`).join("");
+
+  /* ── PERFORMANCE CARDS ── */
+  const swingGridObj = document.getElementById("swingGrid");
+
+  const makePerfCard = (m) => {
+    const sum = arr => arr.reduce((a,b) => a+b, 0);
+    const roundDec = (val, dec) => parseFloat(val.toFixed(dec));
+    const isAgility = m.lowerIsBetter;
+
+    const norms = getAgilityNorms(m.name, c.age, c.sex);
+    let normHtml = '';
+    if (norms) {
+      const unit = isAgility ? 'sec' : 'mph';
+      normHtml = `
+        <div class="norm-band">
+          <div class="norm-band-label">Age-Group Benchmarks — ${norms.level}</div>
+          <div class="norm-row">
+            <div class="norm-item"><span class="ni-label">Average</span><span class="ni-val">${norms.avg} ${unit}</span></div>
+            <div class="norm-item"><span class="ni-label">Good Goal</span><span class="ni-val">${norms.good} ${unit}</span></div>
+            <div class="norm-item"><span class="ni-label">Elite</span><span class="ni-val elite">${norms.elite}</span></div>
+          </div>
+          <div class="ni-tag" style="margin-top:6px">${norms.note}</div>
+        </div>`;
+    }
+
+    const cardNoteHtml = m.notes
+      ? `<div style="font-family:var(--mono);font-size:10px;color:#9a9a9a;margin-top:10px;line-height:1.5;font-style:italic;border-top:1px solid var(--slate);padding-top:10px;">📝 ${m.notes}</div>`
+      : '';
+
+    /* ── SINGLE-TRIAL MODE: only m.Time / m.time array provided (no pre/post) ── */
+    const timeTrials = m.Time || m.time;
+    if (timeTrials && !m.pre) {
+      const validTrials = timeTrials.filter(v => v != null && !isNaN(v));
+      const avg = validTrials.length ? roundDec(sum(validTrials) / validTrials.length, isAgility ? 2 : 1) : 0;
+      const best = validTrials.length ? (isAgility ? Math.min(...validTrials) : Math.max(...validTrials)) : 0;
+      return `<div class="club-card">
+        <div class="club-head">
+          <span class="cname">${m.name}</span>
+          <span class="cgain down" style="color:var(--muted);background:rgba(138,138,138,.12)">
+            ${timeTrials.length} Trial${timeTrials.length !== 1 ? 's' : ''}
+          </span>
+        </div>
+        <div class="metric-line">
+          <div class="ml-top">
+            <span class="ml-name">Avg — ${timeTrials.length} Trials</span>
+            <span class="ml-delta" style="color:var(--muted)">${isAgility ? 'Best: ' + best.toFixed(2) : 'Best: ' + best} ${m.unit}</span>
+          </div>
+          <div class="ml-vals">
+            <span class="ml-post">${avg}</span>
+            <span class="ml-unit">${m.unit} avg</span>
+          </div>
+          <div class="ml-trials" style="margin-top:8px">
+            <b>TRIALS:</b> [${validTrials.join(', ')}] ${m.unit}
+          </div>
+          ${normHtml}
+          ${cardNoteHtml}
+        </div>
+      </div>`;
+    }
+
+    /* ── COMPARISON MODE: m.pre and m.post arrays provided ── */
+    const preAvg  = roundDec(sum(m.pre)/m.pre.length,   isAgility ? 2 : 1);
+    const postAvg = roundDec(sum(m.post)/m.post.length, isAgility ? 2 : 1);
+    const rawDiff = postAvg - preAvg;
+    const diffText = isAgility ? rawDiff.toFixed(2) : rawDiff.toFixed(1);
+
+    let isImprovement = false, badgeClass = "", deltaClass = "", arrow = "▲";
+    if (isAgility) {
+      if (rawDiff < 0)      { isImprovement=true;  badgeClass=""; deltaClass="up";  arrow="▼"; }
+      else if (rawDiff===0) { badgeClass="down";    deltaClass="down"; arrow="▬"; }
+      else                  { isImprovement=false;  badgeClass="alert-bad"; deltaClass="bad"; arrow="▲"; }
+    } else {
+      if (rawDiff > 0)      { isImprovement=true;  badgeClass=""; deltaClass="up";  arrow="▲"; }
+      else if (rawDiff===0) { badgeClass="down";    deltaClass="down"; arrow="▬"; }
+      else                  { isImprovement=false;  badgeClass="alert-bad"; deltaClass="bad"; arrow="▼"; }
+    }
+    const pctChange = preAvg ? ((Math.abs(rawDiff)/preAvg)*100).toFixed(1) : "0";
+
+    let prePct, postPct;
+    if (isAgility) {
+      prePct = 100;
+      postPct = Math.min(100, Math.max(10, (postAvg/preAvg)*100));
+    } else {
+      prePct = Math.min(100, Math.max(10, (preAvg/postAvg)*100));
+      postPct = 100;
+    }
+
+    return `<div class="club-card">
+      <div class="club-head">
+        <span class="cname">${m.name}</span>
+        <span class="cgain ${badgeClass}">
+          ${isImprovement && !isAgility ? '+' : ''}${diffText} ${m.unit} change
+        </span>
+      </div>
+      <div class="metric-line">
+        <div class="ml-top">
+          <span class="ml-name">Functional Adaptation</span>
+          <span class="ml-delta ${deltaClass}">
+            ${arrow} ${isImprovement ? 'Gain' : 'Deficit'} (${pctChange}%)
+          </span>
+        </div>
+        <div class="ml-vals">
+          <span class="ml-pre">${preAvg}</span>
+          <span class="ml-arrow">→</span>
+          <span class="ml-post">${postAvg}</span>
+          <span class="ml-unit">${m.unit}</span>
+        </div>
+        <div class="cmp-bar">
+          <div class="cmp-post" style="width:${postPct}%"></div>
+          <div class="cmp-pre"  style="width:${prePct}%"></div>
+        </div>
+        <div class="ml-trials">
+          <b>PRE:</b> [${m.pre.join(', ')}]<br>
+          <b>POST:</b> [${m.post.join(', ')}]
+        </div>
+        ${normHtml}
+        ${cardNoteHtml}
+      </div>
+    </div>`;
+  };
+
+  let perfHtml = "";
+  for (const k in CONFIG.sportMetrics) {
+    if (CONFIG.sportMetrics.hasOwnProperty(k)) {
+      const m = CONFIG.sportMetrics[k];
+      if (m.tested === false) continue;
+      perfHtml += makePerfCard(m);
+    }
+  }
+  swingGridObj.innerHTML = perfHtml || '<p style="color:var(--muted);font-family:var(--mono);font-size:12px;letter-spacing:.4px;">No agility trial data recorded yet — add times in the CONFIG block and set "tested: true".</p>';
+
+  /* ── PROGRAM ── */
+  const programHost = document.getElementById("programHost");
+  const programSub  = document.getElementById("programSub");
+
+  if (CONFIG.program.fullProgramUrl) {
+    programSub.textContent = "Your conditioning workouts are active inside TrainHeroic.";
+    programHost.innerHTML = `<a class="program-full" href="${CONFIG.program.fullProgramUrl}" target="_blank" rel="noopener">
+      <span class="pf-icon"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
+      <span class="pf-text"><b>Access Full Athlete Workout Suite</b><span>Launch your prehab & conditioning profile →</span></span>
+    </a>`;
+  } else {
+    programSub.textContent = "Run this routine before games and practice to get your joints ready.";
+    programHost.innerHTML = `<div class="drills">
+      ${CONFIG.program.exercises.map((ex, idx) => `
+        <div class="drill">
+          <div class="drill-thumb no-video">
+            <span class="play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
+            <span class="vlabel">Prescribed Prep</span>
+          </div>
+          <div class="drill-body">
+            <span class="ex-num">DRILL 0${idx+1}</span>
+            <h4>${ex.name}</h4>
+            <div class="drill-dose">3 Sets × 10 Dynamic Reps</div>
+          </div>
+        </div>`).join("")}
+    </div>`;
+  }
+});
+</script>
+</body>
+</html>
