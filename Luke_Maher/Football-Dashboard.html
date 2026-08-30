@@ -818,6 +818,7 @@ footer .cred { font-family: var(--mono); font-size: 10px; letter-spacing: 1px; c
 </footer>
 
 <script>
+
 /* ====================================================================
    ███  CONFIG — EDIT THIS BLOCK FOR EACH NEW ATHLETE BEFORE PUBLISHING  ███
    All strength/power/mobility/agility entries below are blank placeholders
@@ -827,69 +828,69 @@ footer .cred { font-family: var(--mono); font-size: 10px; letter-spacing: 1px; c
    ==================================================================== */
 const CONFIG = {
   client: {
-    name: "Athlete Name",              // REPLACE
-    date: "Month DD, YYYY",            // REPLACE — assessment date
-    age:  16,                          // REPLACE
+    name: "Luke Maher",              // REPLACE
+    date: "August 30, 2026",            // REPLACE — assessment date
+    age:  17,                          // REPLACE
     sex:  "male",                      // "male" or "female"
     hand: "right",                     // dominant hand (reference only)
-    bodyweightLbs: 150,                // REPLACE — required for strength ratios, keep > 0
+    bodyweightLbs: 165,                // REPLACE — required for strength ratios, keep > 0
     primarySport: "Football",
-    position: "DB"                     // REPLACE — one of: "QB", "OL", "DL", "LB", "DB", "SKILL" (WR/RB/TE)
+    position: "QB"                     // REPLACE — one of: "QB", "OL", "DL", "LB", "DB", "SKILL" (WR/RB/TE)
   },
 
   bookingUrl: "https://www.revivegolfperformance.com/booking-calendar/training?referral=service_list_widget",
 
   scores: {
     strength: {
-      trapBarDeadlift: { weight: 0, reps: 0, tested: false },
-      backSquat:       { weight: 0, reps: 0, tested: false },
-      pullups:         { addedWeight: 0, reps: 0, tested: false },
-      cablePull:       { leftWeight: 0, leftReps: 0, rightWeight: 0, rightReps: 0, tested: false },
-      cablePush:       { leftWeight: 0, leftReps: 0, rightWeight: 0, rightReps: 0, tested: false },
-      splitSquat:      { leftWeight: 0, leftReps: 0, rightWeight: 0, rightReps: 0, tested: false, notes: "" }
+      trapBarDeadlift: { weight: 225, reps: 6, tested: true },
+      backSquat:       { weight: 205, reps: 12, tested: true },
+      pullups:         { addedWeight: 0, reps: 8, tested: true },
+      cablePull:       { leftWeight: 80, leftReps: 5, rightWeight: 80, rightReps: 5, tested: true },
+      cablePush:       { leftWeight: 60, leftReps: 5, rightWeight: 60, rightReps: 5, tested: true },
+      splitSquat:      { leftWeight: 85, leftReps: 5, rightWeight: 85, rightReps: 5, tested: true, notes: "" }
     },
     rsiTarget: 5.554,
 
-    power: {
-      verticalJump:  { ft: null, in: 0, tested: false },
-      chestPass:     { ft: 0, tested: false },
-      situpThrow:    { ft: 0, tested: false },
-      shotPutRight:  { ft: 0, tested: false },
-      shotPutLeft:   { ft: 0, tested: false }
+     power: {
+      verticalJump:  { ft: null, in: 18, tested: true },
+      chestPass:     { ft: 16, tested: true },
+      situpThrow:    { ft: 14, tested: true },
+      shotPutRight:  { ft: 29, tested: true },
+      shotPutLeft:   { ft: 27, tested: true }
     },
     powerTarget: 1444,
 
     rom: [
-      { name: "Shoulder ER",       lead: 0, trail: 0, target: 90, limitRange: 5  },
-      { name: "Hip IR",            lead: 0, trail: 0, target: 45, limitRange: 10 },
-      { name: "T-Spine Rotation",  lead: 0, trail: 0, target: 60, limitRange: 15 }
+      { name: "Shoulder ER",       lead: 90, trail: 77, target: 90, limitRange: 5  },
+      { name: "Hip IR",            lead: 25, trail: 25, target: 45, limitRange: 10 },
+      { name: "T-Spine Rotation",  lead: 54, trail: 55, target: 60, limitRange: 15 }
     ],
 
-    mobilityClearance: [
-      { name: "Pelvic Tilt Test",             tested: false, status: "Monitor", notes: "" },
-      { name: "Pelvic Rotation Test",         tested: false, status: "Monitor", notes: "" },
-      { name: "Torso Rotation Test",          tested: false, status: "Monitor", notes: "" },
-      { name: "Overhead Deep Squat",          tested: false, status: "Monitor", notes: "" },
-      { name: "Toe Touch Test",               tested: false, status: "Monitor", notes: "" },
-      { name: "Shoulder External Rotation",   tested: false, status: "Monitor", notes: "" },
-      { name: "Single Leg Balance Test",      tested: false, status: "Monitor", notes: "" },
-      { name: "Lat Flexibility Test",         tested: false, status: "Monitor", notes: "" },
-      { name: "Lower Quarter Rotation",       tested: false, status: "Monitor", notes: "" },
-      { name: "Seated Trunk Rotation",        tested: false, status: "Monitor", notes: "" },
-      { name: "Bridge w/ Leg Extension",      tested: false, status: "Monitor", notes: "" },
-      { name: "Hip Internal Rotation",        tested: false, status: "Monitor", notes: "" },
-      { name: "Hip External Rotation",        tested: false, status: "Monitor", notes: "" },
-      { name: "Cervical Rotation Test",       tested: false, status: "Monitor", notes: "" },
-      { name: "Forearm Rotation Test",        tested: false, status: "Monitor", notes: "" },
-      { name: "Wrist Hinge Test",             tested: false, status: "Monitor", notes: "" },
-      { name: "Wrist Flexion/Extension",      tested: false, status: "Monitor", notes: "" }
+     mobilityClearance: [
+      { name: "Pelvic Tilt Test",             tested: true, status: "Fail", notes: "Cannot Pelvic Tilt in either direction when in an Athletic stance" },
+      { name: "Pelvic Rotation Test",         tested: true, status: "Monitor", notes: "Improved with Assistance." },
+      { name: "Torso Rotation Test",          tested: true, status: "Pass", notes: "" },
+      { name: "Overhead Deep Squat",          tested: true, status: "Monitor", notes: "Ankle ROM Limtited: Prevents knees fromcoming over toes to allow for full deep squat" },
+      { name: "Toe Touch Test",               tested: true, status: "Fail", notes: "Unable to touch toes on either side" },
+      { name: "Shoulder External Rotation",   tested: true, status: "Monitor", notes: "Non-Throwing shoulder limited ER ROM. Throwing shoulder should have more ROM to generate more velocity and power behind the ball" },
+      { name: "Single Leg Balance Test",      tested: true, status: "Monitor", notes: "Left side: Pass (+15sec) , Right Side: Needs Improvement (6-10s)" },
+      { name: "Lat Flexibility Test",         tested: true, status: "Fail", notes: "Low back comes off wall before arms raise to cover the nose" },
+      { name: "Lower Quarter Rotation",       tested: true, status: "Monitor", notes: "Slight limitation rotating into Left hip while standing" },
+      { name: "Seated Trunk Rotation",        tested: true, status: "Monitor", notes: "Goal for mobilituy is 60 degrees. Barely below. No concern for injury, but monitor to improve performance." },
+      { name: "Bridge w/ Leg Extension",      tested: true, status: "Pass", notes: "" },
+      { name: "Hip Internal Rotation",        tested: true, status: "Monitor", notes: "25 degrees on both sides. The goal is 90 degrees for Hip internal rotation and External Rotation when Added together" },
+      { name: "Hip External Rotation",        tested: true, status: "Monitor", notes: "32 degrees on both sides. The goal is 90 degrees for Hip internal rotation and External Rotation when Added together." },
+      { name: "Cervical Rotation Test",       tested: true, status: "Pass", notes: "" },
+      { name: "Forearm Rotation Test",        tested: true, status: "Pass", notes: "" },
+      { name: "Wrist Hinge Test",             tested: true, status: "Pass", notes: "" },
+      { name: "Wrist Flexion/Extension",      tested: true, status: "Monitor", notes: "Fractured Left wrist 1 year ago. Limited Wrist flexion." }
     ],
 
-    performanceIndex: {
+     performanceIndex: {
       name: "Dynamic Football Index",
-      display: "—",
-      fillPct: 0,
-      class: "Not Scored"
+      display: "24",
+      fillPct: 33,
+      class: "Developing"
     }
   },
 
@@ -898,20 +899,20 @@ const CONFIG = {
       name: "5-10-5 Pro Agility Drill",
       unit: "sec",
       lowerIsBetter: true,
-      time: [0, 0, 0],
-      tested: false
+      time: [ 5.18, 5.28, 5.03],
+      tested: true
     },
     agilityLDrill: {
       name: "L-Drill (3-Cone)",
       unit: "sec",
       lowerIsBetter: true,
-      time: [0, 0, 0],
-      tested: false
+      time: [8.17, 8.23, 8.37],
+      tested: true
     }
   },
 
   program: {
-    fullProgramUrl: "",
+    fullProgramUrl: "https://pro.theprehabguys.com/patient-portal/programs/Y4L6BO37",
     exercises: [
       { name: "Thoracic Spine Foam Roll",     url: "" },
       { name: "90/90 Dynamic Hip Flow",       url: "" },
