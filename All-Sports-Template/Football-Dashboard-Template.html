@@ -112,6 +112,39 @@ section { margin-top: clamp(28px, 5vw, 46px); }
   margin-bottom: 18px;
 }
 
+.position-bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: linear-gradient(160deg, var(--charcoal), #0e0e0e);
+  border: 1px solid var(--slate);
+  border-left: 3px solid var(--red);
+  border-radius: 10px;
+  padding: 14px 18px;
+}
+.position-pill {
+  flex-shrink: 0;
+  font-family: var(--display);
+  font-size: 22px;
+  letter-spacing: 1px;
+  color: var(--white);
+  background: rgba(217,70,239,.15);
+  border: 1px solid var(--red);
+  border-radius: 8px;
+  padding: 6px 14px;
+  text-align: center;
+  min-width: 56px;
+}
+.position-copy { display: flex; flex-direction: column; gap: 3px; }
+.position-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--red);
+}
+.position-desc { font-size: 13.5px; color: var(--silver); line-height: 1.5; }
+
 .hero {
   display: grid;
   grid-template-columns: minmax(0, 300px) 1fr;
@@ -623,6 +656,11 @@ footer .cred { font-family: var(--mono); font-size: 10px; letter-spacing: 1px; c
   .sec-label { font-size: 9px; letter-spacing: 2px; }
   .sec-title { font-size: clamp(22px, 6vw, 30px); margin-bottom: 10px; }
 
+  /* Position bar */
+  .position-bar { padding: 12px 14px; gap: 12px; }
+  .position-pill { font-size: 18px; padding: 5px 10px; min-width: 46px; }
+  .position-desc { font-size: 12.5px; }
+
   /* Screen cards — single column */
   .screen-grid { grid-template-columns: 1fr; gap: 8px; }
   .screen-card { padding: 14px; }
@@ -697,6 +735,17 @@ footer .cred { font-family: var(--mono); font-size: 10px; letter-spacing: 1px; c
 <div class="wrap">
 
   <section class="reveal" style="margin-top:clamp(24px,5vw,40px)">
+    <div class="sec-label">Position Group</div>
+    <div class="position-bar">
+      <span class="position-pill" id="positionPill">—</span>
+      <div class="position-copy">
+        <div class="position-label" id="positionLabel">Loading...</div>
+        <div class="position-desc" id="positionDesc">Loading...</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="reveal" style="animation-delay:.04s">
     <div class="sec-label">Overall Movement Efficiency</div>
     <div class="hero">
       <div class="radar-box">
@@ -784,7 +833,8 @@ const CONFIG = {
     sex:  "male",                      // "male" or "female"
     hand: "right",                     // dominant hand (reference only)
     bodyweightLbs: 150,                // REPLACE — required for strength ratios, keep > 0
-    primarySport: "Football"
+    primarySport: "Football",
+    position: "DB"                     // REPLACE — one of: "QB", "OL", "DL", "LB", "DB", "SKILL" (WR/RB/TE)
   },
 
   bookingUrl: "https://www.revivegolfperformance.com/booking-calendar/training?referral=service_list_widget",
@@ -874,17 +924,60 @@ const CONFIG = {
 };
 /* ███  END CONFIG  ███ */
 
+/* ── Position-group reference data — labels, blurbs, and the load-management
+     risk lines that read differently depending on what position is training ── */
+const POSITION_META = {
+  QB:    { label: "Quarterback",                  blurb: "Screens and drills below are prioritized for pocket mobility, rotational power through the throw, and protecting your arm over a full season." },
+  OL:    { label: "Offensive Line",                blurb: "Screens and drills below are prioritized for leverage, anchor strength, and hip/ankle mobility for a low, stable stance." },
+  DL:    { label: "Defensive Line",                blurb: "Screens and drills below are prioritized for first-step power, hand-fighting range of motion, and the strength to shed blocks." },
+  LB:    { label: "Linebacker",                    blurb: "Screens and drills below are prioritized for hip mobility in coverage, closing power, and tackling strength in traffic." },
+  DB:    { label: "Defensive Back",                blurb: "Screens and drills below are prioritized for hip mobility, backpedal-to-break transition, and closing speed to the ball." },
+  SKILL: { label: "Wide Receiver / Running Back / Tight End", blurb: "Screens and drills below are prioritized for top-end speed, change-of-direction power, and contact balance through the whistle." }
+};
+
+const POSITION_RISK = {
+  strength: {
+    QB:    "<b>Weaker strength base</b> means your pocket stability and base control break down late in games. Throws made under pressure or on the move lose accuracy when your legs and core are depleted.",
+    OL:    "<b>Weaker strength base</b> means your anchor and leverage break down in the 3rd and 4th quarters. You'll get driven back in pass protection and lose ground in the run game as your legs and core fatigue.",
+    DL:    "<b>Weaker strength base</b> means you get controlled and washed out of plays more easily late in games, as your ability to hold leverage and finish tackles fades with fatigue.",
+    LB:    "<b>Weaker strength base</b> means you get knocked off your angle and out-leveraged in run fits late in games, as your legs and core wear down.",
+    DB:    "<b>Weaker strength base</b> means you get out-muscled at the catch point and miss more open-field tackles late in games, as your legs and core fatigue.",
+    SKILL: "<b>Weaker strength base</b> means you break fewer tackles and lose contact balance late in games, as your legs and core wear down."
+  },
+  power: {
+    QB:    "<b>Below-target power</b> fades fastest under fatigue. Ball velocity on off-platform throws and your ability to escape pressure both drop noticeably in the back half of a game.",
+    OL:    "<b>Below-target power</b> fades fastest under fatigue. Your first punch off the snap and your ability to generate movement in the run game both drop noticeably in the back half of a game.",
+    DL:    "<b>Below-target power</b> fades fastest under fatigue. Your get-off and pass-rush burst both drop noticeably in the back half of a game as your fast-twitch system tires.",
+    LB:    "<b>Below-target power</b> fades fastest under fatigue. Your closing speed to the ball carrier and hit power both drop noticeably in the back half of a game.",
+    DB:    "<b>Below-target power</b> fades fastest under fatigue. Your transition speed out of the backpedal and closing burst to the catch point both drop noticeably in the back half of a game.",
+    SKILL: "<b>Below-target power</b> fades fastest under fatigue. Your first-step quickness and top-end speed both drop noticeably in the back half of a game as your fast-twitch system tires."
+  },
+  symmetry: {
+    QB:    "<b>Side-to-side strength gap</b> puts extra stress on your plant leg and throwing shoulder. Look for arm soreness building as throw volume adds up over a game.",
+    OL:    "<b>Side-to-side strength gap</b> puts extra stress on one side of your stance in pass protection and drive blocking. Look for shoulder or hip soreness building on that side.",
+    DL:    "<b>Side-to-side strength gap</b> gives blockers a predictable weak side to attack, and puts extra stress on your dominant hand and hip over the course of a game.",
+    LB:    "<b>Side-to-side strength gap</b> puts extra stress on your dominant shed side and tackling shoulder. Look for soreness building on one side during and after contact-heavy games.",
+    DB:    "<b>Side-to-side strength gap</b> gives receivers a side to attack in your backpedal and puts extra stress on your dominant tackling shoulder.",
+    SKILL: "<b>Side-to-side strength gap</b> puts extra stress on your dominant cutting leg or ball-carrying side. Look for soreness building on one side during and after contact-heavy games."
+  }
+};
+
 document.addEventListener('DOMContentLoaded', () => {
   const c = CONFIG.client;
   const s = CONFIG.scores;
   const BW = c.bodyweightLbs;
   const SEX = c.sex.toLowerCase() === "female" ? "female" : "male";
   const isMale = SEX === "male";
+  const POS = POSITION_META[c.position] ? c.position : "DB";
+  const posMeta = POSITION_META[POS];
 
   document.getElementById("hClientName").textContent = c.name;
-  document.getElementById("hClientMeta").textContent = `${c.date} · Age ${c.age} · Football`;
+  document.getElementById("hClientMeta").textContent = `${c.date} · Age ${c.age} · Football · ${posMeta.label}`;
   document.getElementById("bookBtn").href = CONFIG.bookingUrl;
   document.getElementById("sport-sec-title").textContent = "Your Football Profile Screens";
+  document.getElementById("positionPill").textContent = POS;
+  document.getElementById("positionLabel").textContent = posMeta.label;
+  document.getElementById("positionDesc").textContent = posMeta.blurb;
 
   const calc1RM = (w, r) => r === 0 ? 0 : w * (1 + r / 30);
   const st = s.strength;
@@ -1005,41 +1098,173 @@ document.addEventListener('DOMContentLoaded', () => {
     svg.innerHTML = g;
   })();
 
-  /* ── BOTTLENECK TEXT ── */
-  function getBottleneck(key, status) {
+  /* ── BOTTLENECK TEXT — position-specific for strength/power/symmetry/mobility/rom.
+       "perf" is a composite grade and stays position-neutral (see buildDetailView). ── */
+  function getBottleneck(key, status, position) {
     const map = {
       strength: {
-        optimal:    "Your strength is right where it needs to be. A strong base means you can win leverage battles at the line, absorb and deliver contact, and keep driving through the whistle without your technique breaking down.",
-        monitor:    "Your strength is getting close. A little more work in the weight room will pay off fast — more strength means winning more one-on-one battles at the point of contact and holding your ground deeper into the game.",
-        restricted: "Your strength is below the target. In football, strength is your foundation — it's what lets you win leverage at the line, finish tackles, break arm tackles, and protect your joints when you're absorbing contact play after play."
+        QB: {
+          optimal:    "Your strength is right where it needs to be. For a quarterback, that means a stable base in the pocket, the ability to reset your feet under pressure, and enough core and lower-body strength to drive the ball on the move without sacrificing accuracy.",
+          monitor:    "Your strength is getting close. A little more lower-body and core work will show up fast — as a quarterback, that translates to a more stable base under pressure and more velocity on throws made off-platform.",
+          restricted: "Your strength is below the target. For a quarterback, strength is what keeps your base stable in the pocket, lets you reset and throw accurately under pressure, and protects your legs and throwing shoulder when you're forced to scramble or absorb a hit."
+        },
+        OL: {
+          optimal:    "Your strength is right where it needs to be. As a lineman, that's what lets you control the point of attack, anchor against a bull rush, and sustain blocks through the whistle instead of getting driven backward.",
+          monitor:    "Your strength is getting close. A little more work in the weight room will pay off fast — for a lineman, more strength means winning more reps at the point of attack and holding your anchor deeper into games.",
+          restricted: "Your strength is below the target. For a lineman, strength is everything — it's what lets you win leverage at the snap, anchor in pass protection, and finish blocks in the run game instead of getting stood up or driven back."
+        },
+        DL: {
+          optimal:    "Your strength is right where it needs to be. For a defensive lineman, that means winning leverage at the snap, shedding blocks, and finishing tackles instead of getting locked up and controlled by an offensive lineman.",
+          monitor:    "Your strength is getting close. A little more strength work will pay off fast — for a defensive lineman, that means beating blocks with power instead of relying only on speed, and finishing more plays.",
+          restricted: "Your strength is below the target. For a defensive lineman, strength is your foundation — it's what lets you win leverage at the snap, shed blocks, and finish tackles instead of getting controlled and washed out of the play."
+        },
+        LB: {
+          optimal:    "Your strength is right where it needs to be. For a linebacker, that means taking on blockers and shedding them, finishing tackles in the hole, and holding up physically over four quarters of contact.",
+          monitor:    "Your strength is getting close. A little more strength work will pay off fast — for a linebacker, that means shedding blocks quicker and finishing more tackles instead of getting knocked off your angle.",
+          restricted: "Your strength is below the target. For a linebacker, strength is what lets you take on and shed blockers, finish tackles in traffic, and hold your ground against the run — without it, you get moved off your spot."
+        },
+        DB: {
+          optimal:    "Your strength is right where it needs to be. For a defensive back, that means winning at the catch point, finishing open-field tackles, and holding up physically against bigger receivers and tight ends.",
+          monitor:    "Your strength is getting close. A little more strength work will pay off fast — for a defensive back, that means more physical press coverage and more finished tackles in the open field.",
+          restricted: "Your strength is below the target. For a defensive back, strength is what lets you press at the line, win contested catches, and finish tackles in space instead of getting bounced off or run through."
+        },
+        SKILL: {
+          optimal:    "Your strength is right where it needs to be. For a skill player, that means breaking arm tackles, finishing runs and routes through contact, and staying available over a full season of hits.",
+          monitor:    "Your strength is getting close. A little more strength work will pay off fast — for a skill player, that means breaking more tackles and finishing more plays through contact.",
+          restricted: "Your strength is below the target. For a skill player, strength is what lets you break arm tackles, finish runs and catches through contact, and hold up over a full season of hits."
+        }
       },
       power: {
-        optimal:    "Your power is on target. That explosive engine is what gets you off the line first, drives through contact, and turns strength into speed. Your fast-twitch system is firing well.",
-        monitor:    "Power is close but not quite there. You already have the strength — it just needs to convert to speed faster. The right training will unlock a quicker first step and harder-hitting contact quickly.",
-        restricted: "Power is below the target. Power is how fast you turn strength into force — it's the main ingredient behind first-step quickness, acceleration, and hitting power. This is your biggest area to gain, and it responds fast to the right work."
+        QB: {
+          optimal:    "Your power is on target. For a quarterback, that explosive engine is what puts velocity on the ball, especially on throws made off-platform or on the move, and helps you escape and create outside the pocket.",
+          monitor:    "Power is close but not quite there. You already have the strength — it just needs to convert to arm speed and escapability faster. The right training will unlock more velocity and quicker movement in the pocket.",
+          restricted: "Power is below the target. For a quarterback, power is what drives ball velocity and your ability to create outside a collapsing pocket. This is your biggest area to gain, and it responds quickly to the right work."
+        },
+        OL: {
+          optimal:    "Your power is on target. For a lineman, that's what turns your strength into a fast, violent first punch off the snap and lets you generate movement in the run game instead of just holding your ground.",
+          monitor:    "Power is close but not quite there. You already have the strength — it just needs to fire faster. The right training will unlock a quicker first punch and more movement in the run game.",
+          restricted: "Power is below the target. For a lineman, power is what turns strength into a fast first punch and real movement at the point of attack. This is your biggest area to gain, and it responds quickly to the right work."
+        },
+        DL: {
+          optimal:    "Your power is on target. For a defensive lineman, that explosive first step off the snap is what gets you into the backfield before the offensive line can set their feet.",
+          monitor:    "Power is close but not quite there. You already have the strength — it just needs to convert to a faster get-off. The right training will unlock a quicker first step and more pressure on the quarterback.",
+          restricted: "Power is below the target. For a defensive lineman, power is your first-step get-off — it's the main ingredient behind winning the snap count and beating blocks before they're set. This is your biggest area to gain."
+        },
+        LB: {
+          optimal:    "Your power is on target. For a linebacker, that's what lets you fill gaps fast, close on ball carriers, and deliver a hard, effective tackle instead of just an arm wrap.",
+          monitor:    "Power is close but not quite there. You already have the strength — it just needs to convert to closing speed faster. The right training will unlock quicker gap-fills and harder tackles.",
+          restricted: "Power is below the target. For a linebacker, power is what lets you close space and deliver force at contact. This is your biggest area to gain, and it responds quickly to the right work."
+        },
+        DB: {
+          optimal:    "Your power is on target. For a defensive back, that explosive hip-and-leg power is what drives your backpedal-to-break transition and your closing speed on the ball.",
+          monitor:    "Power is close but not quite there. You already have the strength — it just needs to convert to a faster transition out of your backpedal. The right training will unlock quicker breaks on the ball.",
+          restricted: "Power is below the target. For a defensive back, power is what drives your transition out of the backpedal and your closing speed to the catch point. This is your biggest area to gain."
+        },
+        SKILL: {
+          optimal:    "Your power is on target. For a skill player, that's what puts you in the open field faster — a quicker first step out of your cut, more top-end speed, and harder contact on runs through the hole.",
+          monitor:    "Power is close but not quite there. You already have the strength — it just needs to release faster. The right training will unlock a quicker first step and more top-end speed.",
+          restricted: "Power is below the target. For a skill player, power is the main ingredient behind separation speed, breakaway ability, and contact balance through arm tackles. This is your biggest area to gain."
+        }
       },
       symmetry: {
-        optimal:    "Both sides of your body are pulling nearly equal weight. That's great for football — every cut, block, and tackle is sharing the load evenly, which protects your joints over a long season of contact.",
-        monitor:    "There's a small gap between your two sides. It's not a big problem yet — but closing it will protect your shoulder and knee as the season's hits and cuts add up.",
-        restricted: "One side is noticeably stronger. In football, that gap usually shows up in your plant leg or lead blocking/tackling shoulder doing more than its fair share on cuts, blocks, and tackles. Over time, that imbalance is a common source of overuse injury on the weaker side."
+        QB: {
+          optimal:    "Both sides of your body are pulling nearly equal weight. For a quarterback, that means your plant leg and throwing-side hip and shoulder are sharing the load evenly through your delivery — good news for arm health over a long season.",
+          monitor:    "There's a small gap between your two sides. For a quarterback, that often shows up as your plant leg or throwing shoulder working harder than it should. Closing it will protect your arm over a full season of throws.",
+          restricted: "One side is noticeably stronger. For a quarterback, that gap usually means your throwing arm and shoulder are compensating for a weaker base underneath you. Over time, that's a common path to shoulder and elbow overuse."
+        },
+        OL: {
+          optimal:    "Both sides of your body are pulling nearly equal weight. For a lineman, that means you can anchor and drive block evenly out of either side of your stance, which matters on down blocks, reach blocks, and pass sets both directions.",
+          monitor:    "There's a small gap between your two sides. For a lineman, that can show up as a weaker anchor or slower set to one side. Closing it will make you more consistent regardless of which way the play goes.",
+          restricted: "One side is noticeably stronger. For a lineman, that gap means one side of your stance is doing more work in pass protection and drive blocking. Over time, that's a common source of hip and shoulder overuse on the weaker side."
+        },
+        DL: {
+          optimal:    "Both sides of your body are pulling nearly equal weight. For a defensive lineman, that means you can win with either hand and rush from either side without a clear weak spot for blockers to target.",
+          monitor:    "There's a small gap between your two sides. For a defensive lineman, offensive linemen will find and target your weaker side over the course of a game. Closing the gap removes that predictable weakness.",
+          restricted: "One side is noticeably stronger. For a defensive lineman, that's a weakness blockers can identify and exploit all game long, and it puts extra strain on your dominant side's shoulder and hip."
+        },
+        LB: {
+          optimal:    "Both sides of your body are pulling nearly equal weight. For a linebacker, that means you can shed blocks and tackle equally well to either side, without a soft spot in your run fits.",
+          monitor:    "There's a small gap between your two sides. For a linebacker, that can show up as a weaker shed or a less confident tackle to one side. Closing it rounds out your game.",
+          restricted: "One side is noticeably stronger. For a linebacker, that gap means one side is absorbing more contact in run fits and tackles. Over time, that's a common source of shoulder and hip soreness on the dominant side."
+        },
+        DB: {
+          optimal:    "Both sides of your body are pulling nearly equal weight. For a defensive back, that means your backpedal, transition, and tackling are equally strong to either side — no obvious side for receivers to attack.",
+          monitor:    "There's a small gap between your two sides. For a defensive back, receivers and route runners will find your weaker side over a season. Closing it removes that predictable weak spot.",
+          restricted: "One side is noticeably stronger. For a defensive back, that gap shows up as a slower transition or weaker tackle to one side — exactly what good offenses are coached to attack."
+        },
+        SKILL: {
+          optimal:    "Both sides of your body are pulling nearly equal weight. For a skill player, that means your cuts, catches, and contact balance are just as strong to either side, which keeps you unpredictable and durable.",
+          monitor:    "There's a small gap between your two sides. For a skill player, that can show up as a weaker cut or less balance through contact to one side. Closing it protects your joints as the hits and cuts add up.",
+          restricted: "One side is noticeably stronger. For a skill player, that gap usually shows up in your plant leg or ball-carrying side doing more than its fair share on cuts and contact. Over time, that's a common source of overuse injury on the weaker side."
+        }
       },
       mobility: {
-        optimal:    "Your movement screen came back clean across all 17 tests. That means your pelvis, hips, thoracic spine, and shoulders are all moving freely through the ranges the game demands. This is a strong foundation for stance, get-off, and tackling mechanics — no compensations stealing power or loading joints unevenly.",
-        monitor:    "One or more movement tests flagged something to watch — likely a Monitor on hip, thoracic, or shoulder mobility. Your body can still perform well, but that restricted spot is creating a compensation upstream or downstream. In football, the most common chain is: tight hips → overloaded lower back → shoulder trying to compensate in blocking or tackling position. Address it early.",
-        restricted: "Multiple movement tests failed. Restricted pelvic, hip, or thoracic mobility forces the rest of your kinetic chain to work around the stuck joint. In football that shows up as a weaker stance and get-off (the hips can't load), hip flexor and groin overuse from repeated contact positions, and shoulder soreness from trying to create rotation the body should be getting from the spine and hips. This is the highest-priority thing to address."
+        QB: {
+          optimal:    "Your movement screen came back clean across all 17 tests. For a quarterback, that means your hips and thoracic spine are free to rotate through your throwing motion, and your base is stable enough to reset and throw accurately from any platform.",
+          monitor:    "One or more movement tests flagged something to watch — likely a Monitor on hip, thoracic, or shoulder mobility. For a quarterback, tight hips or a restricted thoracic spine forces your throwing shoulder to do work it shouldn't, which is a common source of arm soreness. Address it early.",
+          restricted: "Multiple movement tests failed. For a quarterback, restricted hip or thoracic mobility means your lower body can't drive the throw, so your arm has to generate velocity on its own — a fast track to shoulder and elbow overuse. This is the highest-priority thing to address."
+        },
+        OL: {
+          optimal:    "Your movement screen came back clean across all 17 tests. For a lineman, that means your hips and ankles can get low and stay low in your stance, and your shoulders and thoracic spine move freely enough to punch, latch, and turn blockers without compensation.",
+          monitor:    "One or more movement tests flagged something to watch — likely a Monitor on hip, ankle, or shoulder mobility. For a lineman, that limits how low and stable your stance can get, which shows up as getting driven back or losing leverage late in games. Address it early.",
+          restricted: "Multiple movement tests failed. For a lineman, restricted hip or ankle mobility means you can't get into (or stay in) a strong, low stance, which forces your lower back and shoulders to compensate for the leverage you're missing. This is the highest-priority thing to address."
+        },
+        DL: {
+          optimal:    "Your movement screen came back clean across all 17 tests. For a defensive lineman, that means your hips can load explosively off the snap and your thoracic spine and shoulders move freely enough to rip through blocks and change direction to the ball.",
+          monitor:    "One or more movement tests flagged something to watch — likely a Monitor on hip, thoracic, or shoulder mobility. For a defensive lineman, that limits your get-off and your ability to rip free from blocks, which shows up as a slower first step and getting locked up more easily. Address it early.",
+          restricted: "Multiple movement tests failed. For a defensive lineman, restricted hip or thoracic mobility means you can't load your get-off or rip through contact efficiently, forcing your shoulders and low back to do work they shouldn't. This is the highest-priority thing to address."
+        },
+        LB: {
+          optimal:    "Your movement screen came back clean across all 17 tests. For a linebacker, that means your hips can open and close freely for coverage drops, and your thoracic spine and shoulders move well enough to shed blocks and tackle from any angle.",
+          monitor:    "One or more movement tests flagged something to watch — likely a Monitor on hip, thoracic, or shoulder mobility. For a linebacker, that limits your hip turn in coverage and your ability to disengage from blocks cleanly. Address it early.",
+          restricted: "Multiple movement tests failed. For a linebacker, restricted hip or thoracic mobility limits your read-and-react ability and forces your shoulders and low back to compensate when shedding blocks and tackling in space. This is the highest-priority thing to address."
+        },
+        DB: {
+          optimal:    "Your movement screen came back clean across all 17 tests. For a defensive back, that means your hips can open and flip cleanly out of your backpedal, and your thoracic spine and shoulders move freely enough to play the ball at full speed.",
+          monitor:    "One or more movement tests flagged something to watch — likely a Monitor on hip or thoracic mobility. For a defensive back, that limits how cleanly you can flip your hips and transition out of a backpedal — a common source of getting beat on double moves. Address it early.",
+          restricted: "Multiple movement tests failed. For a defensive back, restricted hip mobility directly limits your transition speed out of the backpedal, which shows up as getting beat deep and struggling to close on the ball. This is the highest-priority thing to address."
+        },
+        SKILL: {
+          optimal:    "Your movement screen came back clean across all 17 tests. For a skill player, that means your hips and thoracic spine are free to move through sharp cuts, and your shoulders move well enough to make contested catches or break tackles without compensation.",
+          monitor:    "One or more movement tests flagged something to watch — likely a Monitor on hip, thoracic, or shoulder mobility. For a skill player, that limits how sharp your cuts can be and puts extra strain on your low back and shoulders during contact. Address it early.",
+          restricted: "Multiple movement tests failed. For a skill player, restricted hip or thoracic mobility limits your ability to cut, separate, and absorb contact efficiently, forcing your low back and shoulders to compensate. This is the highest-priority thing to address."
+        }
       },
       rom: {
-        optimal:    "Your range of motion is within the healthy target range. Your hips, shoulders, and spine are moving freely to support your stance, blocking, and tackling mechanics. Not a limiter right now.",
-        monitor:    "One or more joints is a little short of the target. Not a crisis — but tightness here means the joint next to it is picking up extra work during contact and cutting.",
-        restricted: "A joint is tighter than the target. In football, restricted shoulder rotation or hip rotation forces the next joint in the chain to compensate. That compensation is often the source of nagging shoulder, hip, and low back soreness after games and practices."
-      },
-      perf: {
-        optimal:    "Great overall physical grade! Your screens are trending well. Stay on your program and keep building on this foundation.",
-        monitor:    "Your overall grade is in the middle range. There are things to improve — but the path is clear. Close the gaps we found above and this number will go up.",
-        restricted: "Your overall grade has room to grow. That's exactly what the program targets. Work through it, and watch this score climb."
+        QB: {
+          optimal:    "Your range of motion is within the healthy target range. Your throwing shoulder, hips, and thoracic spine are moving freely to support arm speed and accuracy. Not a limiter right now.",
+          monitor:    "One or more joints is a little short of the target. For a quarterback, tightness in the throwing shoulder or thoracic spine means your arm is picking up extra work to generate velocity.",
+          restricted: "A joint is tighter than the target. For a quarterback, restricted throwing-shoulder or thoracic rotation forces your arm to do work your hips and trunk should be doing — a common source of shoulder and elbow soreness."
+        },
+        OL: {
+          optimal:    "Your range of motion is within the healthy target range. Your hips, shoulders, and spine are moving freely to support a low, stable stance and full extension in your punch. Not a limiter right now.",
+          monitor:    "One or more joints is a little short of the target. For a lineman, tightness here limits how low you can get in your stance and how far you can extend your punch.",
+          restricted: "A joint is tighter than the target. For a lineman, restricted hip or shoulder rotation limits your stance depth and punch extension, forcing your lower back to compensate for the leverage you're missing."
+        },
+        DL: {
+          optimal:    "Your range of motion is within the healthy target range. Your hips, shoulders, and spine are moving freely to support your get-off and your ability to rip through blocks. Not a limiter right now.",
+          monitor:    "One or more joints is a little short of the target. For a defensive lineman, tightness here limits your get-off depth and how well you can rip free from contact.",
+          restricted: "A joint is tighter than the target. For a defensive lineman, restricted hip or shoulder rotation limits your get-off and your ability to disengage from blocks, forcing your low back to compensate."
+        },
+        LB: {
+          optimal:    "Your range of motion is within the healthy target range. Your hips, shoulders, and spine are moving freely to support your reads, drops, and tackling angles. Not a limiter right now.",
+          monitor:    "One or more joints is a little short of the target. For a linebacker, tightness here limits your hip turn on coverage drops and your ability to square up for a tackle.",
+          restricted: "A joint is tighter than the target. For a linebacker, restricted hip or shoulder rotation limits your coverage drops and tackling angles, forcing the next joint in the chain to compensate."
+        },
+        DB: {
+          optimal:    "Your range of motion is within the healthy target range. Your hips, shoulders, and spine are moving freely to support your backpedal-to-break transition and ball skills. Not a limiter right now.",
+          monitor:    "One or more joints is a little short of the target. For a defensive back, tightness in the hip is the most common limiter of a clean backpedal-to-break transition.",
+          restricted: "A joint is tighter than the target. For a defensive back, restricted hip rotation is one of the biggest limiters of transition speed — it shows up directly as getting beat on breaks and double moves."
+        },
+        SKILL: {
+          optimal:    "Your range of motion is within the healthy target range. Your hips, shoulders, and spine are moving freely to support sharp cuts, ball skills, and contact balance. Not a limiter right now.",
+          monitor:    "One or more joints is a little short of the target. For a skill player, tightness here limits how sharp your cuts can be and how well you absorb contact.",
+          restricted: "A joint is tighter than the target. For a skill player, restricted hip or shoulder rotation limits cutting sharpness and puts extra strain on the low back and shoulders during contact."
+        }
       }
     };
-    return (map[key] && map[key][status]) || (map[key] && map[key]['monitor']) || "";
+    const posBlock = map[key] && (map[key][position] || map[key]['DB']);
+    return (posBlock && (posBlock[status] || posBlock['monitor'])) || "";
   }
 
   /* ── Agility norms ── */
@@ -1137,7 +1362,7 @@ document.addEventListener('DOMContentLoaded', () => {
         </table>
         <p class="calc-note">Score = est. 1-rep max ÷ bodyweight (${BW} lb). Red = needs work.</p>
         <div class="block-label">What This Means For Your Game</div>
-        <div class="bottleneck ${bnSt==='optimal'?'clear':''}">${getBottleneck('strength', bnSt)}</div>
+        <div class="bottleneck ${bnSt==='optimal'?'clear':''}">${getBottleneck('strength', bnSt, POS)}</div>
       </div>`;
 
     } else if (key === "power") {
@@ -1169,7 +1394,7 @@ document.addEventListener('DOMContentLoaded', () => {
         </table>
         <p class="calc-note">Red = below target. Power index = all tests added up (throws converted to inches).</p>
         <div class="block-label">What This Means For Your Game</div>
-        <div class="bottleneck ${bnSt==='optimal'?'clear':''}">${getBottleneck('power', bnSt)}</div>
+        <div class="bottleneck ${bnSt==='optimal'?'clear':''}">${getBottleneck('power', bnSt, POS)}</div>
       </div>`;
 
     } else if (key === "symmetry") {
@@ -1185,7 +1410,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <div class="metric-cell"><div class="ml">FOCUS</div><div class="mv">${scoreSymmetry>=90?'Balanced':'Isolate Sides'}</div></div>
         </div>
         <div class="block-label">What This Means For Your Game</div>
-        <div class="bottleneck ${bnSt==='optimal'?'clear':''}">${getBottleneck('symmetry', bnSt)}</div>
+        <div class="bottleneck ${bnSt==='optimal'?'clear':''}">${getBottleneck('symmetry', bnSt, POS)}</div>
       </div>`;
 
     } else if (key === "mobility") {
@@ -1240,7 +1465,7 @@ document.addEventListener('DOMContentLoaded', () => {
         </table>
         <p class="calc-note">Movement screen. Monitor = compensatory pattern present. Fail = movement dysfunction requiring targeted intervention. Skipped tests are excluded from score.</p>
         <div class="block-label">What This Means For Your Game</div>
-        <div class="bottleneck ${bnSt==='optimal'?'clear':''}">${getBottleneck('mobility', bnSt)}</div>
+        <div class="bottleneck ${bnSt==='optimal'?'clear':''}">${getBottleneck('mobility', bnSt, POS)}</div>
       </div>`;
 
     } else if (key === "rom") {
@@ -1267,7 +1492,7 @@ document.addEventListener('DOMContentLoaded', () => {
         </table>
         <p class="calc-note">Lead = front side · Trail = back side · Big side differences need attention.</p>
         <div class="block-label">What This Means For Your Game</div>
-        <div class="bottleneck ${bnSt==='optimal'?'clear':''}">${getBottleneck('rom', bnSt)}</div>
+        <div class="bottleneck ${bnSt==='optimal'?'clear':''}">${getBottleneck('rom', bnSt, POS)}</div>
       </div>`;
 
     } else {
@@ -1333,13 +1558,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const riskSignals  = [];
 
   if (scoreStrength < 70) {
-    riskSignals.push({ tag:"Q3–Q4 breakdown", text:"<b>Weaker strength base</b> means your legs and core wear down in the 3rd and 4th quarters. Leverage at the line and tackling form fall apart when your muscles are depleted." });
+    riskSignals.push({ tag:"Q3–Q4 breakdown", text: POSITION_RISK.strength[POS] || POSITION_RISK.strength.DB });
   }
   if (scorePower < 70) {
-    riskSignals.push({ tag:"Burst speed drop", text:"<b>Below-target power</b> fades fastest under fatigue. First-step quickness and hitting power drop noticeably in the back half of a game as your fast-twitch system gets tired." });
+    riskSignals.push({ tag:"Burst speed drop", text: POSITION_RISK.power[POS] || POSITION_RISK.power.DB });
   }
   if (scoreSymmetry < 85) {
-    riskSignals.push({ tag:"Overload side", text:"<b>Side-to-side strength gap</b> puts extra stress on your plant leg or lead blocking/tackling shoulder. Look for soreness building on one side during and after contact-heavy practices and games." });
+    riskSignals.push({ tag:"Overload side", text: POSITION_RISK.symmetry[POS] || POSITION_RISK.symmetry.DB });
   }
   const tpiFailedTests = s.mobilityClearance.filter(mc => mc.tested && mc.status === "Fail").map(mc => mc.name);
   const tpiMonitorTests = s.mobilityClearance.filter(mc => mc.tested && mc.status === "Monitor").map(mc => mc.name);
